@@ -1,0 +1,211 @@
+\section{Flight tests}
+
+1. Recreate hand solution flight test and record
+2. Configure setup Pihawx + Raspberry Pi + Camera
+3. Test setup with HITL
+4. Test setup with very simple real flight: takeoff, take picture, land
+
+Stretch goals
+
+1. Test tracking solution during flight: takeoff, record video, land, then run detection on recorded video
+2. Test follow algorithm (velocity controller)
+%3. Test ground station: receive images from drone (on Android ????)
+4. Test follow algorithm (position controller) -- very unlikely
+
+
+
+Development needed for that:
+
+1.3 - Add test option to program to run on HITL
+
+2.1 - 200 OK
+2.2 - Stabilize PID controller (use tool to get better parameters ???)
+    - Fix problems when losing sight (graph errors)
+    - Make better recovery when landmarks too different from previous
+2.3 - (Send video real-time to ground control ?????)
+2.4 - Make 2D to 3D calculation
+    - Calculate target drone position from followed target position
+    - Add new PID position controller based on target drone position
+    
+    
+    
+    
+    ---------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% Onsite meeting %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+1. Connect setup Pihawx + Raspberry Pi + Camera
+    a. Config rasperry pi
+        
+        1. Build Raspberry Pi \url{https://www.okdo.com/getstarted/}
+        2. Install OS on SD card with Raspberry Pi Imager - Raspberry Pi OS 64 bits + Desktop 
+        3. (Optional) Use Raspberry Pi Imager to setup login user, ssh and network settings
+        4. Clone repo
+        5. Create venv (need to install at least python3.9-dev & python3.9-venv)
+        6. Install requirements (pip install -r requirements.txt) 
+        7. Install own package (pip install . -e)
+        
+        OPTIONAL: Setup XRDP to connect from windows PC (no need for screen, keyboard and mouse)
+        \url{https://linuxize.com/post/how-to-install-xrdp-on-raspberry-pi/}
+        
+    b. connect cam to pi -> get images / video (Setup realsense camera to work on RPi)
+        
+        Modified from:
+        \url{https://github.com/IntelRealSense/librealsense/blob/master/doc/installation_raspbian.md}
+        
+        Step changes:
+        1. Check versions: install cmake and gcc from apt repo (cmake/stable 3.18.4-2+rpt1+rpi1 arm64, gcc/stable, 4:10.2.1-1 arm64)
+        2. Add swap
+        3. Install packages: ignore not found packages (*-dbgsym libglui-dev libglui2c2
+        4. Update udev rule
+        5. Update cmake version --> SKIP
+        6. Set path: set on ~/.bashrc
+        7. Install protobuf: install from apt repo (protobuf-compiler/stable, 3.12.4-1 arm64)
+        8. Install TBB: install from apt repo (libtbb-dev/stable, 2020.3-1 arm64)
+        9. Install OpenCV --> SKIP (if already setup environment)
+        10, 11. Install RealSense SDK/librealsense & install pyrealsense2: keep step 10 only but use this command (cmake ../ -DFORCE_RSUSB_BACKEND=true -DBUILD_PYTHON_BINDINGS=bool:true -DCMAKE_BUILD_TYPE=release -DBUILD_EXAMPLES=true -DBUILD_GRAPHICAL_EXAMPLES=true  -DBUILD_WITH_TM2=true), then (export PYTHONPATH=\$PYTHONPATH:/usr/local/lib) on ~/.bashrc
+        12. Change pi settings (enable OpenGL) --> SKIP (pyopengl and pyopengl_accelerate should be on pip requirements, GL driver is enabled by default)
+        13. EXTRA STEP: Copy librealsense.so and wrappers/python/pyrealsense2.so from build folder to project folder
+        13. REBOOT
+        
+        NOTES: Using adapted stereo algorithm from example code from RealSense to transform fisheye image to flat undistorted.
+        
+        TEST: Use realsense-viewer and other utils located at /usr/local/bin
+
+    c-1. Test HITL simulation with Airsim    
+        1. Build drone (\url{https://docs.px4.io/master/en/frames_multicopter/holybro_x500_pixhawk4.html})
+        2. Configure and calibrate autopilot (\url{https://docs.px4.io/master/en/config/})
+            a. Install PX4 Pro Stable Release v1.12.3
+            b. RC config according to PDF -> AUX Passthrough channels for controlling camera??
+            c. HITL config for PX4 \url{https://docs.px4.io/master/en/simulation/hitl.html#hardware-in-the-loop-simulation-hitl}
+                - Activate HIL on QGroundControl and deactivate autoconnect (optional)
+                - Set up RC with arm switch, can't directly arm from AirSim
+            d. HITL config for AirSim \url{https://microsoft.github.io/AirSim/px4_setup/}
+            -----> Works by default with direct USB connection to PX4, telemetry radio needs serial port config)
+            -----> add standard tcp and port config to get airsim images from inside wsl
+                ("UseTcp": true,
+                "TcpPort": 4560,
+                "ControlIp": "remote",
+                "ControlPortLocal": 14540,
+                "ControlPortRemote": 14580,
+                "LocalHostIp": "<WSL network Windows host IP>",
+                "SerialPort": "<COM10>",
+                "SerialBaudrate": <baudrate>)
+                
+            Connection over cable to PX4 -> baudrate 115200
+            Connection over telemetry radio -> baudrate 57600
+            Connection over serial -> baudrate 921600
+            
+            e. Final configuration:
+                - Pixhawk <-> AirSim:  connect preferably over USB cable, with telemetry it hangs and AirSim freezes
+                - AirSim <-> Dronecontrol: python on Windows, connects through localhost (no ip on airsim source constructor, providing WSL ip works too)
+                - Dronecontrol <-> Pixhawk: connect over telemetry radio, set pilot.system address to telemetry port (COM10) and appropriate baudrate
+                
+            NOTES: 
+            Starting RC controller with receiver plugged to PX4 automatically connect to simulator, and simulated drone can be flown with controller.
+            If no offboard API attached trough telemetry radio (MavSDK, dronecontrol) can use QGroundControl to see GPS location, speeds, logs and send mode changes.
+        
+    c. connect px4 to pi -> test simple commands work (take-off/land) - HITL (processing in the loop)
+    
+        1. Three way connection: \url{https://www.etechnophiles.com/raspberry-pi-4-gpio-pinout-specifications-and-schematic/#raspberry-pi-4-gpio-pinout} \url{https://docs.px4.io/master/en/companion_computer/pixhawk_companion.html#companion-computer-for-pixhawk-series}
+            - Pixhawk <-> AirSim: over USB cable, auto-connect with no config needed
+            - AirSim <-> Dronecontrol: connect through Wi-Fi on local network (WLAN), need to                                 specify host computer (Windows) IP on AirSim constructor
+            - Dronecontrol <-> Pixhawk: for on flight, connect through TELEM2 port on PX4 to UART pins on RPi (TELEM2 left to right cables to RPi pins, cable 2 TX to pin 10 RX, cable 3 RX to pin 8 TX, cable 6 GND to pin 6 GND ((if powered through pins at the same time, more GND on pin 9))) Activate second MAV channel through parameters
+            
+        2. Power the RPi while in flight: \url{http://www.holybro.com/manual/PM07-Quick-Start-Guide.pdf} \url{https://github.com/raspberrypi/hats/blob/master/designguide.md#back-powering-the-pi-via-the-gpio-header}
+            - 5v pin on TELEM2 port not enough current to power RPi consistently
+            - 5v pins on power module not activated by default
+            - POWER2 port provides good supply through custom adapter to RPi pins 4 (5V) and 6 (GND)
+            
+        A guide to set up UART serial connection in RPi: \url{https://discuss.px4.io/t/talking-to-a-px4-fmu-with-a-rpi-via-serial-nousb/14119?page=2}
+    
+        ???? (verify that sensors can be simulated for HITL, flight mechanics on px4, sensors from airsim) -> Tested with first HITL simulation without RPi - OK
+        
+        ???? (check if groundcontrol can get information from rp4, can logs be sent, just get info if it's possible) -> If serial connection between RPi and PX4, telemetry radio can be use on an offboard computer with QGroundControl
+        
+        ???? (check if groundcontrol can tell px4 to not listen to rpi port,
+        maybe: program listens for ground control to change to offboard mode, it doesn't start control until then, if offboard is stopped then control loop stops, detection continues)
+        -> modify code to handle mode changes manually
+        
+2. Simulate dronecontrol follow in raspberry pi
+    -> Verify powering of raspberry pi from telemetry connection to Piwhakx - NOT OK, see 1.c.2.
+    -> Goal is to check if RP4 can handle the computations required for detection and control with decent frame rate
+    Resolution 1280x800:
+        - 0-1 FPS on dronecontrol running on RPi with AirSim for image and flight engine (NO CONTROL)
+3. Introduce real camera to detection algorithm
+    -> Check how real sense image performs, dronecontrol running on RPi with RealSense for image and AirSim for flight engine
+    -------- write up table with average loop time for different combinations  ---------
+    ????? Tool in code to auto calculate ?????
+    Resolution 300x300:
+        - 18-23 FPS no control, no detection
+        - 4-7 FPS no control, pose detection
+        - 1-2 FPS pose detection, follow control
+    Resolution 600x600:
+        - 14-16 FPS no control, no detection
+        - 3-4 FPS no control, pose detection
+        - 1-2 FPS pose detection, follow control
+    Resolution 800x800:
+        - 10-13 FPS no control, no detection
+        - 3-4 FPS no control, pose detection
+        - 1 FPS pose detection, follow control
+    -> FLY THE DRONE to record images only, no control
+4. Safety measures: 
+    -> react to loss of inputs from detections (FIX stop moving if loss)
+    -> check for coherence of inputs to prevent recognizing wrong figure
+    -> add config (parameters) and minimal checks to prevent bad inputs from dronecontrol controller to px4 (angular velocity max, hold on lost connection) 
+            - COM_OBL_ACT/COM_OBL_RC_ACT -> Hold on lost offboard link while offboard
+            - COM_RCL_EXCEPT -> Hold on offboard active without RC (disabled in sim)
+            - NAV_RCL_ACT -> Return on RC loss (disabled in sim)
+    -> detect if failsafe engages in-code (add tests to check that config safety checks are engaged)
+    \url{https://docs.px4.io/master/en/config/safety.html}
+    -----------------------------
+    
+FLIGHT TEST PLAN
+1. Test assembly with RC only
+2. Test config with QGroundControl on computer (telemetry)
+3. Test data link with hand solution (dronecontrol on Windows, telemetry and usb webcam to pc)
+4. Add RPi + RS camera onboard recording, control with RC only, start dronecontrol through ssh
+5. Same setup, add QGroundControl through telemetry on pc
+6. Run follow, control with offboard switch on RC
+EXTRA: Test hand solution from onboard camera
+----
+Test RC and ground control flight OK
+Camera connection fails every time the RPi is restarted, but works afterwards
+Drone will not connect to RPi through serial, telemetry radio works but too slow (is it the connection or the computer that is slow ????)
+RPi seems to run slower with battery and often warns low voltage
+!!! FIX !!! : After changing Airframe (from HITL to normal and back) telemetry port parameters reset, need to be: 
+MAV_1_CONFIG = 102 (TELEM2)
+MAV_1_MODE = Onboard (Companion computer)
+SER_TEL1_BAUD = 921600 (Or use different on connecting through mavsdk, maybe)
+----
+Next flight test:
+1. Run test camera without drone connection, fly with ground control, record video
+2. Try hand solution
+- dronecontrol tools test-camera -r /dev/serial0:921600 -rs -p   ---->>> TEST
+- dronecontrol tools test-camera -r /dev/serial0:921600 -rs      ---->>> RECORD
+- dronecontrol hand --serial COM7:57600 (Windows)                ---->>> TEST FLIGHT
+- dronecontrol follow -s /dev/serial0:921600 -rs                 ---->>> TEST FLIGHT
+
+
+
+Next steps:
+ - Write email with latest test results. offboard control, resolutions and control fps
+ XXXXXX Fix safety measures (step 4)
+ XXXXXX Write flight plan with tests
+ XXXXXX Add pose coherence detection
+ XXXXXX Calibrate yaw PID
+ - Execute flight plan
+ - Fix documentation
+ - Add tests for all code
+ - Fix CLI and standardize 
+ !- Try decouple process_image and offboard_control in different threads
+ 
+Later:
+ XXXXXX Fix PID
+ - Move to position control
+ 
+ Smaller thing:
+  - Get stereo algorithm out of video source and document
+  - Write headers on files ???
+  

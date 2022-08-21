@@ -1,0 +1,40 @@
+OUTLINE
+1. Introduction
+ 	- Project goals
+	- Timeline -> (Solution development, simulation testing, hardware setup, writing) how it's distributed in time
+	- Structure
+2. State-of-the-art
+	- Drone + object-tracking research
+	- Software, libraries used on the project
+		- PX4
+		- AirSim
+		- MediaPipe
+		- MavSDK, OpenCV, …
+	- Hardware
+	    - Pixhawk
+	    - Raspberry Pi
+	    - Real Sense T265
+3. Design and implementation
+	- Diagram of architecture (high-level view of all systems)
+	- Development environment (Ubuntu, WSL - Windows, RaspberryPi)
+	- Hardware-software interaction (hardware setup, connections between flight controller, camera and companion computer, OS)
+	- Hand Solution
+	- Follow Solution
+	     - 1. Translate 2D coordinates to 3D world position:
+	           %https://stackoverflow.com/questions/12299870/computing-x-y-coordinate-3d-from-image-point
+	           %https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
+	     - 2. Path following
+	     - 3. Control loop with PID
+4. Experiments and validation
+	- Individual module testing (how every part of the system is validated separately)
+	- Simulation setup and results from simulation (SITL, HITL, Jmavsim vs. Airsim, Airsim environments)
+	- Flight tests and results on real-time deployment onboard (hand solution and follow solution)
+5. Conclusions and future work
+	- Achievement of proposed goals (from 1a)
+	- Application of bachelor curriculum
+	- Lessons learned
+	- Future work
+
+APPENDIX
+	- CLI interface
+	- Full installation process (reproduction steps)

@@ -1,0 +1,48 @@
+\section{Technologies}
+
+\subsection{Software libraries}
+\subsubsection{PX4 autopilot}
+PX4 \todo{cite} is the a professional open-source autopilot flight stack developed in C++ by developers from industry and academia, and supported by an active world-wide community,
+it powers all kinds of vehicles from racing and cargo drones through to ground vehicles and submersibles.
+The flight stack software runs on a vehicle controller or flight controller hardware. It supports both Ready To Fly vehicles and custom builds made from scratch,
+as well as many additional kinds of sensors and peripherals, such as distance and obstacle sensors, GPS, camera payloads and onboard computers.
+PX4 is a core part of a broader drone platform, the Dronecode Project \todo{cite}, that includes the QGroundControl ground station \todo{cite}, Pixhawk hardware,
+and MAVSDK for integration with companion computers, cameras and other hardware using the MAVLink protocol.
+PX4 was initially designed to run on Pixhawk Series controllers, but can now run on Linux computers and other hardware.
+The software controls the vehicles through flight modes. 
+Flight modes define how the autopilot responds to remote control input, and how it manages vehicle movement during fully autonomous flight.
+The modes provide different types or levels of autopilot assistance to the user, ranging from automation of common tasks like takeoff and landing, 
+to mechanisms that make it easier to regain level flight or hold the vehicle to a fixed path or position.
+
+\subsubsection{MavSDK}
+
+
+\subsubsection{AirSim}
+
+
+\subsubsection{MediaPipe}
+
+
+
+\subsection{Hardware employed}
+\subsubsection{Holybro X500 + Pixhawk 4}
+\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}
+
+PX4 uses sensors to determine vehicle state (needed for stabilization and to enable autonomous control).
+It minimally requires a gyroscope, accelerometer, magnetometer (compass) and barometer.
+A GPS or other positioning system is needed to enable all automatic flight modes, and some assisted ones.
+PX4 uses outputs to control motor speed, flight surfaces like ailerons and flaps, camera triggers, parachutes, grippers, and many other types of payloads.
+Many PX4 drones use brushless motors that are driven by the flight controller via an Electronic Speed Controller (ESC) 
+(the ESC converts a signal from the flight controller to an appropriate level of power delivered to the motor).
+PX4 drones are mostly commonly powered from Lithium-Polymer (LiPo) batteries. 
+The battery is typically connected to the system using a Power Module or Power Management Board, 
+which provide separate power for the flight controller and to the ESCs (for the motors).
+A Radio Control (RC) system is used to manually control the vehicle. 
+It consists of a remote control unit that uses a transmitter to communicate stick/control positions with a receiver based on the vehicle. 
+Some RC systems can additionally receive telemetry information back from the autopilot.
+Telemetry Radios can provide a wireless MAVLink connection between a ground control station like QGroundControl and a vehicle running PX4. 
+This makes it possible to tune parameters while a vehicle is in flight, inspect telemetry in real-time, change a mission on the fly, etc
+
+
+\subsubsection{Raspberry Pi 4}
+\subsubsection{Real Sense T265}
