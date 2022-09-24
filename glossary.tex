@@ -2,5 +2,20 @@
 
 \newglossaryentry{mavlink}{%
   name={MAVlink},
-  description={MAVLink is a very lightweight messaging protocol for communicating with drones and between onboard drone components. It follows a modern hybrid publish-subscribe and point-to-point design pattern where data streams are published as topics while configuration sub-protocols such as the mission protocol or parameter protocol are sent as point-to-point with retransmission. Messages are defined within XML files. Each XML file defines the message set supported by a particular MAVLink system.}
+  description={A lightweight messaging protocol developed by the Dronecode Project for communicating with drones and between onboard drone components.}
+}
+
+\newglossaryentry{sitl}{%
+  name={SITL simulation},
+  description={Software-in-the-loop (SITL) is a simulation mode where the flight stack runs on a standard computer instead of a flight controller.}
+}
+
+\newglossaryentry{hitl}{%
+  name={HITL simulation},
+  description={Hardware-in-the-Loop (HITL or HIL) is a simulation mode in which normal PX4 firmware is run on real flight controller hardware, while all required sensors are simulated.}
+}
+
+\newglossaryentry{gpio}{%
+  name={GPIO (General Purpose Input Output},
+  description={Pins}
 }

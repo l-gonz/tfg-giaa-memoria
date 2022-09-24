@@ -169,7 +169,7 @@ FLIGHT TEST PLAN
 5. Same setup, add QGroundControl through telemetry on pc
 6. Run follow, control with offboard switch on RC
 EXTRA: Test hand solution from onboard camera
-----
+------------------------    TEST 1   ----------------------------------
 Test RC and ground control flight OK
 Camera connection fails every time the RPi is restarted, but works afterwards
 Drone will not connect to RPi through serial, telemetry radio works but too slow (is it the connection or the computer that is slow ????)
@@ -178,7 +178,7 @@ RPi seems to run slower with battery and often warns low voltage
 MAV_1_CONFIG = 102 (TELEM2)
 MAV_1_MODE = Onboard (Companion computer)
 SER_TEL1_BAUD = 921600 (Or use different on connecting through mavsdk, maybe)
-----
+------------------------    TEST 2   ----------------------------------
 Next flight test:
 1. Run test camera without drone connection, fly with ground control, record video
 2. Try hand solution
@@ -186,7 +186,17 @@ Next flight test:
 - dronecontrol tools test-camera -r /dev/serial0:921600 -rs      ---->>> RECORD
 - dronecontrol hand --serial COM7:57600 (Windows)                ---->>> TEST FLIGHT
 - dronecontrol follow -s /dev/serial0:921600 -rs                 ---->>> TEST FLIGHT
-
+----
+Camera draws all the power, low voltage triggers when the camera connection starts
+If the camera is  not transmiting images  (black screen) everything is super fast everything works
+----
+Image showing starts low voltage warning:
+- Is processing faster with RPi own power supply
+- Is there low voltage warning with smaller image?
+Video recorded by Real Sense doesn't detect person
+- Is it too far?
+- Does it improve with a different camera?
+- 
 
 
 Next steps:
@@ -208,4 +218,13 @@ Later:
  Smaller thing:
   - Get stereo algorithm out of video source and document
   - Write headers on files ???
+  
+  
+  
+  
+  
+MEETING 06.09.22
+
+
+
   

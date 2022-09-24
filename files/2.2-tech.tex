@@ -1,12 +1,15 @@
-\section{Technologies}
+\section{Technologies employed}
 
 \subsection{Software libraries}
+
 \subsubsection{PX4 autopilot}
-PX4 \todo{cite} is the a professional open-source autopilot flight stack developed in C++ by developers from industry and academia, and supported by an active world-wide community,
+\label{subsec:px4}
+PX4 \footnote{\url{https://docs.px4.io/main/en/}} is a professional open-source autopilot flight stack developed in C++ by developers from industry and academia, and supported by an active world-wide community,
 it powers all kinds of vehicles from racing and cargo drones through to ground vehicles and submersibles.
 The flight stack software runs on a vehicle controller or flight controller hardware. It supports both Ready To Fly vehicles and custom builds made from scratch,
 as well as many additional kinds of sensors and peripherals, such as distance and obstacle sensors, GPS, camera payloads and onboard computers.
-PX4 is a core part of a broader drone platform, the Dronecode Project \todo{cite}, that includes the QGroundControl ground station \todo{cite}, Pixhawk hardware,
+
+PX4 is a core part of a broader drone platform, the Dronecode Project \footnote{\url{https://www.dronecode.org/}}, that includes the QGroundControl ground station \todo{cite}, Pixhawk hardware,
 and MAVSDK for integration with companion computers, cameras and other hardware using the MAVLink protocol.
 PX4 was initially designed to run on Pixhawk Series controllers, but can now run on Linux computers and other hardware.
 The software controls the vehicles through flight modes. 
@@ -14,35 +17,62 @@ Flight modes define how the autopilot responds to remote control input, and how 
 The modes provide different types or levels of autopilot assistance to the user, ranging from automation of common tasks like takeoff and landing, 
 to mechanisms that make it easier to regain level flight or hold the vehicle to a fixed path or position.
 
-\subsubsection{MavSDK}
+\subsubsection{MAVLink and MavSDK}
+\label{subsec:mavlink}
+MAVLink \footnote{\url{https://mavlink.io/en/}} is a very lightweight messaging protocol for communicating with drones and between onboard drone components. 
+It follows a modern hybrid publish-subscribe and point-to-point design pattern 
+where data streams are published as topics while configuration sub-protocols 
+such as the mission protocol or parameter protocol are sent as point-to-point with retransmission. 
+Messages are defined within XML files. 
+Each XML file defines the message set supported by a particular MAVLink system.
+
+MAVSDK \footnote{\url{https://mavsdk.mavlink.io/main/en/index.html}} is a collection of libraries for various programming languages,
+to interface with MAVLink systems such as drones, cameras or ground systems.
+It is primarly written in C++ with wrappers available for,
+among others, Swift, Python and Java.
+The libraries provides a simple API for managing one or more vehicles, 
+providing programmatic access to vehicle information and telemetry, 
+and control over missions, movement and other operations.
+The libraries can be used onboard a drone on a companion computer
+or on the ground for a ground station or mobile device.
+MAVSDK is cross-platform: Linux, macOS, Windows, Android and iOS.
 
 
 \subsubsection{AirSim}
+\label{subsec:airsim}
+AirSim \footnote{\url{https://microsoft.github.io/AirSim/}} is a simulator for drones, cars and more, built on Unreal Engine and developed by Microsoft. It is open-source, cross platform, and supports software-in-the-loop \gls{sitl} simulation with popular flight controllers such as PX4 and ArduPilot and hardware-in-loop \gls{hitl} with PX4 for physically and visually realistic simulations. It is developed as an Unreal plugin that can simply be dropped into any Unreal environment.
 
+Its goal is to develop a platform for AI research to experiment with deep learning, computer vision and reinforcement learning algorithms for autonomous vehicles. For this purpose, AirSim also exposes APIs to retrieve data and control vehicles in a platform independent way.
 
 \subsubsection{MediaPipe}
-
+\label{subsec:mediapipe}
+Mediapipe \footnote{\url{https://google.github.io/mediapipe/}} is an open-source project developed by Google that offers cross-platform, customizable machine learning solutions for live and streaming media.
+It supports End-to-End acceleration with built-in fast ML inference and processing accelerated even on common hardware and a unified solution that works across Android, iOS, desktop/cloud, web and IoT.
+It offers a framework designed specifically for complex perception pipelines, like real-time perception of human pose, face landmarks and hand tracking that can enable a variety of impactful applications, such as fitness and sport analysis, gesture control and sign language recognition, augmented reality effects and more. 
 
 
 \subsection{Hardware employed}
 \subsubsection{Holybro X500 + Pixhawk 4}
-\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}
-
-PX4 uses sensors to determine vehicle state (needed for stabilization and to enable autonomous control).
-It minimally requires a gyroscope, accelerometer, magnetometer (compass) and barometer.
-A GPS or other positioning system is needed to enable all automatic flight modes, and some assisted ones.
-PX4 uses outputs to control motor speed, flight surfaces like ailerons and flaps, camera triggers, parachutes, grippers, and many other types of payloads.
-Many PX4 drones use brushless motors that are driven by the flight controller via an Electronic Speed Controller (ESC) 
-(the ESC converts a signal from the flight controller to an appropriate level of power delivered to the motor).
-PX4 drones are mostly commonly powered from Lithium-Polymer (LiPo) batteries. 
-The battery is typically connected to the system using a Power Module or Power Management Board, 
-which provide separate power for the flight controller and to the ESCs (for the motors).
-A Radio Control (RC) system is used to manually control the vehicle. 
-It consists of a remote control unit that uses a transmitter to communicate stick/control positions with a receiver based on the vehicle. 
-Some RC systems can additionally receive telemetry information back from the autopilot.
-Telemetry Radios can provide a wireless MAVLink connection between a ground control station like QGroundControl and a vehicle running PX4. 
-This makes it possible to tune parameters while a vehicle is in flight, inspect telemetry in real-time, change a mission on the fly, etc
+\label{subsec:pixhawk}
+The Holybro X500 \footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} kit is composed of a full carbon-fiber twill frame and the Pixhawk 4 flight controller, 
+an advanced autopilot designed and made in collaboration with Holybro and the PX4 team.
+It is based on the Pixhawk-project \footnote{\url{https://pixhawk.org/}} FMUv5 open hardware design and it is optimized to run PX4 on the NuttX OS \footnote{\url{https://nuttx.apache.org/}}.
+The Pixhawk 4 has an integrated accelerometer/gyroscope, a magnetomer and a barometer.
+The kit also includes a power management board, motors an GPS module, an RC receiver and a telemetry radio.
+\todo[inline]{More about this in validation (complete build)}
 
 
 \subsubsection{Raspberry Pi 4}
+\label{subsec:rpi}
+The Raspberry Pi \footnote{\url{https://www.raspberrypi.com/products/raspberry-pi-4-model-b/}} is a line of single-board computers that stands out thanks to its affordable price,
+compact size and maker-friendly design. The model 4B is an improved version of its predecessors,
+getting a major increase in processing power, enhanced video output and peripheral connectivity,
+while maintaining the same low price and tiny size offered on past models.
+This small computer comes as a bare circuit board,
+without any sort of housing or add-ons such as a cooling fan or a power button,
+but it includes USB, HDMI and Ethernet ports and both Wi-Fi and Bluetooth connectivity,
+as well as a 40-pin GPIO \gls{gpio} header, a row of input/output pins that provides direct access for connecting external devices.
+The Raspberry Pi runs natively Raspbian OS, a free operating system based on Debian optimized for the Pi hardware, but it is compatible with other standard flavours of Linux.
+
 \subsubsection{Real Sense T265}
+\url{https://www.intelrealsense.com/tracking-camera-t265/}

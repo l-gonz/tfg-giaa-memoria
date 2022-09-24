@@ -1,11 +1,11 @@
 OUTLINE
-1. Introduction
+1. Introduction (2)
  	- Project goals
 	- Timeline -> (Solution development, simulation testing, hardware setup, writing) how it's distributed in time
 	- Structure
 2. State-of-the-art
-	- Drone + object-tracking research
-	- Software, libraries used on the project
+	- Drone + object-tracking research (2)
+	- Software, libraries used on the project (3)
 		- PX4
 		- AirSim
 		- MediaPipe
@@ -15,21 +15,21 @@ OUTLINE
 	    - Raspberry Pi
 	    - Real Sense T265
 3. Design and implementation
-	- Diagram of architecture (high-level view of all systems)
-	- Development environment (Ubuntu, WSL - Windows, RaspberryPi)
-	- Hardware-software interaction (hardware setup, connections between flight controller, camera and companion computer, OS)
-	- Hand Solution
-	- Follow Solution
+	- Diagram of architecture (high-level view of all systems) (5)
+      Hardware-software interaction (hardware setup, connections between flight controller, camera and companion computer, OS)
+	- Development environment (Ubuntu, WSL - Windows, RaspberryPi) (3)
+	- Hand Solution (7)
+      Follow Solution
 	     - 1. Translate 2D coordinates to 3D world position:
 	           %https://stackoverflow.com/questions/12299870/computing-x-y-coordinate-3d-from-image-point
 	           %https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
 	     - 2. Path following
 	     - 3. Control loop with PID
-4. Experiments and validation
+4. Experiments and validation (20)
 	- Individual module testing (how every part of the system is validated separately)
 	- Simulation setup and results from simulation (SITL, HITL, Jmavsim vs. Airsim, Airsim environments)
 	- Flight tests and results on real-time deployment onboard (hand solution and follow solution)
-5. Conclusions and future work
+5. Conclusions and future work (2)
 	- Achievement of proposed goals (from 1a)
 	- Application of bachelor curriculum
 	- Lessons learned
@@ -38,3 +38,8 @@ OUTLINE
 APPENDIX
 	- CLI interface
 	- Full installation process (reproduction steps)
+	
+Marco teórico (incorporar a la parte que corresponda):
+ - PID controller (design: follow solution)
+ - Computer vision, cv2 (design: hand solution, sota: mediapipe ??)
+ - Any drone flight mechanics ???
