@@ -1,6 +1,6 @@
-\section{Technologies employed}
+\subsection{Methodology}
 
-\subsection{Software libraries}
+\subsubsection{Software}
 
 \subsubsection{PX4 autopilot}
 \label{subsec:px4}
@@ -40,6 +40,14 @@ MAVSDK is cross-platform: Linux, macOS, Windows, Android and iOS.
 \todo[inline]{why not ROS}
 
 
+\subsubsection{QGroundControl}
+\label{subsec:qgc}
+
+
+\subsubsection{Unreal Engine}
+\label{subsec:unreal}
+
+
 \subsubsection{AirSim}
 \label{subsec:airsim}
 AirSim \footnote{\url{https://microsoft.github.io/AirSim/}} is a simulator for drones, cars and more, built on Unreal Engine and developed by Microsoft. It is open-source, cross platform, and supports software-in-the-loop \gls{sitl} simulation with popular flight controllers such as PX4 and ArduPilot and hardware-in-loop \gls{hitl} with PX4 for physically and visually realistic simulations. It is developed as an Unreal plugin that can simply be dropped into any Unreal environment.
@@ -54,15 +62,28 @@ It offers a framework designed specifically for complex perception pipelines, li
 \todo[inline]{Explain hand and pose solutions}
 
 
-\subsection{Hardware employed}
-\subsubsection{Holybro X500 + Pixhawk 4}
+\subsubsection{GitHub}
+\label{subsec:github}
+
+
+\subsubsection{PID controller}
+\label{subsec:pid-theory}
+
+
+
+\subsubsection{Hardware}
+\subsubsection{Holybro X500}
+\label{subsec:x500}
+The Holybro X500 \footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} kit is composed of a full carbon-fiber twill frame and the Pixhawk 4 flight controller.
+The kit also includes a power management board, motors an GPS module, an RC receiver and a telemetry radio.
+\todo[inline]{More about this in validation (complete build)}
+
+
+\subsubsection{Pixhawk 4}
 \label{subsec:pixhawk}
-The Holybro X500 \footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} kit is composed of a full carbon-fiber twill frame and the Pixhawk 4 flight controller, 
 an advanced autopilot designed and made in collaboration with Holybro and the PX4 team.
 It is based on the Pixhawk-project \footnote{\url{https://pixhawk.org/}} FMUv5 open hardware design and it is optimized to run PX4 on the NuttX OS \footnote{\url{https://nuttx.apache.org/}}.
 The Pixhawk 4 has an integrated accelerometer/gyroscope, a magnetomer and a barometer.
-The kit also includes a power management board, motors an GPS module, an RC receiver and a telemetry radio.
-\todo[inline]{More about this in validation (complete build)}
 
 
 \subsubsection{Raspberry Pi 4}
@@ -76,6 +97,3 @@ without any sort of housing or add-ons such as a cooling fan or a power button,
 but it includes USB, HDMI and Ethernet ports and both Wi-Fi and Bluetooth connectivity,
 as well as a 40-pin GPIO \gls{gpio} header, a row of input/output pins that provides direct access for connecting external devices.
 The Raspberry Pi runs natively Raspbian OS, a free operating system based on Debian optimized for the Pi hardware, but it is compatible with other standard flavours of Linux.
-
-\subsubsection{Real Sense T265}
-\url{https://www.intelrealsense.com/tracking-camera-t265/}
