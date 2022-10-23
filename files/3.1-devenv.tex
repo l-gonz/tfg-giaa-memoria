@@ -69,3 +69,7 @@ Moreover, now that PX4 runs on a separate piece of hardware, it is necessary to 
 Figure~\ref{fig:hitl-connections} shows the chosen connections to execute tests in HITL mode.
 The Windows machine runs both AirSim and the Python interpreter, which communicate through the localhost network using TCP.
 The board running PX4 connects to the simulator through a USB to microUSB cable, which is setup to work with a baudrate of 115200, and to the developed program through a telemetry radio running at a baudrate of 57600, both attached to USB ports on the Windows computer accessible through their COM address.
+
+\subsubsection{AirSim testing environment}
+\todo[inline]{Describe Unreal Engine scene and models with pictures}
+\todo[inline]{Describe testing flow from PX4 to Unreal to dronecontrol}

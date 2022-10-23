@@ -2,7 +2,11 @@
 \label{chap:validation}
 
 This chapter contains...
-\todo[inline]{Add diagram of testing process}
+\todo[inline]{Add flow diagram of testing process and sum up}
+\todo[inline]{Add connection diagrams to each of the testing section below}
+
+\input{files/4.1-sitl.tex}
+\clearpage
 
 \section{PID controller validation}
 \label{sec:test-1-pid}
@@ -67,21 +71,23 @@ From the graphs, it is possible to select $K_{P}=50$ as the best of the values t
 From the values tested next in figure\ref{fig:tune-yaw-prop2}, the final value of $K_{P}=60$ is selected.
 Once this approximate desired value of $K_{P}$ is decided, the derivative coefficient can be added.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_i2_feedback.pdf}
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_i2_speed.pdf}
-  \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{I}$.}\label{fig:tune-yaw-int}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_i2_feedback.pdf}
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_i2_speed.pdf}
+%   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{I}$.}\label{fig:tune-yaw-int}
+% \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_d2_feedback.pdf}
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_d2_speed.pdf}
-  \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_d2_feedback.pdf}
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_d2_speed.pdf}
+%   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
+% \end{figure}
 
 \subsection{Forward controller}
+
+...
 
 \begin{figure}
   \centering
@@ -90,124 +96,52 @@ Once this approximate desired value of $K_{P}$ is decided, the derivative coeffi
   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
 \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_p2_feedback.pdf}
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_p2_speed.pdf}
-  \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_p2_feedback.pdf}
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_p2_speed.pdf}
+%   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
+% \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_i1_feedback.pdf}
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_i1_speed.pdf}
-  \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_i1_feedback.pdf}
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_i1_speed.pdf}
+%   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
+% \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_d1_feedback.pdf}
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_d1_speed.pdf}
-  \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_d1_feedback.pdf}
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_d1_speed.pdf}
+%   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
+% \end{figure}
 
 \subsection{PID tuning validation}
+
+\todo[inline]{PID validation}
+\begin{enumerate}
+    \item Run test-controller tool and interpret output graphs and calculate error 
+    \item Run full follow solution in testing environment with videos
+    \item Verify that all the security measures and failsafes for the drone's movement engage when appropriate.
+\end{enumerate}
 
 \begin{figure}
   \centering
   \includegraphics[width=.8\textwidth, keepaspectratio]{img/4.1-tune/yaw_validate_1.png}
-  \caption{Perspective from the vehicle at the start of the program run}\label{fig:sim_camera_tune}
+  \caption{}\label{}
 \end{figure}
 
 \begin{figure}
   \centering
   \includegraphics[width=.8\textwidth, keepaspectratio]{img/4.1-tune/fwd_validate_1.png}
-  \caption{Perspective from the vehicle at the start of the program run}\label{fig:sim_camera_tune}
+  \caption{}\label{}
 \end{figure}
 
 
-\section{PX4 SITL simulation and validation}
-\label{sec:test-2-sitl}
+\clearpage
 
-% Setup:    build from source code on WSL
-% Test:     - Jmavsim simulator
-%           - Hand solution: (on Python Windows?????)
-%               - Mediapipe
-%               - Pilot module
-%               - Video input
-% Results:  images from jmavsim, dronecontrol output, px4 console
-
-\section{PX4 validation with AirSim}
-\label{sec:test-3-airsim}
-
-% Setup:    installing AirSim, AirSim config explanation
-% Test:     - AirSim simulator
-%           - Follow solution:
-%               - Pose detection
-%               - Images from simulator
-%               - Control from PIDs
-%               - Failsafes
-% Results:  images from airsim, dronecontrol output, px4 console
-
-\section{PX4 HITL simulation and validation}
-\label{sec:test-4-hitl}
-
-% Setup:    build drone, HITL configuration
-% Test:     - AirSim + follow on Windows + Pixhawk
-%           - QGroundControl (without program running)
-%           - PX4 to computer connection
-%           - RC on AirSim
-% Results:  images of wiring computer-Pixhawk
-
-\section{PX4 HITL validation with Raspberry Pi}
-\label{sec:test-5-rpi}
-
-% Setup:    Raspberry Pi installation, RPi-Pixhawk connection
-% Test:     - AirSim + follow on RPi + Pixhawk
-%           - Serial connection
-% Results:  wiring, performance metrics
-
-\section{PX4 HITL validation with onboard camera}
-\label{sec:test-6-onboardcam}
-
-% Setup:    installing AirSim, AirSim config explanation
-% Test:     - AirSim + hand-solution on RPi + Pixhawk + onboard camera
-%           - Camera holder
-% Results:  holder 3d, drone close-up, camera feed
-
-\section{Quadcopter flight tests}
-
-\subsection{Build process}
-\label{sec:test-7-builddrone}
-
-% Setup:    build drone, configuration, calibration
-% Test:     - RC, GPS, Pixhawk power supply, RPi power supply
-%           - Arm, takeoff commands
-% Results:  wiring, drone pictures, QGroundControl calibration screens
-
-\subsection{Basic tests}
-\label{sec:test-8-flight}
-
-% Setup:    flight plan
-% Test:     - takeoff with QGC, fly with RC
-%           - tools/test_camera + record video
-% Results:  video of flying
-
-\subsection{Hand gesture control}
-\label{sec:test-9-hand}
-
-% Setup:    ...
-% Test:     - Hand solution on windows through telemetry radio
-%           - Free movement with offboard api
-% Results:  video of flying, output from program
-
-\subsection{Target detecting, tracking and following}
-\label{sec:test-10-follow}
-
-% Setup:    ...
-% Test:     - Follow solution on RPi
-%           - Controller response to real input
-% Results:  video of flying, output from program
-            
+\input{files/4.2-hitl.tex}
+\input{files/4.3-flight.tex}
 
 \cleardoublepage
