@@ -49,8 +49,8 @@ The full steps needed for to configure the system are detailed in Section~\ref{s
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.8,keepaspectratio]{img/sitl-connections.png}
-  \caption{Connection diagram of how the three systems that interact with each other during SITL simulation.}\label{fig:sitl-connections}
+  \includegraphics[width=\textwidth,keepaspectratio]{img/sitl-connections.jpg}
+  \caption{Connection diagram of how the three systems interact with each other during SITL simulation.}\label{fig:sitl-connections}
 \end{figure}
 The whole set of connections established in the software-in-the-loop simulation is shown in Figure~\ref{fig:sitl-connections} at the transport layer level. The two systems that run inside the virtualized Linux system through WSL (the simulated flight stack and the dronecontrol program) connect through the localhost network on the UDP port defined by PX4 for Offboard APIs and each of them connects in turn to the AirSim simulator through the virtual Local Area Network established by the Windows Subsystem for Linux to the host Windows computer.
 The PX4 flight stack on SITL mode connects to the simulator using the TCP port 4560, as defined by PX4 on Figure~\ref{fig:px4-ports}, and dronecontrol connects through the AirSim library which uses by default a TCP connection on port 41451.
@@ -63,8 +63,8 @@ Moreover, now that PX4 runs on a separate piece of hardware, it is necessary to 
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.8,keepaspectratio]{img/hitl-connections.png}
-  \caption{Connection diagram of how the three systems that interact with each other during HITL simulation.}\label{fig:hitl-connections}
+  \includegraphics[width=\textwidth,keepaspectratio]{img/hitl-connections.jpg}
+  \caption{Connection diagram of how the three systems interact with each other during HITL simulation.}\label{fig:hitl-connections}
 \end{figure}
 Figure~\ref{fig:hitl-connections} shows the chosen connections to execute tests in HITL mode.
 The Windows machine runs both AirSim and the Python interpreter, which communicate through the localhost network using TCP.

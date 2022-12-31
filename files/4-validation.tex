@@ -1,8 +1,20 @@
 \chapter{Experiments and validation}
 \label{chap:validation}
 
-This chapter contains...
-\todo[inline]{Add flow diagram of testing process and sum up}
+This chapter explains the complete process of validating each separate piece necessary for the correct operation of the full system, from testing the first simulation steps to carrying out thorough flight tests on the final guidance solution.
+Figure \ref{fig:validation-chart} shows in order each of the steps followed during this validation process.
+In the first section, the application is tested in a purely simulated environment, first individually on each part and finally integrating the flight mechanics simulation 
+ with providing images to the computer vision detection software with sending control commands to the flight controller simulation.
+ In the second section, the follow detection and guidance solution is tested thoroughly to guarantee that only safe velocity commands are outputted from the PID controllers for any image input that could be received and that their response is according to the desired movement of the vehicle.
+ In the third section, and once the software is guaranteed to operate inside the required safety parameters, the simulation is shifted to the dedicated hardware that will be use for real flight: the dedicated autopilot board and the companion computer that will be onboard the vehicle; to ensure that all the connections are working as expected and the devices offer the necessary performance.
+ In the fourth and final section, several flight tests are executed with increasing complexity, from the basic controlling of the vehicle with an RC controller to fully autonomous flight with target following.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/validation-chart.jpg}
+  \caption{Outline for the validation process}\label{fig:validation-chart}
+\end{figure}
+
 \todo[inline]{Add connection diagrams to each of the testing section below}
 
 \input{files/4.1-sitl.tex}
@@ -15,86 +27,127 @@ This chapter contains...
 % Graphs from test-controller
 % Analysis of error
 
-\todo[inline]{Flow chart of validation process}
 \todo[inline]{Videos for github}
 
 As has been mentioned before, the velocity controller that is the heart of the person following mechanism is based on two PID controllers.
 In order to get velocity outputs for the PID controllers that produce a stable movement of the vehicle, it is necessary to tune the parameters of the controllers until the appropriate combination is found.
-The value for the coefficients used for the project has been found empirically with the help of the tuning tool described in section~\ref{subsec:test-tools} and developed for this purpose, and its performance validated with the controller testing tool, both running in a simulated environment with the flight stack in SITL mode so that it is possible to take continuous measures of the response of the PID controllers to step movements of a simulated person present in the 3D world.
-In the first place, each of the controllers has been tuned independently of the other by allowing the vehicle only one direction of movement at a time.
+In this section the value for the coefficients used for the project will be found empirically with the help of the tuning tool described in section~\ref{subsec:test-tools} and developed for this purpose, and its performance validated with the controller testing tool, both running in the simulated environment with the flight stack in SITL mode so that it is possible to take continuous measures of the response of the PID controllers to step movements of a simulated person present in the 3D world.
+In the first place, each of the controllers will be tuned independently of the other by allowing the vehicle only one direction of movement at a time.
 Afterwards, both controllers are engaged at the same time to take measurements of their joint response to a range of different inputs.
 
-The controllers are calibrated for a starting position of x=0, y=0 for the vehicle and x=600, y=0 for the person in world coordinates of the simulated environment.
-At these position, the processing of the images taken from the simulated camera detects the person centered in the field of view and with a height of 36\% of the image height.
-The set points for the controllers running in the simulator are therefore 0.5 for the yaw controller and 0.36 for the forward controller.
+The controllers are calibrated for a reference position of x=0, y=0 for the vehicle and x=600, y=0 for the person in world coordinates of the simulated environment.
+At these positions, processed images taken from the simulated camera detect the person centered in the field of view and with a height of 36\% of the image height.
+Which means that the controllers running in the simulator will have as their target set points 0.5 for the yaw controller and 0.36 for the forward controller. So for any changes in the position of the simulated person the controllers will send velocity commands to the autopilot to achieve the same relative position between the vehicle and the person as in the reference shown in figure \ref{fig:tune-start-pos}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/tune-ref-pos.jpg}
+  \caption{Reference position for the yaw and pitch PID controllers. From left to right the panels show the dronecontrol application window, the AirSim simulator world view and the world location of the human model in the simulator. The distance between the vehicle and the person is 600 units in the x direction and 0 units in the y direction.}\label{fig:tune-start-pos}
+\end{figure}
 
 \subsection{Yaw controller}
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/4.1-tune/sim_window_tune.png}
-  \caption{Starting position of the simulator for tuning the yaw controller}\label{fig:sim_window_tune}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=.5\textwidth, keepaspectratio]{img/4.1-tune/yaw_tune_start_pos.png}
-  \caption{Perspective from the vehicle at the start of the program run}\label{fig:sim_camera_tune}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/tune-ref-pos-yaw.jpg}
+  \caption{Starting position of the simulator for tuning the yaw controller. The human model is situated 500 units forward and 100 units to the right of the vehicle model.}\label{fig:tune-ref-pos-yaw}
 \end{figure}
 
 To find the correct coefficients for the controller that governs the yaw velocity of the vehicle, the target person is set in a position slightly to the side on its field of view so that when the controller is engaged it produces a rotation of the vehicle to that side.
-Figure~\ref{fig:sim_window_tune} shows the starting position of the simulated environment before each run, where the 3D model has been situated at (600,50), that is, 50 units to the right of the target position.
-The image captured from the simulated camera is shown in figure~\ref{fig:sim_camera_tune}.
+Since the forward controller will not be engaged, the target person can be situated closer to the camera to make it easier for the pose detection algorithm to output correct landmarks.
+Figure~\ref{fig:tune-ref-pos-yaw} shows the starting position of the simulated environment before each run, where the 3D model has been situated at (500,100), that is, 100 units to the right of the reference position.
+On the left-most panel of figure \ref{fig:tune-ref-pos-yaw}, the dronecontrol application shows that the input to the yaw controller is 0.62 at this position.
+The controller will then need to output a positive yaw velocity to center the person in its field of view. 
+Since this offset position to the right produces a negative difference but requires a positive velocity to counteract, the coefficients for the yaw controller will need to be negative, so that an increased horizontal position results in a positive yaw velocity to decrease it, as indicated by equation \ref{eq:pid}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\todo[inline]{Move to PID explanation theory (3.3 ???)}
+\begin{equation}
+    u(t)= K_p e(t) + K_i \int{e(t)dt} + K_d \frac{de(t)}{dt}
+%    \caption{Formula for the output from a PID controller}
+    \label{eq:pid}
+\end{equation}
+%% Where: $u(t)=$ PID control variable
+        % $K_p=$ proportional gain
+        % $K_i=$ integral gain
+        % $K_d=$ derivative gain
+        % $e(t)=$ error value
+        % $de=$ change in error value
+        % $dt=$ change in time
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_p1_feedback.pdf}
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_p1_speed.pdf}
-  \caption{Variation of (a) input position and (b) output velocity for different values of $K_{P}$ while the yaw controller is engaged.}\label{fig:tune-yaw-prop}
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_prop_i0_d0.png}
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_prop_i0_d0.png}
+  \caption{Variation of (a) input position and (b) output velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-prop}
 \end{figure}
 
+To tune the controller to its correct coefficients, the first step will be to test different values of $K_{P}$ while maintaining $K_{I}$ and $K_{D}$ at zero.
+Figure~\ref{fig:tune-yaw-prop} shows the output of the tuning program for the five values of $K_{P}$ tested, from $K_P=-10$ to $K_P=-90$ in increments of 20.
+The left graph represents the variation of the horizontal position detected by the camera for the first 30 seconds after activating the controller and the right graph, the yaw velocity that the controller outputs to the pilot module to reach the target.
+It can be seen that for low values of $K_{P}$, the controller makes the vehicle move slowly towards its target, so that it takes a long time to reach the midpoint position.
+In the other hand, for high values of $K_{P}$ the controller tries to reach the target too fast, so when it gets close to it it starts to oscillate without stopping.
+From the graphs, the best of the values tested is $K_{P}=50$, where the distance to the target point decreases rapidly but the velocity does not start to increase and decrease widely around 0.
 
-The first step taken is to test different values of $K_{P}$ while maintaining $K_{I}$ and $K_{D}$ at zero.
-Figure~\ref{fig:tune-yaw-prop} shows the output of the tuning program for the tested values of $K_{P}$.
-The left graph represents the variation of the horizontal position detected by the camera for the first 10 seconds after activating the controller and the right graph, the velocity that the controller outputs to the pilot module to reach the target.
-It can be seen that for low values of $K_{P}$, the controller makes the vehicle move too slowly towards its target, so that it takes more than the 10 seconds sampled to reach the midpoint position.
-In the other hand, for high values of $K_{P}$, the velocity is so high that the vehicle oscillates around the target.
-From the graphs, it is possible to select $K_{P}=50$ as the best of the values tested for representing a balance of the time used to reach the target against the possibility of overshooting it, and then proceed with a finer tune of the parameter.
+The second step is to find the correct value for $K_I$. To do that several values of $K_I$ will be tested for a low $K_P$ of -20 and $K_D=0$, so that the effect of the integral part is easier to appreciate. Figure \ref{fig:tune-yaw-int-20} shows the evolution of the input and output at the controller for a sample time of 40 seconds for each of the values tested. 
+For a low $K_I=-1$, the progress toward the target is stable and slightly faster than without any contribution of the integral part.
+However, when the $K_I$ increases in magnitude it creates initial oscillations around the target position that fade out as time progresses and, for a very large $K_I$ from around -10 and bigger, the velocity of the vehicle becomes locally unstable with many small variations in its oscillations.
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_p2_feedback.pdf}
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_p2_speed.pdf}
-  \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{P}$ between 30 and 70.}\label{fig:tune-yaw-prop2}
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_p20_int_d0.png}
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_p20_int_d0.png}
+  \caption{Variation of (a) input position and (b) output velocity for different values of $K_{I}$ and $K_P=-20$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-int-20}
 \end{figure}
 
-From the values tested next in figure\ref{fig:tune-yaw-prop2}, the final value of $K_{P}=60$ is selected.
-Once this approximate desired value of $K_{P}$ is decided, the derivative coefficient can be added.
+A similar effect can be observed to a lower extent in figure \ref{fig:tune-yaw-int-50}, where the measurements have been taken for $K_P=-50$ and $K_D=0$. 
+In this graph, $K_I=-1$ makes the controller reach the target position some 3 seconds faster and with similar oscillations than with the proportional part exclusively ($K_P=-50$, $K_I=0$, $K_D=0$).
 
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_i2_feedback.pdf}
-%   \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_i2_speed.pdf}
-%   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{I}$.}\label{fig:tune-yaw-int}
-% \end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_p50_int_d0.png}
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_p50_int_d0.png}
+  \caption{Variation of (a) input position and (b) output velocity for different values of $K_{I}$ and $K_P=-50$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-int-50}
+\end{figure}
 
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_d2_feedback.pdf}
-%   \includegraphics[width=.45\linewidth]{img/4.1-tune/yaw_d2_speed.pdf}
-%   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
-% \end{figure}
+In the last step the tuning process will deal with the derivative part of the controller.
+In this case, several values of $K_D$ have been tested against the chosen $K_P=-50$ and both without any integral part and with $K_I=-1$.
+This will allow seeing the effect that the derivative part has in the controller as well as validating if the integral part chosen in the last step can work together with the derivative part to make the controller react better to a changed input.
+Figures \ref{fig:tune-yaw-der-i0} and \ref{fig:tune-yaw-der-i1} shows the evolution of the position detected by the computer vision system and the velocity that the controller outputs for a sample time of 40 seconds for $K_I=0$ and $K_I=-1$, respectively, with $K_P=-50$.
+For all the tested values, the iteration with $K_I=-1$ on \ref{fig:tune-yaw-der-i1} shows a better convergence towards the target positions than their counterpart values of $K_D$ for $K_I=0$, which indicates that the integral part has been chosen correctly.
+Furthermore, adding any amount to the derivative part does not produce any visible benefit in the step response of the controller and the curve that best remains on the target position continues to be the one for $K_D=0$.
+The final values for the coefficients for the yaw controller will then be $K_P=-50$, $K_I=-1$ and $K_D=0$, so the controller will in truth only be a PI controller, and not a full PID controller.
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_p50_i0_der.png}
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_p50_i0_der.png}
+  \caption{Variation of (a) input position and (b) output velocity for different values of $K_{D}$ and $K_P=-50$, $K_I=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-der-i0}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_p50_i1_der.png}
+  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_p50_i1_der.png}
+  \caption{Variation of (a) input position and (b) output velocity for different values of $K_{D}$ and $K_P=-50$, $K_I=-1$ while the yaw controller is engaged.}\label{fig:tune-yaw-der-i1}
+\end{figure}
+
+
 
 \subsection{Forward controller}
 
-...
+A similar process must be followed for the forward (pitch) controller.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_p1_feedback.pdf}
-  \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_p1_speed.pdf}
-  \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
-\end{figure}
+
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_p1_feedback.pdf}
+%   \includegraphics[width=.45\linewidth]{img/4.1-tune/fwd_p1_speed.pdf}
+%   \caption{Variation of (a) input position and (b) output velocity while the yaw controller is engaged for different values of $K_{D}$.}\label{fig:tune-yaw-deriv}
+% \end{figure}
 
 % \begin{figure}
 %   \centering
@@ -126,17 +179,17 @@ Once this approximate desired value of $K_{P}$ is decided, the derivative coeffi
     \item Verify that all the security measures and failsafes for the drone's movement engage when appropriate.
 \end{enumerate}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.8\textwidth, keepaspectratio]{img/4.1-tune/yaw_validate_1.png}
-  \caption{}\label{}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=.8\textwidth, keepaspectratio]{img/4.1-tune/yaw_validate_1.png}
+%   \caption{}\label{}
+% \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=.8\textwidth, keepaspectratio]{img/4.1-tune/fwd_validate_1.png}
-  \caption{}\label{}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=.8\textwidth, keepaspectratio]{img/4.1-tune/fwd_validate_1.png}
+%   \caption{}\label{}
+% \end{figure}
 
 
 \clearpage
@@ -144,4 +197,4 @@ Once this approximate desired value of $K_{P}$ is decided, the derivative coeffi
 \input{files/4.2-hitl.tex}
 \input{files/4.3-flight.tex}
 
-\cleardoublepage
+\clearpage
