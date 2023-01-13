@@ -3,10 +3,11 @@
 
 \subsection{Top level}
 
+\todo[inline]{Draft, add QGC}
 \begin{figure}
   \centering
   \includegraphics[keepaspectratio]{img/toplevel-sysarch.png}
-  \caption{Top level diagram of the hardware/software interactions \todo[inline]{Draft, add QGC}}\label{fig:toplevel}
+  \caption{Top level diagram of the hardware/software interactions}\label{fig:toplevel}
 \end{figure}
 
 The purpose of the Dronecontrol application is to be able to direct the movement of a \gls{uav} through the analysis of the images taken by a camera.
@@ -42,7 +43,7 @@ This process is described in the development environment section (\ref{sec:deven
 The Dronecontrol application that runs on the companion computer has been developed using the Python programming language \footnote{\url{https://www.python.org/}}.
 It offers good advantages for a project of this characteristics because of its high-level,
 easy-to-use syntax, that usually results in a smaller code base than other comparable languages for small projects, its versatility and support for object-oriented programming. 
-Most importantly, Python is widely used and its official package manager \verb|pip| greatly simplifies the use of external libraries and which gathers in its package index \footnote{\url{https://pypi.org/}} thousands of standard utilities,
+Most importantly, Python is widely used and its official package manager \texttt{pip} greatly simplifies the use of external libraries and which gathers in its package index \footnote{\url{https://pypi.org/}} thousands of standard utilities,
 including many machine learning and image processing projects and all the required libraries for interacting with PX4 through the MAVLink protocol (MavSDK).
 As it is an interpreted language, it can run easily in any system with Python installed without the need to compile separate binaries for different operating systems.
 
@@ -57,9 +58,9 @@ However, it also requires that the camera stays connected to computer on the gro
 Other configurations involving a direct connection from a camera to the flight controller and the transmission of its images wirelessly to the companion computer through mavlink for processing can be feasible with the current technology but fall out of the scope of this project.
 
 The wireless link is established in this instance through a pair of telemetry radios that connect to a telemetry port on the flight controller and to a USB port in the companion computer, respectively.
-Since the Pixhawk 4 is configured by default to used its \verb|TELEM1| port for this purpose, no additional configuration is needed when using that port.
+Since the Pixhawk 4 is configured by default to used its \texttt{TELEM1} port for this purpose, no additional configuration is needed when using that port.
 In the companion computer, applications like the QGRoundControl \footnote{\url{http://qgroundcontrol.com/}} ground station software which is part of the Dronecode Project are able to detect automatically a telemetry radio inserted into any of the USB ports of the host computer.
-Additionally, other applications using the MavSDK (\ref{subsec:mavlink}) library can establish connection specifying the baudrate and the USB serial port address, usually something similar to \verb|/dev/ttyUSB0| on Linux and \verb|COM#| on Windows.
+Additionally, other applications using the MavSDK (\ref{subsec:mavlink}) library can establish connection specifying the baudrate and the USB serial port address, usually something similar to \texttt{/dev/ttyUSB0} on Linux and \texttt{COM1} on Windows.
 
 The radio used for the physical tests in this project is the Holybro SiK Telemetry Radio \footnote{\url{http://www.holybro.com/product/transceiver-telemetry-radio-v3/}}.
 It is a small, light and inexpensive open source radio platform that typically allows ranges of better than 300m “out of the box” (the range can be extended to several kilometres with the use of a patch antenna on the ground).
@@ -95,7 +96,7 @@ In addition, the Raspberry's officially supported operating system, called Raspb
 Since this computer is designed to be easy to integrate with hardware projects it includes a 40-pin GPIO header (marked in red in Figure~\ref{fig:rpi4}) that can be programmed for connecting to any number of external devices.
 
 The Raspberry Pi is powered by a 5V input that can be provided either from its USB-C port or through one of two pins in the header dedicated to this (marked as DC 5v power on Figure~\ref{fig:pinout}.
-In the case of the particular vehicle build used in this project, the power management board used (the Holybro PM07 \footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}}) also provides 5V to the flight controller, as well as powering the ESCs to the motors, and counts with two power outputs so one of them can be connected to the flight controller's \verb|POWER1| port and the other to the Raspberry Pi's pins through a custom-made connector.
+In the case of the particular vehicle build used in this project, the power management board used (the Holybro PM07 \footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}}) also provides 5V to the flight controller, as well as powering the ESCs to the motors, and counts with two power outputs so one of them can be connected to the flight controller's \texttt{POWER1} port and the other to the Raspberry Pi's pins through a custom-made connector.
 \todo[inline]{Power management: more about this when it works}
 
 In regards to the camera that will fly onboard the vehicle, there are many possibilities to chose from.
@@ -110,7 +111,7 @@ Since the frame of the Holybro X500 is not prepared by default to include an onb
   \caption{A diagram of the wired connections from the Raspberry Pi 4 to the power management board (TELEM1) and the flight controller (TELEM2).}\label{fig:wiring}
 \end{figure}
 The second wired connection that needs to be established for this configuration is between the flight controller and the companion computer so the Mavlink messages can be exchanged.
-As it is desirable to be able to maintain a wireless link to the vehicle even while it is being controlled by the onboard computer, the telemetry radio is kept connected to the \verb|TELEM1| port of the flight controller and the companion computer is wired to the \verb|TELEM2| port.
+As it is desirable to be able to maintain a wireless link to the vehicle even while it is being controlled by the onboard computer, the telemetry radio is kept connected to the \texttt{TELEM1} port of the flight controller and the companion computer is wired to the \texttt{TELEM2} port.
 This port is not configured to be used by default so it is necessary to modify the configuration of the Pixhawk board either through QGroundControl \todo{More about QGC in SotA} or the PX4 console. \todo{More about this in validation ????}
 The other end of the connector has three female Dupont wires that go into the TX/RX UART pins of the Raspberry Pi.
 A diagram of the connections to the companion computer can be seen in Figure~\ref{fig:wiring}.

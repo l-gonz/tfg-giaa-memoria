@@ -25,9 +25,9 @@ The complete installation process necessary to run these tests is explained in a
 
 Once both parts are installed, PX4 and Gazebo can be started by running the \mintinline{bash}{make px4_sitl gazebo} command inside its installation folder.
 The result of this command can be seen in figure \ref{fig:gazebo}, where the left part shows the user interface and 3D world of the Gazebo simulator and the right side contains the PX4 console that can be used for sending commands and changing the configuration parameters of the simulated flight controller.
-The simplest command to test is takeoff, which is done by sending \verb|commander takeoff| through the console.
+The simplest command to test is takeoff, which is done by sending \texttt{commander takeoff} through the console.
 Figure \ref{fig:gazebo-takeoff} shows the state of the simulator after the takeoff command, with the vehicle model having climbed to the default height of 2.5 meters above ground.
-To land the vehicle again, the command is \verb|commander land|.
+To land the vehicle again, the command is \texttt{commander land}.
 
 \begin{figure}
   \centering
@@ -76,8 +76,8 @@ The full installation process is described in appendix \ref{app:install-airsim}.
 There are specific configuration parameters that have to be set to be able to connect the AirSim simulator in Windows to the PX4 SITL running inside WSL.
 On the simulator side, AirSim's settings file has to include a line defining the IP address of the network interface to use.
 This parameter, along with the full configuration file used for SITL testing can be found on appendix \ref{app:airsim-config}.
-On the PX4 side, it is necessary to specify that the simulator will attach through a different IP address than \verb|localhost|.
-This is done by setting the \verb|PX4_SIM_HOST_ADDR| environment variable in the Linux system to the IP address of the Windows host on the WSL virtual network before starting PX4 as follows:
+On the PX4 side, it is necessary to specify that the simulator will attach through a different IP address than \texttt{localhost}.
+This is done by setting the \texttt{PX4\_SIM\_HOST\_ADDR} environment variable in the Linux system to the IP address of the Windows host on the WSL virtual network before starting PX4 as follows:
 \begin{minted}{bash}
 export PX4_SIM_HOST_ADDR=[IP-address]
 make px4_sitl none_iris

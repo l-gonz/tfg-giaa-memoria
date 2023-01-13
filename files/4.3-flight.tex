@@ -12,8 +12,8 @@ The exact steps that will be executed one after the other to ensure that safety 
     \item Build the quadcopter with its basic components.
     \item Add custom payload.
     \item Fly with remote control and factory autopilot only, monitoring through QGRoundControl.
-    \item Fly with custom software from offboard computer with test tool \verb|test-camera| \ref{subsec:test-tools}.
-    \item Fly with test tool \verb|test-camera| from onboard computer.
+    \item Fly with custom software from offboard computer with test tool \texttt{test-camera} \ref{subsec:test-tools}.
+    \item Fly with test tool \texttt{test-camera} from onboard computer.
     \item Fly with custom hand-gesture control solution from offboard computer.
     \item Fly with custom follow solution from onboard computer.
 \end{enumerate}
@@ -37,8 +37,8 @@ Figure \ref{fig:x500-dev-kit} shows all the parts that make up the complete vehi
   \centering
   \includegraphics[width=.6\textwidth, keepaspectratio]{img/x500-dev-kit.jpg}
   \caption{Development kit for the Holybro X500}\label{fig:x500-dev-kit}
-  \todo{Cite}
 \end{figure}
+\todo{Cite}
 
 
 After all the standard parts are put together, the custom additions can be attached as well using the remaining space in the frame.
@@ -98,6 +98,7 @@ Before any flight can be carried out, any simulation modes previously activated 
 % Results:  video of flying, adjust pid set-point
 
 \subsubsection{Baseline flight with factory software}
+\label{subsec:fl-test-1}
 
 Once the vehicle is fully configured, the RC controller and QGroundControl can be used to test assisted take off and landing.
 At this point, the drone should be able to maintain stable flight while using autopilot-assisted flight modes like Position Mode, where the roll and pitch sticks control the acceleration over ground of the vehicle in the forward/backward and left/right directions relative to the heading the vehicle is facing, and throttle controls speed of ascent and descent. 
@@ -126,12 +127,23 @@ The full video of the test can be seen in link \todo{Make video and link}.
 \end{figure}
 
 \subsubsection{Offboard computer flight with test tool}
+\label{subsec:fl-test-2}
 
 The second test flight will aim to make certain that the custom software can send takeoff and landing commands through a wireless MAVlink channel from the offboard computer (by using the telemetry radio through the developed test tool).
 For this flight, the QGroundControl application cannot be connected to the vehicle since the telemetry radio channel will be blocked by the custom tool.
 The RC controller will be therefore be used as a backup in case anything goes wrong with the software.
 At any moment the controller can switch flight mode and override the input generated from the dronecontrol application, recovering manual control.
-Now, once the main battery is connected again to the power module, the test tool is run with the command \verb|dronecontrol tools test-camera -r COM<X>:57600| on a Windows PC or with \verb|dronecontrol tools test-camera -r /dev/ttyUSB0:57600| on a Linux computer.
+Since the dronecontrol application can now easily arm the vehicle on its own before while sending a takeoff command,
+the two-way switch of the controller will be mapped for all the tests going forward to the command to kill the power to the engines.
+This command can be useful in very edge cases to protect the vehicle or the surrounding area, if the autopilot were to destabilize during takeoff and landing or completely lose control over the vehicle.
+Now, once the main battery is connected again to the power module, the test tool is run with the following command for a Windows or a Linux machine, respectively:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol tools test-camera -r COM<X>:57600
+\end{minted}
+or
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol tools test-camera -r /dev/ttyUSB0:57600
+\end{minted}
 
 After a successful connection to the vehicle, the T and L keys in the computer keyboard can be used for takeoff and landing, respectively, and the O key can be used to set the autopilot in offboard flight mode to make it able to receive velocity commands.
 Afterwards, the WASD keys can be used to control the forward and sideways velocity of the vehicle and the QE keys to control its yaw velocity.
@@ -141,10 +153,12 @@ Figure \ref{fig:flight-test-cam-offboard} displays the output on the terminal wi
   \centering
   \includegraphics[width=.45\textwidth, keepaspectratio]{img/placeholder.png}
   \includegraphics[width=.45\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{a) Terminal output from the test-camera tool running on an offboard computer and b) Output from the camera of the offboard computer towards the vehicle in flight}\label{fig:flight-test-cam-offboard}
+  \caption{a) Terminal output from the \texttt{test-camera} tool running on an offboard computer and b) Output from the camera of the offboard computer towards the vehicle in flight}
+  \label{fig:flight-test-cam-offboard}
 \end{figure}
 
 \subsubsection{Onboard computer flight with test tool}
+\label{subsec:fl-test-3}
 
 The third and last test flight in this section will ensure that the custom software can send takeoff and landing commands through a cabled MAVlink channel from the onboard computer,
 as well as making sure that the onboard camera can obtain a good image of the field of view of the vehicle during flight.
@@ -154,8 +168,10 @@ Since the camera connected to the computer sending commands is now looking down 
 To start the flight test, the main battery and the secondary battery need to be attached, respectively, to the power module and to the Raspberry Pi.
 After the onboard computer has started up, the easiest way to take control of it is with a remote desktop connection through WiFi, as explained in section \ref{sec:devenv}.
 By this connection, a terminal window can be opened on the desktop and the following command run:
-\verb|dronecontrol tools test-camera -r /dev/serial0:921600 -p|
-As opposed to the flight using the telemetry radio, in this test the serial connection runs at a baudrate of 921600, which matches the configured baudrate on the \verb|TELEM2| port of the Pixhawk board.
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol tools test-camera -r /dev/serial0:921600 -p
+\end{minted}
+As opposed to the flight using the telemetry radio, in this test the serial connection runs at a baudrate of 921600, which matches the configured baudrate on the \texttt{TELEM2} port of the Pixhawk board.
 The "-p" option is used to enable pose detection in the output images.
 The terminal and camera output can be seen in figure \ref{fig:flight-test-cam-onboard} and a video recording the remote desktop during the flight can be seen in link \todo{Link video of screen during onboard test-camera flight}.
 
@@ -167,10 +183,8 @@ The terminal and camera output can be seen in figure \ref{fig:flight-test-cam-on
 \end{figure}
 
 
-\todo[inline]{lint all commands on this section properly, consistent \\verb|| on test-camera }
-
 \subsection{Hand gesture control}
-\label{sec:test-9-hand}
+\label{subsec:fl-test-4}
 
 % Setup:    ...
 % Test:     - Hand solution on windows through telemetry radio
@@ -180,9 +194,11 @@ The terminal and camera output can be seen in figure \ref{fig:flight-test-cam-on
 During basic flight tests, all the connections and individual parts of the software were validated in real flight.
 Now it is time to integrate the piloting system with the image recognition results to test the vision-based control solutions developed.
 The first solution to be used in flight will be the hand-gesture guidance system, as it is made to run on an offboard computer with more available processing resources and no dependence on battery-supplied power to work.
-The setup will be identical to the second test flight with the telemetry radio as the serial link and the onboard companion computer turned off
+The setup will be identical to the second test flight (\ref{subsec:fl-test-2}) with the telemetry radio as the serial link and the onboard companion computer turned off
 Once the autopilot board is powered up, the control solution can be started with the following command:
-\verb|dronecontrol hand -s <device>:57600|
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol hand -s <device>:57600
+\end{minted}
 where <device> is the COM port or TTY device the telemetry radio is attached to, depending on the platform.
 
 
@@ -199,25 +215,50 @@ At any point during the test, an open hand will make the vehicle land at the cur
 \begin{figure}
   \centering
   \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is taking off}\label{fig:flight-test-cam-onboard}
+  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is taking off}\label{fig:flight-test-hand-takeoff}
 \end{figure}
 
 \begin{figure}
   \centering
   \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is moving to the right.}\label{fig:flight-test-cam-onboard}
+  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is moving to the right.}\label{fig:flight-test-hand-right}
 \end{figure}
 
 \begin{figure}
   \centering
   \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is moving forward}\label{fig:flight-test-cam-onboard}
+  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is moving forward}\label{fig:flight-test-hand-fwd}
 \end{figure}
 
 \subsection{Target detecting, tracking and following}
-\label{sec:test-10-follow}
+\label{subsec:fl-test-5}
 
 % Setup:    ...
 % Test:     - Follow solution on RPi
 %           - Controller response to real input
 % Results:  video of flying, output from program
+
+Finally, it only remains to test the follow control solution.
+In this section, the companion computer will be running the follow program and it will be validated whether it is capable of keeping track of and following a moving target during non-simulated flight.
+The setup will be identical to the third test in section \ref{subsec:fl-test-3}, without the need for a wireless telemetry connection.
+The telemetry radio is therefore free to be used, for example, to track the vehicle's path through the QGroundControl application on a secondary, offboard computer.
+The control application will be started with the following command:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol follow -s /dev/serial0:921600
+\end{minted}
+Figure \ref{fig:flight-test-follow} shows the process in the terminal of getting the vehicle to takeoff (T key), activating offboard flight mode (O key) and starting movement tracking of the detected figure.
+The maximum frames per second managed by the program running on the Pi is around %______.
+In practice, this means that the person being tracked by the drone has to move quite slowly in order for the camera to not lose sight of them before the autopilot can send the command to the vehicle to move to the previous detected position.
+At the end of the program run, the average loop time and average runtime for each of the tasks in the main loop is shown in the terminal
+From the measures obtained for the test flight carried out, we can see %______________.
+However, for a proof-of-concept scenario, this is acceptable performance.
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
+  \caption{Terminal and image output of the dronecontrol follow solution running on the  Raspberry Pi}\label{fig:aaa}
+\end{figure}
+
+\todo[inline]{Save performance for flight tests, add measure tables in each section}
+\todo[inline]{Same recording as hand sec}

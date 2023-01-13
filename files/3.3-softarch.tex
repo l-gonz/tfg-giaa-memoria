@@ -8,9 +8,9 @@
 
 Figure~\ref{fig:architecture} shows the main modules the designed the software is composed of and how it interacts with the external libraries.
 The application consists of three basic parts: 
-the pilot module, in charge of sending instructions to the flight controller and receiving back information on position and state through the \verb|mavsdk| library, 
+the pilot module, in charge of sending instructions to the flight controller and receiving back information on position and state through the \texttt{mavsdk} library, 
 a video source module that handles the retrieval of images from different sources and the necessary processing for image analysis, 
-and a control module that directs the interaction between the other two to transform the pixel information first into position points through the \verb|mediapipe| library and then into instructions for the pilot.
+and a control module that directs the interaction between the other two to transform the pixel information first into position points through the \texttt{mediapipe} library and then into instructions for the pilot.
 The upper part of the diagram in Figure~\ref{fig:architecture} shows how the program modules receive input and send instructions to the hardware systems whether these are simulated or not.
 Other smaller utilities have also been developed to help test how the systems interact with each other and calibrate different parts of the control behaviour.
 \todo[inline]{Command-line interface summary here and link to appendix with full help extract.}
@@ -22,10 +22,10 @@ This library provides a simple asynchronous API for managing one or more vehicle
 MavSDK utilizes the python standard library \emph{asyncio} to be able to run coroutines in parallel while waiting for the messages provided through the \emph{MAVLink} communication.
 Therefore all calls to the library have to be written as async functions that await the result of one or more polls to the flight stack.
 
-\verb|asyncio| provides support for writing concurrent code using the \verb|async/await| syntax.
+\texttt{asyncio} provides support for writing concurrent code using the \texttt{async/await} syntax.
 It is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc; 
 and provides a set of high-level APIs to run Python coroutines concurrently and have full control over their execution.
-The pilot module integrates \verb|mavsdk| and \verb|asyncio| and provides a queue for the control module to send actions to be executed in the vehicle one after another.
+The pilot module integrates \texttt{mavsdk} and \texttt{asyncio} and provides a queue for the control module to send actions to be executed in the vehicle one after another.
 
 Listing~\ref{lst:pilot.connect} shows how to establish a connection to a PX4 vehicle through its physical (serial) or virtual (UDP) address and poll for internal information from the flight controller to decide when the system is ready to receive instructions.
 The mavsdk library exposes telemetry and other state information through asynchronous generators, which are defined in python as a convenient way to make asynchronous data producers and accessed with the \mintinline{python}{async for} syntax.
@@ -119,7 +119,7 @@ It connects automatically through localhost, but it can also be provided with an
 \subsection{Vision control module}
 The control module contains the main logic of the application and is in charge of converting the raw images obtained from the video source into commands for the pilot module.
 Two different types of control have been implemented.
-The first one is a proof-of-concept control solution, described in Section~\ref{subsec:hands}, that runs in offboard mode (see Section~\ref{subsec:offboard}) and translates some predefined hand gestures into simple commands for the aerial vehicle, of which the main purpose is to be able to test the interaction between all the components of the system in a more easily controlled environment, since it uses the simpler configuration of situating the computer with the controller outside of the vehicle.
+The first one is a proof-of-concept control solution, described in section \ref{sec:hands}, that runs in offboard mode (see section \ref{subsec:offboard}) and translates some predefined hand gestures into simple commands for the aerial vehicle, of which the main purpose is to be able to test the interaction between all the components of the system in a more easily controlled environment, since it uses the simpler configuration of situating the computer with the controller outside of the vehicle.
 The second control system consists of a follow solution more applicable to real-life scenarios where the control and the camera is onboard the vehicle and the presence of a person is detected in the images obtained from the perspective of the drone in order to be able to give the flight controller velocity commands to follow said person and maintain it centered in its view.
 
 The process followed in both solutions consists roughly of the same two parts.

@@ -16,7 +16,7 @@ To activate this new hardware-in-the-loop mode, QGroundControl contains a specif
 QGroundControl automatically detects the Pixhawk 4 board when it is connected to the computer through its Micro-USB port.
 It is as well required to make changes to the AirSim configuration for the simulator to work with HITL mode, namely, activating the option to accept connections through serial.
 To test the complete system configuration for HITL described in section \ref{sec:devenv} and outlined in figure \ref{fig:hitl-connections} the Pixhawk board needs an additional channel of communication to the computer dedicated to the Mavlink exchange with the dronecontrol application.
-The board will therefore have both a direct cable connection to the computer and a telemetry radio on its \verb|TELEM1| port with a wireless link to its counterparty radio connected to the computer.
+The board will therefore have both a direct cable connection to the computer and a telemetry radio on its \texttt{TELEM1} port with a wireless link to its counterparty radio connected to the computer.
 Since the AirSim simulator requires a higher update rate than the dronecontrol application it will employ the faster, cabled link, through which it can automatically connect to the board when it is started.
 The dronecontrol program will connect through the telemetry radio by specifying the serial port and its baudrate.
 Figure \ref{fig:hitl-setup-picture} shows all the connections mentioned.
@@ -31,7 +31,7 @@ After all the necessary connections are set up, the program can be started with 
 \mintinline{bash}{python -m dronecontrol follow --sim --serial COM[X]:57600}, where the exact COM port will vary depending on the particular USB port to which the telemetry radio is connected.
 
 
-With the results matching exactly those obtained in section \ref{sec:test-3-airsim}, and since the flight stack is now running on a physical controller, it is possible to add an RC antenna to the \verb|PPM RC| \todo{check port} port of the board to be able to fly the vehicle with a remote control unit after it has been bound to the receiver \footnote{\url{https://docs.px4.io/main/en/config/radio.html}}.
+With the results matching exactly those obtained in section \ref{sec:test-3-airsim}, and since the flight stack is now running on a physical controller, it is possible to add an RC antenna to the \texttt{PPM RC} \todo{check port} port of the board to be able to fly the vehicle with a remote control unit after it has been bound to the receiver \footnote{\url{https://docs.px4.io/main/en/config/radio.html}}.
 By configuring one of the switches in the RC unit to change to PX4's offboard flight mode, additional checks to the safety measures of interrupting autonomous flight on flight mode changes or loss of signal from the RC controller can be carried out.
 As can be seen in figure \ref{fig:rc-tests}, ....
 
@@ -89,13 +89,13 @@ Figure \ref{fig:power-supply} shows the power supply through the battery to the 
 % serial activation (enable MAVLINK 2 with baudrate)
 
 A similar connector is used to provide a channel for the Mavlink communication between the flight controller and the onboard computer.
-In this case, one end of the connector is attached to the \verb|TELEM2| port in the board and the TX/RX pins are attached to the UART pins on the Raspberry's GPIO header.
+In this case, one end of the connector is attached to the \texttt{TELEM2} port in the board and the TX/RX pins are attached to the UART pins on the Raspberry's GPIO header.
 For this serial connection to work, both the flight controller and the companion computer need some additional configuration.
-The Pixhawk needs to be configured through QGroundControl to enable a secondary Mavlink channel as, by default, only the \verb|TELEM1| port used by the telemetry radio is configured.
+The Pixhawk needs to be configured through QGroundControl to enable a secondary Mavlink channel as, by default, only the \texttt{TELEM1} port used by the telemetry radio is configured.
 The necessary parameters to modify and their values are collected in table \ref{tab:telem2-params}.
 On the Raspberry side, the serial port is configured to be used as a terminal by default.
-This can be disabled through the \verb|raspi-config| command-line utility (Advanced config -> Serial -> Disable\todo{Check option path on latest OS}).
-After that, the \verb|/dev/serial0| address can be used to communicate to the device attached to the UART pins at the baudrate configured through QGroundControl.
+This can be disabled through the \texttt{raspi-config} command-line utility (Advanced config -> Serial -> Disable\todo{Check option path on latest OS}).
+After that, the \texttt{/dev/serial0} address can be used to communicate to the device attached to the UART pins at the baudrate configured through QGroundControl.
 
 \todo[inline]{Fix table}
 \begin{table}[h!]

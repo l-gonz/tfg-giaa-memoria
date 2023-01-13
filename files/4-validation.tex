@@ -200,7 +200,7 @@ The final values for the coefficients for the forward controller will then be $K
 
 \subsection{PID tuning validation}
 
-As a final validation for the tuning obtained previously, in this section the \verb|test-controller| tool described in section \ref{subsec:test-tools} will be used check the step response of the controllers to different starting distances for the same coefficients.
+As a final validation for the tuning obtained previously, in this section the \texttt{test-controller} tool described in section \ref{subsec:test-tools} will be used check the step response of the controllers to different starting distances for the same coefficients.
 Additionally, for this test both of the controllers will be engaged simultaneously to verify that work well together.
 In the first instance, the positions will vary in the y axis, that is, the figure will move from left to right in the field of view of the vehicle.
 The values for the y coordinate to be tested will be between -150 and 150 units, in increments of 50.
@@ -208,7 +208,7 @@ The x coordinate of the figure in the simulated world will remain at $x=500$.
 
 Plots of the changes in normalized horizontal distance and normalized figure height detected by the person recognition algorithm during the time the vehicle takes to reach the target distance from the human figure for each of the positions tested can be seen in figure \ref{fig:validate-yaw}.
 It is considered that the vehicle has reached its target when the error is less than 2\% and the output speed at the controller is less than 10\% of its maximum.
-Furthermore, the whole testing process followed with the developed \verb|test-controller| tool can be seen in \todo{link video of test-controller tool}.
+Furthermore, the whole testing process followed with the developed \texttt{test-controller} tool can be seen in \todo{link video of test-controller tool}.
 
 Since each of the starting positions differ both in distance and orientation to the target, both of the controllers are engaged to reach it.
 The yaw controller then introduces a negative yaw velocity when the figure is on the left half of the camera's field of view and a positive yaw velocity when the figure is on the right half to reach the target horizontal distance of 0.5 (figure centered in the image received from the camera);
@@ -228,7 +228,7 @@ This shows that the controllers can recover from errors in the detection mechani
   \caption{}\label{fig:validate-yaw}
 \end{figure}
 
-Additionally, the \verb|test-controller| tool is run with varying positions in the x axis, which means that the tests are run with the human figure at different distances closer and further away from the vehicle, while maintaining in the center of its field of view (y position will remain 0 for the whole process).
+Additionally, the \texttt{test-controller} tool is run with varying positions in the x axis, which means that the tests are run with the human figure at different distances closer and further away from the vehicle, while maintaining in the center of its field of view (y position will remain 0 for the whole process).
 This means the yaw controller will not need to output any velocity.
 The changes over time in the input into the forward controller between each starting position and the target position are shown in figure \ref{fig:validate-fwd}.
 The figure reflects that there is a very big difference in how the controller reacts to closer positions and to further positions.
