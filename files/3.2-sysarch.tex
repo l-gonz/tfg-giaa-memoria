@@ -3,11 +3,11 @@
 
 \subsection{Top level}
 
-\todo[inline]{Draft, add QGC}
 \begin{figure}
   \centering
-  \includegraphics[keepaspectratio]{img/toplevel-sysarch.png}
-  \caption{Top level diagram of the hardware/software interactions}\label{fig:toplevel}
+  \includegraphics[width=0.9\textwidth,keepaspectratio]{img/sys-arch-diagram.jpg}
+  \caption{Top level diagram of the hardware/software interactions}
+  \label{fig:toplevel}
 \end{figure}
 
 The purpose of the Dronecontrol application is to be able to direct the movement of a \gls{uav} through the analysis of the images taken by a camera.
@@ -68,9 +68,7 @@ The radios are offered either as 915Mhz (Europe) or 433Mhz (US) so they can be u
 They offer 2-way full-duplex communication through an adaptive TDM UART interface and their antenna allows for an adjustable 100-mW-maximum output power and -117 dBm receive sensitivity.
 The link is established by default with a baudrate of 57600 (max bits per second on a serial channel) and it can provide air data rates of up to 250 kbps.
 
-\todo[inline]{Images of the radios}
-\todo[inline]{Images of the flight controller}
-\todo[inline]{Connection diagram / pictures}
+\todo[inline]{Take pictures: Images of the radios with computer, flight controller}
 
 \subsection{Onboard computer configuration}
 \label{subsec:onboard}
@@ -86,50 +84,86 @@ To be able to take into the air, the computer has to be light enough that its we
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth,keepaspectratio]{img/rpi4.png}
-  \caption{The Raspberry Pi 4 microcomputer, with its 40-pin GPIO header marked in red}\label{fig:rpi4}
+  \includegraphics[width=0.8\textwidth,keepaspectratio]{img/rpi4-pinout.png}
+  \caption{The Raspberry Pi 4 microcomputer, with its 40-pin GPIO header marked in red, and its pinout.}
+  \source{Adapted from \citeauthor{rpi4-pinout} \cite{rpi4-pinout}}
+  \label{fig:rpi4-pinout}
 \end{figure}
-\todo[inline]{Add pinout figure}
-The Raspberry Pi 4 model chosen for this project and shown in Figure~\ref{fig:rpi4} is one of the most popular small computers available in the market at the time and it is widely use in all kinds of robotics projects both for education and hobbyists.
-One of the most important advantages of using such a platform is the easy access to a great amount of manuals, guides and other support available online.
-In addition, the Raspberry's officially supported operating system, called Raspberry Pi OS, is a Debian-based version of Unix optimized for its ARM microcontroller, which simplifies the process of moving from an Ubuntu test environment into real flight experiments.
-Since this computer is designed to be easy to integrate with hardware projects it includes a 40-pin GPIO header (marked in red in Figure~\ref{fig:rpi4}) that can be programmed for connecting to any number of external devices.
 
-The Raspberry Pi is powered by a 5V input that can be provided either from its USB-C port or through one of two pins in the header dedicated to this (marked as DC 5v power on Figure~\ref{fig:pinout}.
+The Raspberry Pi 4 model chosen for this project and shown in Figure~\ref{fig:rpi4-pinout} is one of the most popular small computers available in the market at the time, and it is widely use in all kinds of robotics projects both for education and hobbyists.
+One of the most important advantages of using such a platform is the easy access to a great amount of manuals, guides and other support available online.
+In addition, the Raspberry's officially supported operating system, called Raspberry Pi OS, is a Debian-based version of Unix optimized for its ARM microcontroller, simplifying the process of moving from an Ubuntu test environment into real flight experiments.
+Since this computer is designed to be easy to integrate with hardware projects it includes a 40-pin GPIO header (marked in red in Figure~\ref{fig:rpi4-pinout}) that can be programmed for connecting to any number of external devices.
+
+\todo[inline]{Write: power management, secondary battery}
+The Raspberry Pi is powered by a 5V input that can be provided either from its USB-C port or through one of two pins in the header dedicated to this (marked as "5v" on figure \ref{fig:rpi4-pinout}.
 In the case of the particular vehicle build used in this project, the power management board used (the Holybro PM07 \footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}}) also provides 5V to the flight controller, as well as powering the ESCs to the motors, and counts with two power outputs so one of them can be connected to the flight controller's \texttt{POWER1} port and the other to the Raspberry Pi's pins through a custom-made connector.
-\todo[inline]{Power management: more about this when it works}
+
 
 In regards to the camera that will fly onboard the vehicle, there are many possibilities to chose from.
 The most important characteristics that should be looked for are a small weight and simple plug-and-play interaction with the onboard computer.
-For the tests carried out and detailed in Section~\ref{chap:validation} a Logitech 1080p webcam \todo{Exact model and link} has been used.
-Since the frame of the Holybro X500 is not prepared by default to include an onboard camera, it became necessary to design a support to hang from the central rods of the vehicle frame where the camera could be attached securely during flight.
-\todo[inline]{Pictures and 3D model}
+The camera used for the tests carried out and detailed in section \ref{chap:validation} is a Logitech C920 1080p webcam \footnote{\url{https://www.logitech.com/es-es/products/webcams/c920-pro-hd-webcam.960-001055.html}}.
+Since the frame of the Holybro X500 is not prepared by default to include an onboard camera,
+a custom support has been designed and 3D-printed from PLA plastic to be able to hang the camera from the central rods on the underside of the vehicle frame and ensure that it is attached securely during flight.
+The 3D model of the custom support can be seen in figure \ref{fig:camera-holder-3d} and the print-ready file can be found in the project repository in GitHub \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/data/camera-holder.stl}}.
+\todo{Final check: link works}
 
 \begin{figure}
   \centering
-  \includegraphics[keepaspectratio]{img/wiring-diagram.pdf}
-  \caption{A diagram of the wired connections from the Raspberry Pi 4 to the power management board (TELEM1) and the flight controller (TELEM2).}\label{fig:wiring}
+  \includegraphics[width=0.6\textwidth, keepaspectratio]{img/cam-holder.jpg}
+  \caption{3D model for the camera support designed for the Holybro X500 frame.}
+  \label{fig:camera-holder-3d}
 \end{figure}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth,keepaspectratio]{img/wiring-diagram.jpg}
+  \caption{A diagram of the wired connections from the Raspberry Pi 4 to the secondary battery and the flight controller (\texttt{TELEM2}).}
+  \label{fig:wiring}
+\end{figure}
+
+
 The second wired connection that needs to be established for this configuration is between the flight controller and the companion computer so the Mavlink messages can be exchanged.
 As it is desirable to be able to maintain a wireless link to the vehicle even while it is being controlled by the onboard computer, the telemetry radio is kept connected to the \texttt{TELEM1} port of the flight controller and the companion computer is wired to the \texttt{TELEM2} port.
-This port is not configured to be used by default so it is necessary to modify the configuration of the Pixhawk board either through QGroundControl \todo{More about QGC in SotA} or the PX4 console. \todo{More about this in validation ????}
-The other end of the connector has three female Dupont wires that go into the TX/RX UART pins of the Raspberry Pi.
-A diagram of the connections to the companion computer can be seen in Figure~\ref{fig:wiring}.
-\todo[inline]{Description of 6 wires from connectors both power and telem}
+This port is not configured to be used by default so it is necessary to modify the configuration of the Pixhawk board either through QGroundControl or the PX4 console.
+\todo[inline]{Write: setup parameters to enable mavlink on telem2, configure baudrate}
 
-In comparison with the default baudrate of 57600 on the telemetry radio link established in the previous section the wired serial connection works at a baudrate of 921600, which means the data is transferred 16 times faster through the link.
-\todo{Main limitation is image processing though, so slower processing power from computer means slower responsiveness to movement all together. Any info about update rate from PX4? Does it depend on the link speed or is it constant?}
-\todo[inline]{Link to section in validation where onboard setup is done}
+The other end of the connector has three female Dupont wires that go into the TX/RX UART pins of the Raspberry Pi,
+according to mapping table \ref{tab:wiring-telem} between the 6 pins in the telemetry connection of the Pixhawk board and the corresponding GPIO pins in the Raspberry Pi header \cite{pixhawk-manual} \cite{pixhawk-px4}.
+A diagram of all the connections to the companion computer can be seen in figure \ref{fig:wiring}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{|ll||ll|}
+\hline
+\multicolumn{2}{|c||}{\textbf{TELEM2}}                                             & \multicolumn{2}{c|}{\textbf{GPIO header}}                                        \\ \hline \hline
+\multicolumn{1}{|c|}{\textit{Pin \#}} & \multicolumn{1}{c||}{\textit{Description}} & \multicolumn{1}{c|}{\textit{Description}} & \multicolumn{1}{c|}{\textit{Pin \#}} \\ \hline
+\multicolumn{1}{|l|}{1}               & VCC, +5V                                  & \multicolumn{1}{l|}{}                     &                                      \\ \hline
+\multicolumn{1}{|l|}{2}               & TX (out), +3.3V                           & \multicolumn{1}{l|}{GPIO15 (RXD0, UART)}  & 10                                   \\ \hline
+\multicolumn{1}{|l|}{3}               & RX (in), +3.3V                            & \multicolumn{1}{l|}{GPIO14 (TXD0, UART)}  & 8                                    \\ \hline
+\multicolumn{1}{|l|}{4}               & CTS (in), +3.3V                           & \multicolumn{1}{l|}{}                     &                                      \\ \hline
+\multicolumn{1}{|l|}{5}               & RTS (in), +3.3V                           & \multicolumn{1}{l|}{}                     &                                      \\ \hline
+\multicolumn{1}{|l|}{6}               & GND                                       & \multicolumn{1}{l|}{GND}                  & 6                                    \\ \hline
+\end{tabular}
+\caption{Mapping between the \texttt{TELEM2} port in the Pixhawk 4 board and the Rapberry Pi's GPIO header.}
+\label{tab:wiring-telem}
+\end{table}
+
+In comparison with the default baudrate of 57600 on the telemetry radio link established in the previous section the wired serial connection works at a baudrate of 921600, which means that data can be transferred 16 times faster through the link.
+%Main limitation is image processing though, so slower processing power from computer means slower responsiveness to movement all together. Any info about update rate from PX4? Does it depend on the link speed or is it constant?
+\todo[inline]{Final polish: link to performance section}
 
 The offboard configuration allowed the supervision of the output from the program while the vehicle was flying, since the computer stayed stationary on the ground, however in this configuration it is not possible to have a screen connected directly to the companion computer.
 To fix this situation and be able to monitor during flight, as well as being able to give input directly to the program, it is possible to make use of the WiFi receptor of the Raspberry Pi to configure a remote desktop and connect to it through another computer serving as a ground station;
 then the output from the camera and the image recognition can be seen in real time.
-A more detailed description of the configuration required can be found on Section~\ref{sec:devenv}.
-\todo[inline]{Is there a more detailed description ???}
+
+Figure \ref{fig:onboard-config} shows a summary of all the connections mentioned between the autopilot the companion computer, and their respective peripherals.
+\todo[inline]{Write: elaborate on the summary}
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth,keepaspectratio]{img/onboard-diagram.jpg}
-  \caption{Onboard configuration connections}\label{fig:onboard-config}
+  \caption{Onboard configuration connections}
+  \label{fig:onboard-config}
 \end{figure}
-

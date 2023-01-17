@@ -6,15 +6,16 @@
   \caption{Structure of the program}\label{fig:architecture}
 \end{figure}
 
-Figure~\ref{fig:architecture} shows the main modules the designed the software is composed of and how it interacts with the external libraries.
+\todo[inline]{Write: Describe the actual new diagram, blue vs green arrows, data flow, ...}
+
+Figure \ref{fig:architecture} shows the main modules the designed the software is composed of and how it interacts with the external libraries.
 The application consists of three basic parts: 
 the pilot module, in charge of sending instructions to the flight controller and receiving back information on position and state through the \texttt{mavsdk} library, 
 a video source module that handles the retrieval of images from different sources and the necessary processing for image analysis, 
 and a control module that directs the interaction between the other two to transform the pixel information first into position points through the \texttt{mediapipe} library and then into instructions for the pilot.
-The upper part of the diagram in Figure~\ref{fig:architecture} shows how the program modules receive input and send instructions to the hardware systems whether these are simulated or not.
+The upper part of the diagram in figure \ref{fig:architecture} shows how the program modules receive input and send instructions to the hardware systems whether these are simulated or not.
 Other smaller utilities have also been developed to help test how the systems interact with each other and calibrate different parts of the control behaviour.
-\todo[inline]{Command-line interface summary here and link to appendix with full help extract.}
-These different parts that make up the dronecontrol app are detailed in the next sections.
+Appendix \ref{app:cli} contains the user manual with all the application's options.
 
 \subsection{Pilot module}
 The purpose of the pilot module is to provide access to the rest of the application to send and receive messages from the PX4 controller through the MavSDK library.
@@ -103,9 +104,9 @@ There are three classes of video sources implemented: file, simulator and camera
 
 \begin{figure}
   \centering
-  \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
-  \caption{Diagram of inheritance on the video source classes available to retrieve image data.}\label{fig:video-source-inheritance}
-  \todo[inline]{Make inheritance schema}
+  \includegraphics[width=8cm, keepaspectratio]{img/uml-video-source.jpg}
+  \caption{Diagram of inheritance on the video source classes available to retrieve image data.}
+  \label{fig:video-source-inheritance}
 \end{figure}
 
 The \mintinline{python}{FileSource} class is able to open a video file stored in the companion computer and provides images taken frame by frame from it until the video ends.
@@ -136,30 +137,18 @@ In order to hold position while in this mode, the vehicle must receive a stream 
 
 Sections~\ref{sec:hands} and \ref{sec:follow} offer a more complete explanation of the control module used by the two different solutions developed.
 
-
-\subsection{Test tools}
+\subsubsection{Camera-testing tool}
 \label{subsec:test-tools}
 
 Several additional utilities have been added to the dronecontrol program to facilitate the development and testing process of the two main control solutions.
-
 The first tool is accessed through the command \mintinline{bash}{dronecontrol tools test-camera} and can be used for testing the connection between the computer and the camera, as well as the performance of the MediaPipe hand and pose machine learning solution on real time images.
 It is as well possible to take images and record video from the live camera feed for later analysis and it allows connecting to a physical or simulated flight controller to send basic commands through keyboard input like takeoff and landing.
 
-\todo[inline]{Code from tool}
-
-Two additional utilities have been developed for tuning and measuring the performance of the PID controllers.
-\todo[inline]{How they work and code}
-
-The process of tuning the PID controllers is described in section~\ref{sec:test-1-pid}
-
-
-\todo[inline]{Tune PID tool}
-\todo[inline]{Test PID tool}
+\todo[inline]{Write: Add control functionality, describe connection options, link to cli in appendix}
+\todo[inline]{Polish: Link some code from test-camera tool}
 
 
 
-\subsection{Safety mode}
-\label{subsec:safety}
 
 
 \section{Proof of concept: hand-gesture solution}
@@ -170,23 +159,27 @@ For that reason it is designed to be able to be run in real flight with the mini
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/hand_landmarks.png}
-  \caption{Landmarks extracted from detected hands by the MediaPipe hand solution}\label{fig:hand-landmarks}
+  \caption{Landmarks extracted from detected hands by the MediaPipe hand solution.}
+  \source{Adapted from \citetitle{mp-hands} \cite{mp-hands}.}
+  \label{fig:hand-landmarks}
 \end{figure}
 
-This control module runs on a loop that continuously polls for a new frame from the chosen video source and feeds it to the hand detection functionality from MediaPipe.
-If a hand is detected in the images, 2D coordinates are extracted according to the map shown in Figure~\ref{fig:hand-landmarks}.
+This control module runs on a loop that continuously polls for a new frame from the chosen video source and feeds it to the hand detection functionality from MediaPipe \cite{mp-hands-paper}.
+If a hand is detected in the images, 2D coordinates are extracted according to the map shown in figure~\ref{fig:hand-landmarks}.
 These landmarks are then converted into different discrete gestures like open palm, closed fist or an specific finger pointing different directions.
 When a new gesture is detected, the command assigned to it is queued to the pilot module and executed as soon as the previous commands end their execution.
 
-The conversion between landmarks and gestures is performed by drawing vectors from the base of each of the fingers to their tips as well as from the base of the hand (wrist feature) to the base of the fingers and using the dot product vector operation to calculate the relative angles between each finger and the base of the hand, as shown in Figure~\ref{fig:vector-calcs}.
+The conversion between landmarks and gestures is performed by drawing vectors from the base of each of the fingers to their tips as well as from the base of the hand (wrist feature) to the base of the fingers and using the dot product vector operation to calculate the relative angles between each finger and the base of the hand, as shown in figure~\ref{fig:vector-calcs}.
 By comparing the calculated angles to a threshold, it is possible to detect whether each individual finger is extended or folded, as well as the general direction it is pointing towards.
 The open hand gesture, for example, can then be defined as all five fingers extended, that is, all five vectors defined by the fingers sharing the same approximate angle with the vector from the base of the hand to that finger.
 
 \begin{figure}
   \centering
   \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
-  \caption{Vector calculations}\label{fig:vector-calcs}
+  \caption{Vector calculations}
+  \label{fig:vector-calcs}
 \end{figure}
+\todo[inline]{Draw: hand vectors}
 
 The full list of gestures detected by the program by calculating these angles is as follows:
 \begin{itemize}
@@ -200,9 +193,13 @@ The full list of gestures detected by the program by calculating these angles is
     \item Thumb pointing to the left: same as the previous gesture, but the drone pitches backward when the thumb point to the left of the screen.
 \end{itemize}
 
-\todo[inline]{Include some code for the module after cleanup, vector calcs and/or running loop}
-\todo[inline]{Include diagram of angles for each pointy gesture ?????}
-\todo[inline]{Include images of program output image with drawn lines for gestures}
+\todo[inline]{Write: add loop code and link to first paragraph}
+\todo[inline]{Draw: Include diagram of angles for each pointy gesture ?????}
+\todo[inline]{Images: simulators program output image with drawn lines for gestures}
+\todo[inline]{Video: hand control in simulator}
+
+
+
 
 
 \section{Final solution: human following}
@@ -218,17 +215,20 @@ In this mode the vehicle will attempt to find a single person in its field of vi
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/pose-landmarks.png}
-  \caption{Landmarks extracted from detected human figures by the MediaPipe Pose solution}\label{fig:pose-landmarks}
+  \caption{Landmarks extracted from detected human figures by the MediaPipe Pose solution}
+  \source{Adapted from \citetitle{mp-pose} \cite{mp-pose}}
+  \label{fig:pose-landmarks}
 \end{figure}
 
-During the program execution and while the offboard mode and the follow mechanism is engaged, the system continuously retrieves images from the offboard camera that are fed into the MediaPipe Pose computer vision library to extract pose landmarks from it in the form of 2D coordinates.
+During the program execution and while the offboard mode and the follow mechanism is engaged, the system continuously retrieves images from the offboard camera that are fed into the MediaPipe Pose \cite{mp-pose-paper} computer vision library to extract pose landmarks from it in the form of 2D coordinates.
 Figure~\ref{fig:pose-landmarks} shows the available extracted features and their correspondence to the human body.
 These coordinates are used to draw a bounding rectangle around the detected person, as well as for validating that the received landmarks match the general pose of a person standing up.
 To prevent unwanted movements, the vehicle will always stop and hover every time it becomes impossible to detect a person in the image received or its features do not match the expected geometry.
-\todo[inline]{Images of valid and invalid person detection from simulator camera output}
-After a valid bounding box has been defined around the target person, its position in respect to the field of view of the camera is sent to a control mechanism composed of two independent PID controllers (\todo{Formula and coefficients} the theory behind these controllers is explained in section~\ref{subsec:pid-theory}).
+\todo[inline]{Images: valid and invalid person detection from simulator camera output}
+After a valid bounding box has been defined around the target person, its position in respect to the field of view of the camera is sent to a control mechanism composed of two independent PID controllers. The theory behind these controllers is explained in section~\ref{subsec:pid-tools}).
 
-The first of the PID controllers is in charge of controlling the yaw velocity of the vehicle to respond to horizontal movements in the x direction of the image. \todo{coordinate system figure}
+The first of the PID controllers is in charge of controlling the yaw velocity of the vehicle to respond to horizontal movements in the x direction of the image. 
+\todo[inline]{Draw: coordinate system figure}
 It takes as input the x coordinate of the center point of the bounding box and its target is the middle point of the screen.
 This controller therefore will output velocity commands aimed to maintain the bounding box centered horizontally in its field of view.
 
@@ -237,4 +237,38 @@ It takes as input the height of the calculated bounding box as a percentage of t
 The exact percentage of the image height that is covered by a person at a given distance depends on the camera used and needs to be obtained empirically for each separate video source.
 
 \todo[inline]{Add some controller and follow code to show and explain}
-\todo[inline]{PID library ???}
+\todo[inline]{Images: simulator and output, link video of run}
+
+
+
+\subsubsection{PID tools}
+
+Two additional utilities have been developed for tuning and measuring the performance of the PID controllers.
+\todo[inline]{Write: PID tools, how they work and code}
+\todo[inline]{PID library, Formula and coefficients}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{equation}
+    u(t)= K_p e(t) + K_i \int{e(t)dt} + K_d \frac{de(t)}{dt}
+%    \caption{Formula for the output from a PID controller}
+    \label{eq:pid}
+\end{equation}
+%% Where: $u(t)=$ PID control variable
+        % $K_p=$ proportional gain
+        % $K_i=$ integral gain
+        % $K_d=$ derivative gain
+        % $e(t)=$ error value
+        % $de=$ change in error value
+        % $dt=$ change in time
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The process of tuning the PID controllers is described in section~\ref{sec:test-1-pid}
+
+
+\subsection{Safety mode}
+\label{subsec:safety}
+
+\todo[inline]{Write: safety mechanisms, speed limits on pids, loss of signal, loss of vision, ...}
+\todo{}
+\todo{}
+

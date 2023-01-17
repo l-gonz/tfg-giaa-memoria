@@ -1,6 +1,5 @@
 \section{Methodology}
 
-\todo[inline]{Cite pictures}
 This section describes the software programs and libraries employed in this project, as well as the hardware used to carry out flight tests for the developed application.
 
 \subsection{Software}
@@ -54,7 +53,8 @@ Figure \ref{fig:qgc-map} shows the interface of the application on a Windows sys
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth,keepaspectratio]{img/qgc-map.png}
-  \caption{Map interface for the QGroundControl program}\label{fig:qgc-map}
+  \caption{Main interface for the QGroundControl program}
+  \label{fig:qgc-map}
 \end{figure}
 
 \subsubsection{Unreal Engine}
@@ -90,11 +90,6 @@ It offers a framework designed specifically for complex perception pipelines, li
 GitHub is an online hosting service using the distributed version control system Git for software development. It is currently the largest source code host with over 350 million repositories.
 
 
-\subsubsection{PID controller}
-\label{subsec:pid-theory}
---
-
-
 \subsubsection{OpenCV}
 \label{subsec:opencv}
 OpenCV is an open-source library for computer vision, machine learning and image processing that counts with over 2000 algorithms. 
@@ -109,51 +104,52 @@ This makes it easy to work together with other libraries that use Numpy like Mat
 \subsubsection{Pixhawk 4}
 \label{subsec:pixhawk}
 The Pixhawk 4 is an advanced autopilot module designed and produced by Holybro\footnote{\url{https://shop.holybro.com/}}, a UAV parts and kits manufacturer, in collaboration with the Dronecode Project team.
-It is based on the Pixhawk-project \footnote{\url{https://pixhawk.org/}} FMUv5 open hardware design and it is optimized to run PX4 on the NuttX \footnote{\url{https://nuttx.apache.org/}} operating system by the Apache Foundation.
-The Pixhawk 4 has an integrated accelerometer/gyroscope, a magnetomer and a barometer, which enables it to drive an unmanned vehicle using the PX4 flight stack natively without any other sensors.
-It includes as well many connector sockets to extend its features with additional sensors, input/output devices or a companion computer.
+It is based on the Pixhawk-project \footnote{\url{https://pixhawk.org/}} FMUv5 open hardware design, and it is optimized to run PX4 on the NuttX \footnote{\url{https://nuttx.apache.org/}} operating system by the Apache Foundation.
+The Pixhawk 4 has an integrated accelerometer/gyroscope, a magnetometer, and a barometer, which enables it to drive an unmanned vehicle using the PX4 flight stack natively without any other sensors.
+It includes as well many connector sockets to extend its features with additional sensors, input/output devices, or a companion computer.
 Figure \ref{fig:pixhawk4} shows the autopilot module with all its connectors and buttons.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth,keepaspectratio]{img/pixhawk4.jpg}
-  \caption{Side views and connector map for the Pixhawk 4 autopilot module}\label{fig:pixhawk4}
+  \includegraphics[width=0.6\textwidth,keepaspectratio]{img/pixhawk4.jpg}
+  \caption{Side views and connector map for the Pixhawk 4 autopilot module.}
+  \source{Adapted from \citetitle{px4-guide} \cite{px4-guide}.}
+  \label{fig:pixhawk4}
 \end{figure}
-\todo[inline]{Cite}
-% \url{https://docs.px4.io/main/en/flight_controller/pixhawk4.html}
 
 
 \subsubsection{Holybro X500}
 \label{subsec:x500}
-The Holybro X500 \footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} is a PX4 development kit for a quadcopter build made up of a full carbon-fiber twill frame and the Pixhawk 4 flight controller.
-The kit also includes a power management board, four motors, a GPS module, an RC receiver and a telemetry radio.
+The Holybro X500 \footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} is a quadcopter designed by Holybro to use with PX4.
+It comes as a ready-to-assemble development kit made up of a full carbon-fiber twill frame and the Pixhawk 4 flight controller.
+The kit includes as well a power management board, four motors, a GPS module, an RC receiver, and a telemetry radio.
 It has a build time of approximately 3 hours and does not require any specialized tools for the process.
-Figure \ref{fig:x500} shows all the parts that make up the kit.
+Figure \ref{fig:x500} shows the final result of the building process.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth,keepaspectratio]{img/x500-dev-kit.jpg}
-  \caption{Parts included in the X500 Development Kit. Image provided by the Dronecode Test Flight Team.}\label{fig:x500}
+  \includegraphics[width=0.7\textwidth,keepaspectratio]{img/X500-assembled.jpg}
+  \caption{Fully assembled X500 kit.}
+  \source{Adapted from \citetitle{px4-guide} \cite{px4-guide}.}
+  \label{fig:x500}
 \end{figure}
-\todo[inline]{Cite}
-% https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html#holybro-x500-pixhawk4-build
 
 \subsubsection{Raspberry Pi 4}
 \label{subsec:rpi}
 The Raspberry Pi \footnote{\url{https://www.raspberrypi.com/products/raspberry-pi-4-model-b/}} is a line of single-board computers that stands out thanks to its affordable price,
-compact size and maker-friendly design. The model 4B is an improved version of its predecessors,
-getting a major increase in processing power, enhanced video output and peripheral connectivity,
+compact size, and maker-friendly design. Model 4B is an improved version of its predecessors,
+getting a significant increase in processing power, enhanced video output, and peripheral connectivity
 while maintaining the same low price and tiny size offered on past models.
 This small computer comes as a bare circuit board,
-without any sort of housing or add-ons such as a cooling fan or a power button,
-but it includes USB, HDMI and Ethernet ports and both Wi-Fi and Bluetooth connectivity,
+without any housing or add-ons, such as a cooling fan or a power button,
+but it includes USB, HDMI, and Ethernet ports and both Wi-Fi and Bluetooth connectivity,
 as well as a 40-pin GPIO \gls{gpio} header, a row of input/output pins that provides direct access for connecting external devices.
 The Raspberry Pi runs natively Raspbian OS, a free operating system based on Debian optimized for the Pi hardware, but it is compatible with other standard flavours of Linux.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth,keepaspectratio]{img/rpi4b.jpg}
-  \caption{Raspberry Pi 4 Model B. Image by OKdo}\label{fig:rpi4b}
+  \includegraphics[width=0.4\textwidth,keepaspectratio]{img/rpi4b.jpg}
+  \caption{Raspberry Pi 4 Model B}
+  \source{Wikimedia Commons \cite{rpi4-side}.}
+  \label{fig:rpi4b}
 \end{figure}
-\todo[inline]{Cite}
-% \url{https://www.okdo.com/p/raspberry-pi-4-model-b-8gb-ram/}

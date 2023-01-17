@@ -36,9 +36,10 @@ Figure \ref{fig:x500-dev-kit} shows all the parts that make up the complete vehi
 \begin{figure}
   \centering
   \includegraphics[width=.6\textwidth, keepaspectratio]{img/x500-dev-kit.jpg}
-  \caption{Development kit for the Holybro X500}\label{fig:x500-dev-kit}
+  \caption{Development kit for the Holybro X500.}
+  \source{Adapted from \citetitle{px4-guide} \cite{px4-guide}.}
+  \label{fig:x500-dev-kit}
 \end{figure}
-\todo{Cite}
 
 
 After all the standard parts are put together, the custom additions can be attached as well using the remaining space in the frame.
@@ -50,12 +51,10 @@ This port will be connected with the Raspberry Pi's original power cable to its 
 As detailed in \ref{sec:test-5-rpi}, this current is enough to power the connected camera and run the developed software with an acceptable performance.
 This battery will be located underneath the autopilot, centered in the frame of the vehicle so its weight destabilizes it as little as possible, as can be seen in figure \ref{fig:full-build}.
 
-The camera also needs to be attached to the frame of the vehicle in a secure way.
-For this purpose, a support has been designed and 3D-printed from PLA plastic.
+The camera also needs to be attached to the frame of the vehicle in a secure way, with the custom support described in section \ref{subsec:onboard}.
 The holder attaches to the slide bars underneath the main frame of the vehicle so that the camera and its substantial weight is situated as close to the center of mass as possible, behind the GPS platform.
 The battery powering the engines and the autopilot, which is located on the underside of the carbon frame, is also moved slightly backwards from its centered position to make space for the camera and compensate its weight in the front.
 Figure \ref{fig:camera-holder-closeup} shows how the underside of the vehicle looks with the camera attached.
-The 3D model of the custom support can be seen in figure \ref{fig:camera-holder-3d} and the print-ready file can be found in the project repository in GitHub. \todo{Link 3D model in repo}
 
 \begin{figure}
   \centering
@@ -69,17 +68,11 @@ The 3D model of the custom support can be seen in figure \ref{fig:camera-holder-
   \caption{}\label{fig:camera-holder-closeup}
 \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{}\label{fig:camera-holder-3d}
-\end{figure}
-
 
 After the vehicle has been built, there are additional installation and calibration steps that must be carried out before it can fly, also contained in the guide mentioned above.
 The QGroundControl \ref{subsec:qgc} ground station application contains a configuration screen with all the calibration tools needed for the vehicle setup, as shown in figure \ref{fig:qgc-config}.
 The vehicle can be configured either by connecting the flight controller directly to the computer via the micro-USB port on its side or through a wireless connection by plugging the companion telemetry radio to the computer running QGroundControl.
-Before any flight can be carried out, any simulation modes previously activated for testing must be deactivated from the Safety section of the vehicle configuration.
+Before any flight can be carried out, any simulation modes previously activated for testing must be deactivated from the Safety section of the vehicle configuration and the \texttt{MAV\_1\_CONFIG} parameter set to \texttt{TELEM2}, as described in section \ref{subsec:offboard}.
 
 
 \begin{figure}

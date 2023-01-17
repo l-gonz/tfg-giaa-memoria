@@ -142,7 +142,8 @@
 %%-- Configuración fragmentos de código
 %%-- Minted necesita Python Pygments instalado en el sistema para funcionar
 %%-- En Overleaf ya está instalada esta dependencia
-% \usepackage[center, labelfont=bf]{caption}
+\usepackage[labelfont=bf]{caption}
+\newcommand{\source}[1]{\vspace{-3pt} \caption*{Source: {#1}} }
 \usepackage{minted}
 \usemintedstyle{vs}
 

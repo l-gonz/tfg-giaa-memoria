@@ -15,8 +15,6 @@ In the first section, the application is tested in a purely simulated environmen
   \caption{Outline for the validation process}\label{fig:validation-chart}
 \end{figure}
 
-\todo[inline]{Add connection diagrams to each of the testing section below}
-
 \input{files/4.1-sitl.tex}
 \clearpage
 
@@ -61,22 +59,6 @@ Figure~\ref{fig:tune-ref-pos-yaw} shows the starting position of the simulated e
 On the left-most panel of figure \ref{fig:tune-ref-pos-yaw}, the dronecontrol application shows that the input to the yaw controller is 0.62 at this position.
 The controller will then need to output a positive yaw velocity to center the person in its field of view. 
 Since this offset position to the right produces a negative difference but requires a positive velocity to counteract, the coefficients for the yaw controller will need to be negative, so that an increased horizontal position results in a positive yaw velocity to decrease it, as indicated by equation \ref{eq:pid}.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\todo[inline]{Move to PID explanation theory (3.3 ???)}
-\begin{equation}
-    u(t)= K_p e(t) + K_i \int{e(t)dt} + K_d \frac{de(t)}{dt}
-%    \caption{Formula for the output from a PID controller}
-    \label{eq:pid}
-\end{equation}
-%% Where: $u(t)=$ PID control variable
-        % $K_p=$ proportional gain
-        % $K_i=$ integral gain
-        % $K_d=$ derivative gain
-        % $e(t)=$ error value
-        % $de=$ change in error value
-        % $dt=$ change in time
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
 
 \begin{figure}
