@@ -86,7 +86,7 @@ To be able to take into the air, the computer has to be light enough that its we
   \centering
   \includegraphics[width=0.8\textwidth,keepaspectratio]{img/rpi4-pinout.png}
   \caption{The Raspberry Pi 4 microcomputer, with its 40-pin GPIO header marked in red, and its pinout.}
-  \source{Adapted from \citeauthor{rpi4-pinout} \cite{rpi4-pinout}}
+  \source{Adapted from \citetitle{rpi4-pinout} \cite{rpi4-pinout}}
   \label{fig:rpi4-pinout}
 \end{figure}
 
@@ -95,9 +95,15 @@ One of the most important advantages of using such a platform is the easy access
 In addition, the Raspberry's officially supported operating system, called Raspberry Pi OS, is a Debian-based version of Unix optimized for its ARM microcontroller, simplifying the process of moving from an Ubuntu test environment into real flight experiments.
 Since this computer is designed to be easy to integrate with hardware projects it includes a 40-pin GPIO header (marked in red in Figure~\ref{fig:rpi4-pinout}) that can be programmed for connecting to any number of external devices.
 
-\todo[inline]{Write: power management, secondary battery}
-The Raspberry Pi is powered by a 5V input that can be provided either from its USB-C port or through one of two pins in the header dedicated to this (marked as "5v" on figure \ref{fig:rpi4-pinout}.
-In the case of the particular vehicle build used in this project, the power management board used (the Holybro PM07 \footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}}) also provides 5V to the flight controller, as well as powering the ESCs to the motors, and counts with two power outputs so one of them can be connected to the flight controller's \texttt{POWER1} port and the other to the Raspberry Pi's pins through a custom-made connector.
+
+The Raspberry Pi is powered by a 5V input that can be provided either from its USB-C port or through one of two pins in the header dedicated to this (marked as "5v Power" on figure \ref{fig:rpi4-pinout}.
+In the case of the particular vehicle build used in this project, the power management board supplying the energy (the Holybro PM07 \footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}}) also provides 5V to the flight controller, as well as powering the ESCs to the motors.
+It counts with two power outputs: one of them connected to the flight controller's \texttt{POWER1} port and another one that remains unused.
+A first attempt at supplying current to the Raspberry Pi was tested initially with a direct connection between the second, free output on the power module and the powering pins on the GPIO header with a custom connector.
+However, the power supply ended up being too unstable for the Pi board, resulting in frequent dips in the supplied current that would affect the processing capabilities of the companion computer.
+The solution was to add an additional, secondary battery to the build that provides power through an USB cable.
+This configuration allows the Raspberry to receive power by its default way, through the regulated USB-C port.
+The disadvantage is that it add one more piece of equipment of substantial weight that needs to be secured to the vehicle's frame and carried into the air while in flight.
 
 
 In regards to the camera that will fly onboard the vehicle, there are many possibilities to chose from.
@@ -127,7 +133,13 @@ The 3D model of the custom support can be seen in figure \ref{fig:camera-holder-
 The second wired connection that needs to be established for this configuration is between the flight controller and the companion computer so the Mavlink messages can be exchanged.
 As it is desirable to be able to maintain a wireless link to the vehicle even while it is being controlled by the onboard computer, the telemetry radio is kept connected to the \texttt{TELEM1} port of the flight controller and the companion computer is wired to the \texttt{TELEM2} port.
 This port is not configured to be used by default so it is necessary to modify the configuration of the Pixhawk board either through QGroundControl or the PX4 console.
-\todo[inline]{Write: setup parameters to enable mavlink on telem2, configure baudrate}
+The required parameter to change in the board is mainly the \texttt{MAV\_1\_CONFIG}, which configures the serial port on which to run a second instance of MAVLink (primary instance is configured with \texttt{MAV\_0\_CONFIG}), and defaults to 0 (disabled) and should be set to 102 for TELEM 2.
+This MAVLink instance is set to Onboard mode by default, which is the appropriate mode for communicating with an offboard computer, instead of the Normal mode running on the primary MAVLink instance through \texttt{TELEM1} to communicate with QGroundControl.
+Another parameter to take into account is the \texttt{SER\_TEL2\_BAUD}, which regulates the baud rate of the \texttt{TELEM2} port.
+The default rate is 921600, and it needs to be used when establishing connection in the Dronecontrol application through the MAVSDK library.
+PX4 provides a complete overview of all the available parameters for the board configuration in their documentation \cite{px4-docs-params}.
+
+
 
 The other end of the connector has three female Dupont wires that go into the TX/RX UART pins of the Raspberry Pi,
 according to mapping table \ref{tab:wiring-telem} between the 6 pins in the telemetry connection of the Pixhawk board and the corresponding GPIO pins in the Raspberry Pi header \cite{pixhawk-manual} \cite{pixhawk-px4}.

@@ -124,3 +124,7 @@ Inside the project in WSL, the flight controller can be run for AirSim by using 
 sh simulator.sh --airsim
 \end{minted}
 Once both the simulator and the flight controller are connected, an RC controller or QGroundControl can be used to control the vehicle, and other offboard applications like Dronecontrol can be attached to send any desired MAVLink commands.
+
+For HITL, the \texttt{UseSerial} setting should be set to true in the AirSim configuration and the Pixhawk board connected to an USB port in computer, as well as HITL mode enabled in the board from QGroundControl.
+Then, the simulator will attach automatically to the board after starting play mode in Unreal.
+Once the simulation has started, there is no noticeable change between the simulated flight controller in the computer (SITL mode) and the one running in the physical board (HITL mode).
