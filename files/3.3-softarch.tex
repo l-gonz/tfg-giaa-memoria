@@ -3,7 +3,7 @@
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/software-arch.jpg}
-  \caption{Structure of the program}\label{fig:architecture}
+  \caption{Structure of the Dronecontrol application and its interactions with the necessary additional software for running in a simulation (green) or in an actual vehicle (blue).}\label{fig:architecture}
 \end{figure}
 
 \todo[inline]{Write: Describe the actual new diagram, blue vs green arrows, data flow, ...}
@@ -11,11 +11,13 @@
 Figure \ref{fig:architecture} shows the main modules the designed the software is composed of and how it interacts with the external libraries.
 The application consists of three basic parts: 
 the pilot module, in charge of sending instructions to the flight controller and receiving back information on position and state through the \texttt{mavsdk} library, 
-a video source module that handles the retrieval of images from different sources and the necessary processing for image analysis, 
+a video source module that handles the retrieval of images from different sources and the necessary processing for image analysis,
 and a control module that directs the interaction between the other two to transform the pixel information first into position points through the \texttt{mediapipe} library and then into instructions for the pilot.
-The upper part of the diagram in figure \ref{fig:architecture} shows how the program modules receive input and send instructions to the hardware systems whether these are simulated or not.
+The upper part of the diagram in figure \ref{fig:architecture} shows the flow of information between the Dronecontrol application and the external systems, with green lines representing its path in a simulated workflow and the blue ones indicating the alternative path for the information in a system with actual quadcopter hardware.
+Purple arrows show the input/output of each module within the developed application and how they interconnect with each other.
 Other smaller utilities have also been developed to help test how the systems interact with each other and calibrate different parts of the control behaviour.
-Appendix \ref{app:cli} contains the user manual with all the application's options.
+These are described in section \ref{subsec:test-tools}.
+A user manual with all the options available in the application can be found in Appendix \ref{app:cli}.
 
 \subsection{Pilot module}
 The purpose of the pilot module is to provide access to the rest of the application to send and receive messages from the PX4 controller through the MavSDK library.
@@ -141,12 +143,14 @@ Sections~\ref{sec:hands} and \ref{sec:follow} offer a more complete explanation 
 \label{subsec:test-tools}
 
 Several additional utilities have been added to the dronecontrol program to facilitate the development and testing process of the two main control solutions.
-The first tool is accessed through the command \mintinline{bash}{dronecontrol tools test-camera} and can be used for testing the connection between the computer and the camera, as well as the performance of the MediaPipe hand and pose machine learning solution on real time images.
-It is as well possible to take images and record video from the live camera feed for later analysis and it allows connecting to a physical or simulated flight controller to send basic commands through keyboard input like takeoff and landing.
-
-\todo[inline]{Write: Add control functionality, describe connection options, link to cli in appendix}
-\todo[inline]{Polish: Link some code from test-camera tool}
-
+The first tool is accessed through the command \mintinline{bash}{dronecontrol tools test-camera} and can be used for testing the connection between the computer, the flight stack and the camera without using any self-guided control mechanism, as well as evaluating the performance of the MediaPipe hand and pose machine learning solution on real time images.
+It is also possible to take images and record video from the live camera feed for later analysis.
+Through the command-line options, the test tool can be configured to use any of the three available video sources: camera, simulator or a video file recorded by using the tool itself,
+to connect to an optional hardware or simulated PX4 flight controller by specifying a connection string or IP, respectively,
+to run either in a host computer or a WSL subsystem,
+and to process incoming images with the hand or pose recognition software.
+While the tool is running, the keyboard can be used to send basic commands to a connected vehicle like takeoff, landing or moving along any of its three axis.
+A full breakdown of all the tool's options can be found in Appendix \ref{app:cli}.
 
 
 
@@ -241,7 +245,7 @@ The exact percentage of the image height that is covered by a person at a given 
 
 
 
-\subsubsection{PID tools}
+\subsection{PID tools}
 
 Two additional utilities have been developed for tuning and measuring the performance of the PID controllers.
 \todo[inline]{Write: PID tools, how they work and code}
