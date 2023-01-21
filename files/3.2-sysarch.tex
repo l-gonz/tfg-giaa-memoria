@@ -68,6 +68,14 @@ The radios are offered either as 915Mhz (Europe) or 433Mhz (US) so they can be u
 They offer 2-way full-duplex communication through an adaptive TDM UART interface and their antenna allows for an adjustable 100-mW-maximum output power and -117 dBm receive sensitivity.
 The link is established by default with a baudrate of 57600 (max bits per second on a serial channel) and it can provide air data rates of up to 250 kbps.
 
+Figure \ref{fig:offboard-config} shows a summary of all the connections between the PX4 software, the Dronecontrol application, their hardware platforms, and their respective peripherals both onboard the vehicle and at the ground station for the offboard computer configuration setup.
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth,keepaspectratio]{img/offboard-diagram.jpg}
+  \caption{Offboard configuration connections}
+  \label{fig:offboard-config}
+\end{figure}
+
 \todo[inline]{Take pictures: Images of the radios with computer, flight controller}
 
 \subsection{Onboard computer configuration}
@@ -76,11 +84,11 @@ The link is established by default with a baudrate of 57600 (max bits per second
 The second way of configuring the interaction between the flight controller and the companion computer consists of integrating both together on board the \gls{uav}.
 In this case, the connection is done through a direct cable between the serial port in the flight controller and a USB port in the companion computer.
 The camera will then be connected via cable as well to the companion computer and oriented in the vehicle in a way that allows for the best possible perspective during flight.
-This configuration makes it possible to develop new control solutions based on images taken directly from the vehicle and that reflect the trajectory that it follows.
-Therefore, it becomes possible to adjust the control loop based on previous reactions of the vehicle to commands and maintain a feedback loop for a more stable guidance.
+This configuration makes it possible to develop new control solutions based on images taken directly from the vehicle that reflect the trajectory that it follows.
+Therefore, it becomes possible to adjust the control loop based on previous reactions of the vehicle to commands and maintain a feedback loop for more stable guidance.
 
-Since the computer running the visual processing algorithm now has to fly on board the vehicle, it becomes specially important to make a good choice when selecting hardware.
-To be able to take into the air, the computer has to be light enough that its weight can be lifted by the propellers while maintaining an adequate battery autonomy, but also powerful enough that the processor can handle the computer vision algorithms required to extract the necessary features from the images taken from the onboard camera that are to be feed to the control loop.
+Since the computer running the visual processing algorithm now has to fly on board the vehicle, it becomes especially important to make a good choice when selecting hardware.
+To be able to take into the air, the computer has to be light enough that its weight can be lifted by the propellers while maintaining adequate battery autonomy, but also powerful enough that the processor can handle the computer vision algorithms required to extract the necessary features from the images taken from the onboard camera that are to be feed to the control loop.
 
 \begin{figure}
   \centering
@@ -90,9 +98,9 @@ To be able to take into the air, the computer has to be light enough that its we
   \label{fig:rpi4-pinout}
 \end{figure}
 
-The Raspberry Pi 4 model chosen for this project and shown in Figure~\ref{fig:rpi4-pinout} is one of the most popular small computers available in the market at the time, and it is widely use in all kinds of robotics projects both for education and hobbyists.
-One of the most important advantages of using such a platform is the easy access to a great amount of manuals, guides and other support available online.
-In addition, the Raspberry's officially supported operating system, called Raspberry Pi OS, is a Debian-based version of Unix optimized for its ARM microcontroller, simplifying the process of moving from an Ubuntu test environment into real flight experiments.
+The Raspberry Pi 4 model chosen for this project and shown in Figure~\ref{fig:rpi4-pinout} is one of the most popular small computers available in the market at the time, and it is widely used in all kinds of robotics projects both for education and hobbyists.
+One of the most essential advantages of using such a platform is the easy access to a great number of manuals, guides, and other support available online.
+In addition, the Raspberry's officially supported operating system, called Raspberry Pi OS, is a Debian-based version of Unix optimized for its ARM microcontroller, simplifying the process of moving from an Ubuntu test environment into actual flight experiments.
 Since this computer is designed to be easy to integrate with hardware projects it includes a 40-pin GPIO header (marked in red in Figure~\ref{fig:rpi4-pinout}) that can be programmed for connecting to any number of external devices.
 
 
@@ -171,7 +179,6 @@ To fix this situation and be able to monitor during flight, as well as being abl
 then the output from the camera and the image recognition can be seen in real time.
 
 Figure \ref{fig:onboard-config} shows a summary of all the connections present in the onboard configuration between the three pieces of software that interact together: PX4, Dronecontrol and QGroundControl, with their respective hardware platforms and the attached peripherals.
-\todo[inline]{Draw: hardware in white background, group all drone component, separate qgc, duplicate and edit for onboard}
 
 \begin{figure}
   \centering

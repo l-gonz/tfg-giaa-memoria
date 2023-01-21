@@ -8,7 +8,7 @@
 
 \todo[inline]{Write: Describe the actual new diagram, blue vs green arrows, data flow, ...}
 
-Figure \ref{fig:architecture} shows the main modules the designed the software is composed of and how it interacts with the external libraries.
+Figure \ref{fig:architecture} shows the main modules the designed software is composed of and how it interacts with the external libraries.
 The application consists of three basic parts: 
 the pilot module, in charge of sending instructions to the flight controller and receiving back information on position and state through the \texttt{mavsdk} library, 
 a video source module that handles the retrieval of images from different sources and the necessary processing for image analysis,
@@ -20,6 +20,7 @@ These are described in section \ref{subsec:test-tools}.
 A user manual with all the options available in the application can be found in Appendix \ref{app:cli}.
 
 \subsection{Pilot module}
+\label{subsec:pilot-module}
 The purpose of the pilot module is to provide access to the rest of the application to send and receive messages from the PX4 controller through the MavSDK library.
 This library provides a simple asynchronous API for managing one or more vehicles, providing programmatic access to vehicle information and telemetry, and control over missions, movement and other operations.
 MavSDK utilizes the python standard library \emph{asyncio} to be able to run coroutines in parallel while waiting for the messages provided through the \emph{MAVLink} communication.
@@ -99,6 +100,7 @@ async def run_queue(self):
 \end{listing}
 
 \subsection{Video source module}
+\label{subsec:viz-source-module}
 
 The objective of the video source module is to provide a collection of classes to retrieve images from different sources,
 in a way that they can be exchanged for one another without affecting the rest of the application to facilitate testing and be adaptable running in different environments.
@@ -120,6 +122,7 @@ The simulator source uses AirSim's Python library to communicate with the simula
 It connects automatically through localhost, but it can also be provided with an IP to establish connection to the simulator running on a different computer on the local network, for example when the program runs inside WSL and the simulator runs on its host computer.
 
 \subsection{Vision control module}
+\label{subsec:control-module}
 The control module contains the main logic of the application and is in charge of converting the raw images obtained from the video source into commands for the pilot module.
 Two different types of control have been implemented.
 The first one is a proof-of-concept control solution, described in section \ref{sec:hands}, that runs in offboard mode (see section \ref{subsec:offboard}) and translates some predefined hand gestures into simple commands for the aerial vehicle, of which the main purpose is to be able to test the interaction between all the components of the system in a more easily controlled environment, since it uses the simpler configuration of situating the computer with the controller outside of the vehicle.
@@ -140,7 +143,7 @@ In order to hold position while in this mode, the vehicle must receive a stream 
 Sections~\ref{sec:hands} and \ref{sec:follow} offer a more complete explanation of the control module used by the two different solutions developed.
 
 \subsubsection{Camera-testing tool}
-\label{subsec:test-tools}
+\label{subsec:cam-test-tools}
 
 Several additional utilities have been added to the dronecontrol program to facilitate the development and testing process of the two main control solutions.
 The first tool is accessed through the command \mintinline{bash}{dronecontrol tools test-camera} and can be used for testing the connection between the computer, the flight stack and the camera without using any self-guided control mechanism, as well as evaluating the performance of the MediaPipe hand and pose machine learning solution on real time images.
@@ -184,6 +187,7 @@ The open hand gesture, for example, can then be defined as all five fingers exte
   \label{fig:vector-calcs}
 \end{figure}
 \todo[inline]{Draw: hand vectors}
+\todo[inline]{Draw: Include diagram of angles for each pointy gesture ?????}
 
 The full list of gestures detected by the program by calculating these angles is as follows:
 \begin{itemize}
@@ -197,10 +201,22 @@ The full list of gestures detected by the program by calculating these angles is
     \item Thumb pointing to the left: same as the previous gesture, but the drone pitches backward when the thumb point to the left of the screen.
 \end{itemize}
 
-\todo[inline]{Write: add loop code and link to first paragraph}
-\todo[inline]{Draw: Include diagram of angles for each pointy gesture ?????}
+
+The program execution is described in figure \ref{fig:hands-loop}.
+After all the necessary options have been set, one new thread is started to run the pilot queue loop detailed in \ref{subsec:pilot-module}, which waits for new commands.
+On the main thread, the GUI loop runs endlessly until the user quits the program, queuing actions based on gestures calculated from retrieved images and on user input on the keyboard.
+\todo[inline]{Draw: hand loop diagram}
+\begin{figure}
+  \centering
+  \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
+  \caption{Execution flow for the hand-gesture control solution.}
+  \label{fig:hands-loop}
+\end{figure}
+
 \todo[inline]{Images: simulators program output image with drawn lines for gestures}
 \todo[inline]{Video: hand control in simulator}
+
+
 
 
 
@@ -213,8 +229,8 @@ The intention behind the development of a UAV control solution that implements t
 The only requirements of the follow application are a PX4-enabled flight controller installed in an aerial vehicle, a companion computer of appropriate dimensions to be able to be mounted on board the vehicle and any camera that can be connected to the companion computer via USB.
 During the program execution, the drone can be controlled via an RC controller, an external ground station application or keyboard input directly to the companion computer through, for example, a secure shell using the SSH protocol.
 
-For safety, the follow mechanism only engages when the flight mode on the vehicle is changed to offboard mode e.g. by activating a configured switch in the RC controller, and stops automatically if the connection to the computer is lost or any of the available failsafes are triggered, like low battery, loss of RC or GPS signal or vehicle attitude exceeding a predefined pitch and roll value for longer than a specified time.
-In this mode the vehicle will attempt to find a single person in its field of view and follow their movements by changing its yaw and forward velocity to match horizontal movements and distance changes, respectively.
+For safety, the follow mechanism only engages when the flight mode on the vehicle is changed to offboard mode e.g. by activating a configured switch in the RC controller and stops automatically if the connection to the computer is lost or any of the available failsafes are triggered, like low battery, loss of RC or GPS signal or vehicle attitude exceeding a predefined pitch and roll value for longer than a specified time.
+In this mode, the vehicle will attempt to find a single person in its field of view and follow their movements by changing its yaw and forward velocity to match horizontal movements and distance changes, respectively.
 
 \begin{figure}
   \centering
@@ -233,46 +249,100 @@ After a valid bounding box has been defined around the target person, its positi
 
 The first of the PID controllers is in charge of controlling the yaw velocity of the vehicle to respond to horizontal movements in the x direction of the image. 
 \todo[inline]{Draw: coordinate system figure}
-It takes as input the x coordinate of the center point of the bounding box and its target is the middle point of the screen.
-This controller therefore will output velocity commands aimed to maintain the bounding box centered horizontally in its field of view.
+It takes as input the x coordinate of the center point of the bounding box, and its target is the middle point of the screen.
+This controller, therefore, will output velocity commands aimed at maintaining the bounding box centered horizontally in its field of view.
 
-The second PID controller controls the forward velocity of the vehicle to respond to distance changes of the person getting closer or further away from the drone.
-It takes as input the height of the calculated bounding box as a percentage of the total height of the field of view and works to keep it within a value that matches the desired distance to maintain between the person and the vehicle by moving forwards when the height is too low and backwards when it is to high.
+The second PID controller controls the forward velocity of the vehicle to respond to distance changes of the person getting closer or farther away from the drone.
+It takes as input the height of the calculated bounding box as a percentage of the total height of the field of view and works to keep it within a value that matches the desired distance to maintain between the person and the vehicle by moving forwards when the height is too low and backwards when it is too high.
 The exact percentage of the image height that is covered by a person at a given distance depends on the camera used and needs to be obtained empirically for each separate video source.
 
-\todo[inline]{Add some controller and follow code to show and explain}
+A summary diagram of the structure of the follow solution can be seen in figure \ref{fig:follow-loop}.
+After connecting to the pilot module according to the starting options, a loop runs continuously until the user quits the program.
+For each execution, a new image is retrieved, pose features are extracted from it, and a bounding box is calculated.
+Then, and only if the vehicle is in offboard flight mode, the calculated positions will be fed into the PID controller to get a velocity output to send to the pilot.
+Keyboard control is also available to send manual commands to the vehicle directly.
+
+\todo[inline]{Draw: follow loop diagram}
+\begin{figure}
+  \centering
+  \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
+  \caption{Vector calculations}
+  \label{fig:vector-calcs}
+\end{figure}
+
 \todo[inline]{Images: simulator and output, link video of run}
+
+
 
 
 
 \subsection{PID tools}
 
 Two additional utilities have been developed for tuning and measuring the performance of the PID controllers.
-\todo[inline]{Write: PID tools, how they work and code}
-\todo[inline]{PID library, Formula and coefficients}
+These tools are used in section \ref{sec:test-1-pid} to set the correct values in the coefficients for the controllers empirically.
+A proportional-integral-derivative is a control loop mechanism commonly used in control systems requiring continuously modulated control.
+It works by constantly calculating an error value from the difference between the received input on a chosen process variable, which in this case is the detected position of a person in a the frame, and the desired set point for that variable, a position centered in the frame.
+From the error value, and output for the controller is calculated according to this equation:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{equation}
     u(t)= K_p e(t) + K_i \int{e(t)dt} + K_d \frac{de(t)}{dt}
-%    \caption{Formula for the output from a PID controller}
     \label{eq:pid}
 \end{equation}
-%% Where: $u(t)=$ PID control variable
-        % $K_p=$ proportional gain
-        % $K_i=$ integral gain
-        % $K_d=$ derivative gain
-        % $e(t)=$ error value
-        % $de=$ change in error value
-        % $dt=$ change in time
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{conditions}
+u(t)  &   PID control variable \\
+K_p   &   proportional gain \\
+K_i   &   integral gain \\
+K_d   &   derivative gain \\
+e(t)  &   error value \\
+de    &   change in error value \\
+dt    &   change in time
+\end{conditions}
 
-The process of tuning the PID controllers is described in section~\ref{sec:test-1-pid}
+The PID controllers used in this project are developed from the freely-available \texttt{simple-pid} library for Python \cite{pid-library}. which provides all the necessary error calculations already implemented.
+It is only necessary to provide the coefficients, or tunings, and the set point for the controller and then call it periodically with an updated input value to receive the output.
+
+Since the coefficients for a controller are most simply decided empirically, a small tool has been developed to help with the process.
+With it, it is possible to specify a range of potential coefficients and test the response of the system on the images retrieved from AirSim and a simulated flight controller (either SITL or HITL can be used).
+For each of the values to be checked, the simulated person to be followed starts in an offset position from the target center, then the controller is engaged with the test values and its detected position input and calculated velocity output a plotted in a graph for analysis.
+Finally, the vehicle moves back to the starting position to reset the environment for the next value to be checked.
+The tool is run with the following command: \mintinline{bash}{dronecontrol tools tune}, and can be started with the option \texttt{--yaw} or \texttt{--forward} to decide which specific controller should be tuned.
+The other one is deactivated during the test to visualize the effect of the examined values more easily.
+Each of the coefficients is tested separately by providing fixed values to the other two parameters.
+
+The second tool designed to check the controllers' performance works in a slightly different way from the previous one.
+The underlying process is the same: engage the controller in an offset position and wait until the movement has stopped before resetting and running again.
+However, the objective of this tool is to show how an already tuned controller reacts to different position inputs for the camera.
+The parameter coefficients then remain the same for the entire test and it is the relative position between the vehicle and the followed person that varies.
+During the execution, both the yaw and the forward controller are activated simultaneously to obtain results closer to what will be expected during actual flight.
+However, the test tool can be run in either yaw or forward mode, then the distances to be tested between the vehicle and the person vary either left to right or closer to farther, respectively.
+The objective is to be able to measure how the vehicle will react to increasingly bigger differences to the target position, to ensure that the movement is stable and safety is maintained during the entire flight.
+A full execution of this tool for both modes is shown in section \ref{subsec:pid-test-controller}.
 
 
-\subsection{Safety mode}
+\subsection{Safety mechanisms}
 \label{subsec:safety}
 
-\todo[inline]{Write: safety mechanisms, speed limits on pids, loss of signal, loss of vision, ...}
-\todo{}
-\todo{}
+The Dronecontrol application implements a very experimental vision-based guidance system.
+Therefore, to be able to carry out flight tests with real-life conditions it is necessary to make sure that both the software implements sufficient safety mechanisms so that accidents can be prevented.
+Some of these guards employed are part of the developed code and others are activated simply from the PX4 safety configuration.
 
+In the first place, the computer vision module prevents accepting as valid input persons that may have been detected wrongly by the computer vision algorithm.
+The method to determine this is to only accept detected feature points that have a minimum resemblance to a standing human pose, with a taller than wider bounding box and the features for head, shoulder, hip, knee and ankle always stacked from top to bottom in that order.
+If any of this checks are failed, as well as if there is no detection at all in the image from the algorithm, the vehicle will go into Hold flight mode, which discards any possible pending velocity commands and makes the drone hover over its current position.
+
+The second safety mechanism relates to the PID controllers and pilot module, and consists of limiting the maximum possible velocity of the vehicle at any point during flight.
+This is done both inside the Dronecontrol application, by setting up output limits on the PID controllers that prevent the guidance system from sending abnormal velocity commands to the flight controller, and from the PX4 autopilot itself as a fallback in case of issues with the custom MAVLink integration or the companion computer as a whole, by setting the \texttt{MPC\_XY\_VEL\_ALL} parameter in the autopilot configuration which limits the overall horizontal velocity of the vehicle.
+
+Other safety configuration options included as part of the PX4 autopilot detect undesired behaviour in the flight conditions and trigger a flight mode change to either Hold (hover) or Return (fly back to takeoff position and land), as documented in \citetitle{px4-docs-safety} \cite{px4-docs-safety}.
+Some of the detected failure conditions are:
+\begin{enumerate}
+    \item Lost connection to companion computer while in Offboard mode.
+    \item RC transmitter link lost while in manual modes, which can be extended to trigger in Offboard mode.
+    \item Lost GPS position, when the quality of the PX4 position estimate falls below acceptable levels.
+    \item Low battery during flight.
+    \item Vehicle unexpectedly flips.  (CBRK\_FLIGHTTERM)
+\end{enumerate}
+
+The last safety mechanism to mention is not based on automatic detection by the developed software or the autopilot, but on active surveillance of the systems behaviour during flight by an operator in control of the vehicle.
+With an RC controller configured with a switch to control flight mode, it is possible to deactivate Offboard mode at any moment, which will disregard all instructions from the companion computer, and assume full control of the vehicle either through a GPS-assisted mode or completely manual.
+A secondary switch in the RC controller can be configured as a kill switch for the last-resort option to immediately stop all motor outputs.
