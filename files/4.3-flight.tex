@@ -111,7 +111,7 @@ Turning on the RC controller will likewise make it connect to the vehicle, as lo
 Once all the wireless connections have been established the drone can take off by first switching to the armed state and then switching to the takeoff flight mode.
 While the drone is in the air, switching to the position flight mode will allow direct control through the joysticks in the controller.
 Figure \ref{fig:flight-test-basic} shows an image from a flight carried out following this steps.
-The full video of the test can be seen in link \todo{Make video and link}.
+The full video of the test can be seen in link \todo{Fly-Video: Make video and link}.
 
 \begin{figure}
   \centering
@@ -166,7 +166,7 @@ dronecontrol tools test-camera -r /dev/serial0:921600 -p
 \end{minted}
 As opposed to the flight using the telemetry radio, in this test the serial connection runs at a baudrate of 921600, which matches the configured baudrate on the \texttt{TELEM2} port of the Pixhawk board.
 The "-p" option is used to enable pose detection in the output images.
-The terminal and camera output can be seen in figure \ref{fig:flight-test-cam-onboard} and a video recording the remote desktop during the flight can be seen in link \todo{Link video of screen during onboard test-camera flight}.
+The terminal and camera output can be seen in figure \ref{fig:flight-test-cam-onboard} and a video recording the remote desktop during the flight can be seen in link \todo{Fly-video: Link video of screen during onboard test-camera flight}.
 
 
 \begin{figure}
@@ -199,11 +199,11 @@ After the pilot connects, the image from the webcam of the computer will appear 
 To start controlling the vehicle, an open palm should be shown to the camera.
 Then, a closed fist will make the drone take off and pointing up with the index finger will start offboard flight mode.
 Afterwards, moving the index finger right or left will make the vehicle mirror the movement, 
-and moving the thumb right or left will make the vehicle move forwards and backwards, respectively \todo{Check direction of thumb movement}.
+and moving the thumb right or left will make the vehicle move forwards and backwards, respectively.
 At any point during the test, an open hand will make the vehicle land at the current place and losing sight of the controlling hand will make the vehicle return to the starting position before landing as well.
-\todo[inline]{Make return home altitude less before flying}
+\todo[inline]{Fly-config: Make return home altitude less before flying}
 
-\todo[inline]{Video should show side-by-side computer screen with terminal and image output and video from vehicle flying, synced}
+\todo[inline]{Fly-Video: Video should show side-by-side computer screen with terminal and image output and video from vehicle flying, synced}
 
 \begin{figure}
   \centering
@@ -253,5 +253,5 @@ However, for a proof-of-concept scenario, this is acceptable performance.
   \caption{Terminal and image output of the dronecontrol follow solution running on the  Raspberry Pi}\label{fig:aaa}
 \end{figure}
 
-\todo[inline]{Save performance for flight tests, add measure tables in each section}
-\todo[inline]{Same recording as hand sec}
+\todo[inline]{Fly-Write: Save performance for flight tests, add measure tables in each section}
+\todo[inline]{Fly-video: Same recording as hand sec}

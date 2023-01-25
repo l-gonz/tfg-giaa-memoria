@@ -3,8 +3,26 @@
 \label{sec:intro}
 \pagenumbering{arabic} % para empezar la numeración de página con números
 
+\section{General context}
+
+An Unmanned Aerial Vehicle (UAV) is an aircraft able to fly without any pilot or operator on board. They may be operated through remote control by a human operator or with various degrees of autonomy, from sensor-driven control aids provided to the operator to fully autonomous flight through preplanned missions.
+UAVs have existed since the 20th century and were initially developed as military technology to protect pilots from dangerous missions.
+However, as the cost of the electronics and sensors decreased and control technologies were improved, they became available to a broader public and are now employed in a wide range of civil applications like crop control, search and rescue, or filmmaking and photography.
+Nevertheless, most commercial solutions are limited to remote operations or basic autonomy, with fully autonomous flight still in the earliest phases.
+Specifically, vision-based guidance systems have only started to appear in recent years as artificial intelligence becomes more widespread and very few fully-developed consumer-ready platforms are available for the general public.
+Even so,
+from the essential hardware to build your own quadcopter, a helicopter with four rotors that represents the most common type of UAV, to miniaturized computers that handle complex calculations and open-source software that can be customized to endless applications,
+all the individual pieces that enable building such a system are readily available.
+
 \section{The Dronecontrol project}
 
+The project presented in this thesis aims to show the options available to design and implement control solutions for the popular PX4 open-source autopilot platform and how to integrate them with detection and tracking computer vision mechanisms to achieve simple vision-based self-guided UAVs.
+All the necessary code for this project has been written in the Python programming language and always runs outside of the flight controller board on a companion computer.
+This allows more processing power to be accessible for any compute-intensive computer vision algorithms,
+but also ensures that the control solutions are abstracted from the hardware components and not dependent on the specific flight stack employed, 
+to allow applying the results to any available autopilot platform with exposed APIs.
+Two complete vision-based control solutions have been implemented for two different scenarios: keeping the computer driving the computer vision algorithms on board or off-board the vehicle itself during flight.
+The following chapters detail the hardware, libraries, testing environments, and systems used during the development process and how they can be used to develop new control solutions based on available computer vision mechanisms.
 
 
 %%-- Objetivos del  proyecto
@@ -13,32 +31,18 @@
 
 \section{Objectives}
 \label{sec:objetives}
-\todo[inline]{Write: objectives}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% •	Main Objectives:  
-% o	detect + track + follow with vision control techiniques
-% o	explore software and hardware possibilities for vision control
-% o	machine learning techniques for vision control
-% o	SIL/HIL validation procedure
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The main objective of this project is to demonstrate the available possibilities to develop control solutions for the PX4 autopilot driven by computer vision mechanisms.
 
+More specifically it aims to:
+\begin{itemize}
+    \item Introduce the software and hardware environment of the Dronecode project and the techniques they have made available.
+    \item Show the minimum requirements needed to develop control software for the platform.
+    \item Suggest viable vision-driven control solutions that use those techniques.
+    \item Present a testing process using available tools that can help ensure safety and reliability for any new solutions developed.
+    \item Build a quadcopter and use it to carry out test flights with the developed solutions.
+\end{itemize}
 
-% \subsection{General goal} % título de subsección (se muestra)
-% \label{sec:objetivo-general} % identificador de subsección (no se muestra, es para poder referenciarla)
-% Aquí vendría el objetivo general en una frase:
-% Mi Trabajo Fin de Grado/Master consiste en crear de una herramienta de análisis de los comentarios jocosos en repositorios de software libre alojados en la plataforma GitHub.
-% Recuerda que los objetivos siempre vienen en infinitivo.
-% \subsection{Specific goals}
-% \label{sec:objetivos-especificos}
-% Los objetivos específicos se pueden entender como las tareas en las que se ha desglosado el objetivo general. Y, sí, también vienen en infinitivo.
-% Lo mejor suele ser utilizar una lista no numerada, como sigue:
-%     \begin{itemize}
-%         \item Un objetivo específico.
-%         \item Otro objetivo específico.
-%         \item Tercer objetivo específico.
-%         \item \ldots
-%     \end{itemize}
 
 \section{Time planning}
 \label{sec:time-planning}
@@ -50,27 +54,25 @@
 % (tiempo natural, p.ej., 6 meses) y a qué nivel de esfuerzo (p.ej., principalmente los 
 % fines de semana).
 
+%%% PHASES
+% 1. Research
+% 2. Development
+% 3. Testing
+% 4. Writing
+
 \section{Thesis layout}
 \label{sec:layout}
-\todo[inline]{Write: layout}
 
-% Por último, en esta sección se introduce a alto nivel la organización del resto del documento
-% y qué contenidos se van a encontrar en cada capítulo.
-%     \begin{itemize}
-%       \item En el primer capítulo se hace una breve introducción al proyecto, se describen los objetivos del mismo y se refleja la planificación temporal.
-%       \item En el siguiente capítulo se describen las tecnologías utilizadas en el desarrollo de este TFM/TFG (Capítulo~\ref{chap:tecnologias}).
-%       \item En el capítulo~\ref{chap:desing} Se describe el proceso de desarrollo
-%       de la herramienta \ldots
-%       \item En el capítulo~\ref{chap:experimentos} Se presentan las principales pruebas realizadas
-%       para validación de la plataforma/herramienta\ldots (o resultados de los experimentos
-%       efectuados).
-%       \item Por último, se presentan las conclusiones del proyecto así como los trabajos futuros que podrían derivarse de éste (Capítulo~\ref{chap:conclusiones}).
-%     \end{itemize}
+This sections details the structure of this thesis.
+The work is composed of five individual chapters that reflect the four distinct phases described in the last section.
 
-\cleardoublepage
-\chapter{State of the art}
-\label{chap:sota}
-\input{files/2.1-literature}
-\input{files/2.2-tech}
+\begin{itemize}
+    \item In the first chapter there is a brief introduction to the context in which the project has been developed, as well as the objectives it pursues.
+    \item Chapter 2 presents the technologies and tools employed in this project and the current state-of-the-art of vision-based control solutions for UAVs.
+    \item The third chapter introduces the simulation environments used for development of the solutions throughout the entire project and the architecture of both the hardware used and the software developed.
+    \item Chapter 4 follows along through the process of testing every part of the system incrementally until reaching the final flight tests.
+    \item The last chapter shows the conclusions drawn from the work and presents ideas for future development.
+\end{itemize}
+
 
 \cleardoublepage

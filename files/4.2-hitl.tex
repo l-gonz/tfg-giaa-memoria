@@ -31,7 +31,7 @@ After all the necessary connections are set up, the program can be started with 
 \mintinline{bash}{python -m dronecontrol follow --sim --serial COM[X]:57600}, where the exact COM port will vary depending on the particular USB port to which the telemetry radio is connected.
 
 
-With the results matching exactly those obtained in section \ref{sec:test-3-airsim}, and since the flight stack is now running on a physical controller, it is possible to add an RC antenna to the \texttt{PPM RC} \todo{check port} port of the board to be able to fly the vehicle with a remote control unit after it has been bound to the receiver \footnote{\url{https://docs.px4.io/main/en/config/radio.html}}.
+With the results matching exactly those obtained in section \ref{sec:test-3-airsim}, and since the flight stack is now running on a physical controller, it is possible to add an RC antenna to the \texttt{PPM RC} \todo{Polish: check controller port} port of the board to be able to fly the vehicle with a remote control unit after it has been bound to the receiver \footnote{\url{https://docs.px4.io/main/en/config/radio.html}}.
 By configuring one of the switches in the RC unit to change to PX4's offboard flight mode, additional checks to the safety measures of interrupting autonomous flight on flight mode changes or loss of signal from the RC controller can be carried out.
 As can be seen in figure \ref{fig:rc-tests}, ....
 
@@ -70,14 +70,12 @@ This way, it is possible to access the Pi's desktop from the ground station comp
 One option to achieve this is XRDP\footnote{\url{http://xrdp.org/}}, an open-source implementation of a Microsoft Remote Desktop Protocol server compatible with the Raspberry OS.
 
 The first hardware connection to test is the power supply to the Raspberry.
-The most common way of providing current to the Pi when mobility is not required is through its USB-C port directly to a wall socket.
-This provides the recommended 3 amps that it needs to function at maximum capacity.
-The power module included with the Holybros' X500 development kit has two ports that provide 5 volts with an output current of 3 amps.
-One of them will therefore be used to power the flight controller and the other to power the Raspberry Pi, as described in section \ref{subsec:onboard}.
-Figure \ref{fig:power-supply} shows the power supply through the battery to the two computers.
+As detailed in section \ref{subsec:onboard}, the selected method for powering the companion computer in the onboard configuration is through a secondary battery.
+The connection will be done with a USB to USB-C cable, from the battery to the Raspberry Pi, respectively.
+The intent behind testing the power supply at this point in this process is to verify that it will be suitable for its purpose before it actually needed to power the computer onboard the vehicle.
+It is necessary that this power source provides enough power to both maintain the processor running at an appropriate speed and provide power to the external camera in turn, which will be attached to the Pi's board and extract power from it.
 
-\todo[inline]{Edit for new battery}
-\todo[inline]{Close up image and description of custom connector}
+\todo[inline]{Image: Close up image and description of custom connector}
 
 \begin{figure}
   \centering
@@ -94,15 +92,14 @@ For this serial connection to work, both the flight controller and the companion
 The Pixhawk needs to be configured through QGroundControl to enable a secondary Mavlink channel as, by default, only the \texttt{TELEM1} port used by the telemetry radio is configured.
 The necessary parameters to modify and their values are collected in table \ref{tab:telem2-params}.
 On the Raspberry side, the serial port is configured to be used as a terminal by default.
-This can be disabled through the \texttt{raspi-config} command-line utility (Advanced config -> Serial -> Disable\todo{Check option path on latest OS}).
+This can be disabled through the \texttt{raspi-config} command-line utility (Advanced config -> Serial -> Disable\todo{Polish: Check option path on latest OS}).
 After that, the \texttt{/dev/serial0} address can be used to communicate to the device attached to the UART pins at the baudrate configured through QGroundControl.
 
-\todo[inline]{Fix table}
 \begin{table}[h!]
  \begin{center}
   \begin{tabular}{l|l}
     Parameter name & Value \\ \hline
-    MAV\_2\_CONFIG & TELEM2 \\
+    MAV\_1\_CONFIG & TELEM2 \\
     SER\_TEL2\_BAUD & 921600 \\
   \end{tabular}
   \caption{PX4 parameters than need to be configured to enable Mavlink communication through the secondary telemetry port}
@@ -138,5 +135,5 @@ On the right side, the AirSim simulator shows the movements of the vehicle as it
 
 % performance test ---> graphs
 The main question to answer now is whether the less powerful processor in the Raspberry Pi 4b, a quad-core ARM Cortex-A72 64-bit SoC running at 1.5GHz, can handle the detection and tracking algorithms with a performance good enough to react to real-time movement.
-\todo[inline]{Performance analysis with/out peripherals, detection only, detection and control together}
+\todo[inline]{Write: Performance analysis with/out peripherals, detection only, detection and control together}
 

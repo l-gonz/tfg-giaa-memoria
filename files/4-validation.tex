@@ -25,7 +25,7 @@ In the first section, the application is tested in a purely simulated environmen
 % Graphs from test-controller
 % Analysis of error
 
-\todo[inline]{Videos for github}
+\todo[inline]{Image: Videos for github}
 
 As has been mentioned before, the velocity controller that is the heart of the person following mechanism is based on two PID controllers.
 In order to get velocity outputs for the PID controllers that produce a stable movement of the vehicle, it is necessary to tune the parameters of the controllers until the appropriate combination is found.
@@ -45,7 +45,7 @@ Which means that the controllers running in the simulator will have as their tar
 
 \subsection{Yaw controller}
 
-\todo[inline]{Discuss velocity graphs as well for every section, mention velocity limits}
+\todo[inline]{Write: Discuss velocity graphs as well for every section, mention velocity limits}
 
 \begin{figure}
   \centering
@@ -130,7 +130,7 @@ In this position, the input to the forward controller is 0.47, that is, the boun
 The response from the controller will therefore need to be a negative forward velocity that brings the vehicle away from the target person and reduces the perceived figure height.
 Since a negative output velocity reduces the input at the entrance of the controller in a directly proportional manner, the coefficients for this PID controller will need to be positive, contrary to what happened on the yaw controller where the feedback loop was inversely proportional (a positive velocity decreased the input to the yaw controller).
 
-\todo[inline]{Controller should end up with (4, 0.1, 0)}
+\todo[inline]{Test: Controller should end up with (4, 0.1, 0)}
 
 
 \begin{figure}
@@ -191,7 +191,7 @@ The x coordinate of the figure in the simulated world will remain at $x=500$.
 
 Plots of the changes in normalized horizontal distance and normalized figure height detected by the person recognition algorithm during the time the vehicle takes to reach the target distance from the human figure for each of the positions tested can be seen in figure \ref{fig:validate-yaw}.
 It is considered that the vehicle has reached its target when the error is less than 2\% and the output speed at the controller is less than 10\% of its maximum.
-Furthermore, the whole testing process followed with the developed \texttt{test-controller} tool can be seen in \todo{link video of test-controller tool}.
+Furthermore, the whole testing process followed with the developed \texttt{test-controller} tool can be seen in \todo{Image: link video of test-controller tool}.
 
 Since each of the starting positions differ both in distance and orientation to the target, both of the controllers are engaged to reach it.
 The yaw controller then introduces a negative yaw velocity when the figure is on the left half of the camera's field of view and a positive yaw velocity when the figure is on the right half to reach the target horizontal distance of 0.5 (figure centered in the image received from the camera);
@@ -215,7 +215,7 @@ Additionally, the \texttt{test-controller} tool is run with varying positions in
 This means the yaw controller will not need to output any velocity.
 The changes over time in the input into the forward controller between each starting position and the target position are shown in figure \ref{fig:validate-fwd}.
 The figure reflects that there is a very big difference in how the controller reacts to closer positions and to further positions.
-\todo[inline]{TODO, and rerun}
+\todo[inline]{Write: TODO validate fwd, and rerun}
 - Closer vs further positions
 - Error in detection for x=300
 
@@ -225,7 +225,7 @@ The figure reflects that there is a very big difference in how the controller re
   \caption{}\label{fig:validate-fwd}
 \end{figure}
 
-A video of the full follow solution running with the appropriate tunings for the controllers can be seen in \todo{Link video to follow run}.
+A video of the full follow solution running with the appropriate tunings for the controllers can be seen in \todo{Image: Link video to follow run}.
 
 
 \clearpage
