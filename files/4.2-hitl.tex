@@ -132,8 +132,24 @@ On the right side, the AirSim simulator shows the movements of the vehicle as it
   \caption{a) RPi desktop with pose output || b) AirSim on Windows}\label{fig:rpi-airsim-test}
 \end{figure}
 
+\subsection{Performance validation}
+\label{subsec:performance}
 
-% performance test ---> graphs
-The main question to answer now is whether the less powerful processor in the Raspberry Pi 4b, a quad-core ARM Cortex-A72 64-bit SoC running at 1.5GHz, can handle the detection and tracking algorithms with a performance good enough to react to real-time movement.
+The main question left to answer before the vehicle can take to the air with this hardware and software is whether the less powerful processor in the Raspberry Pi 4b, a quad-core ARM Cortex-A72 64-bit SoC running at 1.5GHz, can handle the detection and tracking algorithms with enough performance to get similar results to those obtained with simulated hardware and achieve good reactions to real-time movement.
+To do that, the average time that the program spends on each task in the running loop can be calculated and analyzed for different scenarios.
+Then it will be possible to estimate the maximum speed at which the person being followed by the algorithm can move.
+
+\todo[inline]{Make sure there's a good loop diagram in that section pointed below, and that the enumerated parts are explained in detail}
+From the follow loop presented in section \ref{sec:follow} it is possible to divide the processing costs in several sections that can be measured independently:
+\begin{enumerate}
+    \item Image processing
+    \item Offboard control
+    \item Keyboard input
+    \item Released thread
+\end{enumerate}
+
+Figure \ref{} shows the time used for each of the tasks on an average run of the follow solution with simulated hardware. It is therefore the first item the one to be highlighted for further analysis.
+
+
 \todo[inline]{Write: Performance analysis with/out peripherals, detection only, detection and control together}
 

@@ -3,6 +3,7 @@
 
 This chapter explains the complete process of validating each separate piece necessary for the correct operation of the full system, from testing the first simulation steps to carrying out thorough flight tests on the final guidance solution.
 Figure \ref{fig:validation-chart} shows in order each of the steps followed during this validation process.
+
 In the first section, the application is tested in a purely simulated environment, first individually on each part and finally integrating the flight mechanics simulation 
  with providing images to the computer vision detection software with sending control commands to the flight controller simulation.
  In the second section, the follow detection and guidance solution is tested thoroughly to guarantee that only safe velocity commands are outputted from the PID controllers for any image input that could be received and that their response is according to the desired movement of the vehicle.
@@ -72,8 +73,9 @@ To tune the controller to its correct coefficients, the first step will be to te
 Figure~\ref{fig:tune-yaw-prop} shows the output of the tuning program for the five values of $K_{P}$ tested, from $K_P=-10$ to $K_P=-90$ in increments of 20.
 The left graph represents the variation of the horizontal position detected by the camera for the first 30 seconds after activating the controller and the right graph, the yaw velocity that the controller outputs to the pilot module to reach the target.
 It can be seen that for low values of $K_{P}$, the controller makes the vehicle move slowly towards its target, so that it takes a long time to reach the midpoint position.
-In the other hand, for high values of $K_{P}$ the controller tries to reach the target too fast, so when it gets close to it it starts to oscillate without stopping.
-From the graphs, the best of the values tested is $K_{P}=50$, where the distance to the target point decreases rapidly but the velocity does not start to increase and decrease widely around 0.
+In the other hand, for high values of $K_{P}$ the controller tries to reach the target too fast, so when it gets close to it it starts to oscillate around the target.
+The right side graph also shows well how the output velocity in the yaw controller is limited to 5 degrees per second, so even for very high values of $K_P$ the vehicle will not rotate faster than that.
+From the graphs, the best of the values tested is $K_{P}=50$, where the distance to the target point decreases rapidly (left graph) but the velocity does not start to increase and decrease widely around 0 (right graph).
 
 The second step is to find the correct value for $K_I$. To do that several values of $K_I$ will be tested for a low $K_P$ of -20 and $K_D=0$, so that the effect of the integral part is easier to appreciate. Figure \ref{fig:tune-yaw-int-20} shows the evolution of the input and output at the controller for a sample time of 40 seconds for each of the values tested. 
 For a low $K_I=-1$, the progress toward the target is stable and slightly faster than without any contribution of the integral part.
@@ -87,7 +89,7 @@ However, when the $K_I$ increases in magnitude it creates initial oscillations a
 \end{figure}
 
 A similar effect can be observed to a lower extent in figure \ref{fig:tune-yaw-int-50}, where the measurements have been taken for $K_P=-50$ and $K_D=0$. 
-In this graph, $K_I=-1$ makes the controller reach the target position some 3 seconds faster and with similar oscillations than with the proportional part exclusively ($K_P=-50$, $K_I=0$, $K_D=0$).
+In this graph, $K_I=-1$ makes the controller reach the target position some 3 seconds faster and with similar oscillations in its velocity than with the proportional part exclusively ($K_P=-50$, $K_I=0$, $K_D=0$).
 
 \begin{figure}
   \centering
@@ -101,7 +103,7 @@ In this case, several values of $K_D$ have been tested against the chosen $K_P=-
 This will allow seeing the effect that the derivative part has in the controller as well as validating if the integral part chosen in the last step can work together with the derivative part to make the controller react better to a changed input.
 Figures \ref{fig:tune-yaw-der-i0} and \ref{fig:tune-yaw-der-i1} shows the evolution of the position detected by the computer vision system and the velocity that the controller outputs for a sample time of 40 seconds for $K_I=0$ and $K_I=-1$, respectively, with $K_P=-50$.
 For all the tested values, the iteration with $K_I=-1$ on \ref{fig:tune-yaw-der-i1} shows a better convergence towards the target positions than their counterpart values of $K_D$ for $K_I=0$, which indicates that the integral part has been chosen correctly.
-Furthermore, adding any amount to the derivative part does not produce any visible benefit in the step response of the controller and the curve that best remains on the target position continues to be the one for $K_D=0$.
+Furthermore, adding any amount to the derivative part does not produce any visible benefit in the step response of the controller and the curve that first stabilizes on the target position continues to be the one for $K_D=0$, while the velocity graph remains approximately the same between $K_D=0$ and $K_D=-2$
 The final values for the coefficients for the yaw controller will then be $K_P=-50$, $K_I=-1$ and $K_D=0$, so the controller will in truth only be a PI controller, and not a full PID controller.
 
 
@@ -139,14 +141,15 @@ Since a negative output velocity reduces the input at the entrance of the contro
   \caption{Starting position of the simulator for tuning the forward controller. The human model is situated 450 units forward and centered from the vehicle position.}\label{fig:tune-ref-pos-fwd}
 \end{figure}
 
-In general, the forward velocity needs to be smaller than the yaw velocity since it induces a pitch angle in the vehicle that tilts the camera up and down which can destabilize the camera and cause a loss of sight of the followed figure.
+In general, the forward velocity will always need to be smaller than the yaw velocity since it induces a pitch angle in the vehicle that tilts the camera up and down which can destabilize the camera and cause a loss of sight of the followed figure.
 To achieve that, the coefficients for the forward controller will be reduced by one order of magnitude.
 In the first place, values from $K_P=1$ to $K_P=9$ in increments of 2 have been tested for $K_I=0$ and $K_D=0$ for a sample time of 30 seconds.
 The curves described by the controller for this coefficients are shown in figure \ref{fig:tune-fwd-prop}.
 In comparison with the trajectory described by the yaw controller, the forward controller is in general more unstable since fast movements forward and backward affect the pose detection algorithm.
 This is particularly visible at the start of the each test as slightly different heights are detected in the image from the camera even though the vehicle is in the same position in respect to the human figure.
-It also creates an effect for the bigger $K_P$ values tested where small leftover oscillations from the previous test can affect the next one and cause the controller to pull the vehicle in the opposite direction for a second before stabilizing the image and detecting the correct direction of movement it should follow.
+It also creates an effect, especially for the bigger $K_P$ values tested, where even as the vehicle begin its movement backwards to its target position, the pose detection mechanism get a better image of the followed person, increasing or decreasing the detected height slightly, so that small spikes of height differences show in the height graphs even though the velocity graph shows that the vehicle's direction of movement remains the same during those approximately 3 seconds at the beginning of each test.
 This is the main reason why the output forward velocity needs to be kept small in the controller.
+In the right graph of figure \ref{fig:tune-fwd-prop}, it is also visible for high values of $K_P$ how the output velocity is high enough that the maximum velocity limit is reached for the forward controller, which is set at 0.4\unitfrac{m}{s}.
 However, even for a value up to $K_P=7$ the trajectory described descends rapidly without ending in big oscillations around the target height, so it is a good value to keep for the final controller.
 
 
