@@ -1,59 +1,34 @@
 \section{Literature review}
+\label{sec:lit-review}
 
-\todo[inline]{Write: literature review}
+Vision-based control solutions for UAVs on low-cost platforms have gained significant attention recently due to the increasing demand for cost-effective and efficient aerial applications. This literature review summarizes the existing research in this field and highlights the key findings and challenges.
 
-\begin{enumerate}
-\item Ref~\cite{Mao2017345} Indoor Follow Me Drone
-Tracking through acoustic signals in indoor environments produced by speakers on the drone and received by a mobile device. Discards CV for stability and processing power. Controller on mobile device with three degrees of freedom, pitch and yaw through MPC and roll through PID, with prediction of target's movement.
-\begin{itemize}
-\item Identification and path following control of an AR.Drone quadrotor \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-84893212045&origin=reflist}{--Link--} \\ 
-Path following application based on IMC position controllers, external webcam video stream.
+A significant amount of research has focused on developing algorithms for real-time image processing, with a focus on improving the accuracy and robustness of tracking solutions for UAV applications.
+In \cite{gomez-balderas2012}, a computer
+vision algorithm for position measurement and velocity estimation using optical flow is proposed for tracking ground-moving targets.
+In \cite{bevilacqua2016}, the focus is to solve the problem of tracking and following a generic human target by a drone in a natural, possibly dark scene without relying on color information.
+In \cite{rysdyk2003}, several algorithms are developed to design path-following mechanisms to maintain a constant line of sight with the target.
+These studies attempt to develop solutions that can be applied to any platform regardless of any preexisting autopilot control in the UAVs.
+They focus on low-level software implementations of complex control theory topics and advanced mathematics.
+In contrast, this thesis aims to abstract as much as possible both the control technics and the computer vision mechanisms of detection and tracking to focus on presenting an easy-to-use platform that can employ already developed algorithms and combine them to make robust systems with a lower threshold of expertise.
 
-\item Tracking a ground moving target with a quadrotor using switching control: Nonlinear modeling and control \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-84871633622&origin=reflist}{--Link--} \\ 
-Tracking of a moving target on ground, embedded camera, use of 2-dimensional images to compute the relative 3-dimensional position and translational velocity of the UAV with respect to the target, switching controllers.
+Some studies have already been centered around developing lower-cost solutions for more accessible platforms. Many have used the Parrot AR.Drone camera-enabled quadcopter that allows controlling through WiFi from an external offboard computer.
+In \cite{bartak2015}, \cite{chakrabarty2016}, \cite{pestana2013}, and \cite{haag2015}, the AR.Drone is used for implementing object tracking and following solutions in different environments and conditions with a higher emphasis on the type of trackers employed to achieve a robust visual following mechanism.
+In \cite{hernandez2013}, \cite{lugo2014}, and \cite{bristeau2011}, there is a higher focus on exposing the capabilities of the AR.Drone as a platform to develop custom control solutions utilizing the navigation and control technology and the low-cost sensors already embedded in the vehicle.
+The main difference between the platform used in the mentioned research and the PX4 platform that has been the target of this thesis is that the AR.Drone is offered as-is, as a concrete low-cost vehicle for which autonomous guidance and control can be developed, while the PX4 platform is a part of an extensive environment that encompasses everything from the minimum essential hardware to the low-level autopilot mechanisms to the high-level control commands and allows complete personalization at each layer of the system.
 
-\item A computer vision and control algorithm to follow a human target in a generic environment using a drone \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-84978870802&origin=reflist}{--Link--} \\ 
-Tracking and following a generic human target, using the HOG classifier, and on local brightness information, using the optical flow algorithm.
+As the PX4 platform has been available for less than a decade and has only become a widely-recognized standard in the drone industry since 2020, there is still little research on its ecosystem and fewer specific computer-vision projects have been developed.
+However, some studies do share some of the possibilities that the PX4 software and the Pixhawk flight controllers offer in the field.
+In \cite{sizkouhi2022}, aerial images are analyzed in real-time and fed to a deep-learning architecture to calculate optimal flight paths.
+In \cite{naufal2022}, a vision-based precision landing method for quadcopter drones is developed on the Pixhawk flight controller to prevent crashes on landing.
 
-\item Framework for autonomous on-board navigation with the AR.Drone \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-84899426060&origin=reflist}{--Link--} \\ 
-All sensing and computations on-board, three systems to autonomously following several trajectory patterns, visually estimate its position and detecting and following a person.
+Another vital advantage of the PX4 platform over other available platforms is its compatibility with a wide range of simulators that allow the development of complex control systems in changing environments without the need for expensive, time-consuming, and careful testing of the correct integration of the hardware and software components that real-world flight tests of UAVs entail.
+Some studies have carried out developments in this area for the ecosystem.
+In \cite{garcia2022}, the Gazebo simulator and the PX4 software are used to develop a system for simulating real navigation conditions for obstacle avoidance.
+In \cite{chen2022}, a similar ROS-Gazebo environment serves as the basis for designing fault-tolerant controllers that can recover from rotor failure.
+In \cite{huynh2022}, the aim is to integrate a photo-realistic environment simulator with a flight-dynamics simulator as a means to develop full autonomy in the Pixhawk autopilot board.
+These represent only some of the possible applications of such a complete ecosystem of development solutions.
 
-\item A robust real-time embedded vision system on an unmanned rotorcraft for ground target following \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-80054803865&origin=reflist}{--Link--} \\
-
-\item UAV path following for constant line-of-sight \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-85088181184&origin=reflist}{--Link--} \\ 
-Flight path guidance and synchronous camera angles to observe a target, analytic expressions are derived for trajectories required for constant line-of-sight orientation relative to the aircraft.
-
-\item Reactive control of autonomous drones \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-84979920485&origin=reflist}{--Link--} \\ 
-Reactive control that supersedes the time-triggered approach, control decisions are taken only upon recognizing the need to, based on observed changes in the navigation sensors, rate of execution dynamically adapts to the circumstances.
-
-\item Correlation filter based visual trackers for person pursuit using a low-cost Quadrotor \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-84954554999&origin=reflist}{--Link--} \\ 
-Correlation filters for short-term tracking and a redetection strategy based on tracking-learning-detection (TLD), flight experiments in unconstrained environments using human targets and an existing visual servoing controller.
-
-\item The Navigation and Control technology inside the AR.Drone micro UAV \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-84863704626&origin=reflist}{--Link--} \\ 
-Navigation and Control technology embedded in a recently commercialized micro Unmanned Aerial Vehicle (UAV), the AR.Drone.
-
-\item Vector field path following for miniature air vehicles \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-34447327237&origin=reflist}{--Link--} \\ 
-Method for accurate path following for miniature air vehicles is developed, vector-field path-following control laws are developed for straight-line paths and circular arcs and orbits.
-
-\item Trajectory tracking for autonomous vehicles: An integrated approach to guidance and control \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-0031673631&origin=reflist}{--Link--} \\
-
-\item Trajectory-tracking and path-following of underactuated autonomous vehicles with parametric modeling uncertainty \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-34548237452&origin=reflist}{--Link--} \\
-
-\item Combined trajectory tracking and path following: An application to the coordinated control of autonomous marine craft \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-0035713115&origin=reflist}{--Link--} \\ 
-Good trajectory tracking performance while keeping some of the desired properties normally associated with path following
-
-\item Understanding the basis of the kalman filter via a simple and intuitive derivation [lecture notes] \href{https://www.scopus.com/record/display.uri?eid=2-s2.0-85032780920&origin=reflist}{--Link--} \\
-\end{itemize}
-
-\item Ref~\cite{Pestana20141886} Computer Vision Based General Object Following for GPS-denied Multirotor Unmanned Vehicles, Ref~\cite{Pestana2013} (6) Vision based GPS-denied Object Tracking and Following for Unmanned Aerial Vehicles
-Object tracker + IBVS controllers
-
-\item Ref~\cite{Chakrabarty201625} Autonomous Indoor Object Tracking with the Parrot AR.Drone
-Deformable Object
-Tracking (CMT) tracker with image-based visual servoing (IBVS), relies directly on image features to compute control values as opposed to position-based servoing
-
-\item Ref~\cite{Bartak201635} Any Object Tracking and Following by a Flying Drone
- Offboard control solution though WiFi on Parrot AR Drone with computer vision (Training-Learning-Detection), with two PID controllers for forward/backward (scale estimation) and yaw (center position).
-
-\end{enumerate}
-\newpage
+In conclusion, vision-based control solutions are still a relatively new field in the broader topic of autonomous guidance and navigation for UAVs.
+Some older low-cost platforms have been more widely employed in research as the basis for developing accessible control systems driven by computer vision.
+However, for PX4-driven UAVs, there are still many unexplored possibilities when it comes to applying the simulator capabilities of the platform to the development of vision-based control solutions and taking advantage of modern rendering techniques to simulate complex detection and tracking scenarios that reduce the need for difficult real-world flight tests.
