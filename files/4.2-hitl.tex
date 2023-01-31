@@ -13,33 +13,27 @@ To do so, the aim is to be able to run the follow solution to send control comma
 
 
 To activate this new hardware-in-the-loop mode, QGroundControl contains a specific quadcopter HITL airframe configuration that sets up the board with all the required parameters.
-QGroundControl automatically detects the Pixhawk 4 board when it is connected to the computer through its Micro-USB port.
-It is as well required to make changes to the AirSim configuration for the simulator to work with HITL mode, namely, activating the option to accept connections through serial.
-To test the complete system configuration for HITL described in section \ref{sec:devenv} and outlined in figure \ref{fig:hitl-connections} the Pixhawk board needs an additional channel of communication to the computer dedicated to the Mavlink exchange with the dronecontrol application.
+QGroundControl automatically detects the Pixhawk 4 board when connected to the computer through its Micro-USB port.
+It is also required to make changes to the AirSim configuration for the simulator to work with HITL mode, namely, activating the option to accept connections through serial.
+To test the complete system configuration for HITL described in section \ref{sec:devenv} and outlined in figure \ref{fig:hitl-connections}, the Pixhawk board needs an additional channel of communication to the computer dedicated to the Mavlink exchange with the dronecontrol application.
 The board will therefore have both a direct cable connection to the computer and a telemetry radio on its \texttt{TELEM1} port with a wireless link to its counterparty radio connected to the computer.
 Since the AirSim simulator requires a higher update rate than the dronecontrol application it will employ the faster, cabled link, through which it can automatically connect to the board when it is started.
 The dronecontrol program will connect through the telemetry radio by specifying the serial port and its baudrate.
+Since the flight stack is now running on a physical controller, it is possible to add an RC antenna to the \texttt{PPM RC} port of the board to be able to fly the vehicle with a remote control unit after it has been bound to the receiver \footnote{\url{https://docs.px4.io/main/en/config/radio.html}}.
+By configuring one of the switches in the RC unit to change to PX4's offboard flight mode, additional checks to the safety measures of interrupting autonomous flight on flight mode changes or loss of signal from the RC controller can be carried out.
 Figure \ref{fig:hitl-setup-picture} shows all the connections mentioned.
 
 \begin{figure}
   \centering
   \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Pixhawk 4 board connected to the computer running the AirSim simulator and the dronecontrol application}\label{fig:hitl-setup-picture}
+  \caption{Pixhawk 4 board connected to the computer running the AirSim simulator and the dronecontrol application}
+  \label{fig:hitl-setup-picture}
 \end{figure}
+\todo[inline]{Figure \ref{fig:hitl-setup-picture}: take picture pixhawk hitl + airsim + rc receiver + telem}
 
 After all the necessary connections are set up, the program can be started with the following command:
-\mintinline{bash}{python -m dronecontrol follow --sim --serial COM[X]:57600}, where the exact COM port will vary depending on the particular USB port to which the telemetry radio is connected.
-
-
-With the results matching exactly those obtained in section \ref{sec:test-3-airsim}, and since the flight stack is now running on a physical controller, it is possible to add an RC antenna to the \texttt{PPM RC} \todo{Polish: check controller port} port of the board to be able to fly the vehicle with a remote control unit after it has been bound to the receiver \footnote{\url{https://docs.px4.io/main/en/config/radio.html}}.
-By configuring one of the switches in the RC unit to change to PX4's offboard flight mode, additional checks to the safety measures of interrupting autonomous flight on flight mode changes or loss of signal from the RC controller can be carried out.
-As can be seen in figure \ref{fig:rc-tests}, ....
-
-\begin{figure}
-  \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Some figures that show these tests}\label{fig:rc-tests}
-\end{figure}
+\mintinline{bash}{python -m dronecontrol follow --sim --serial COM[X]:57600}, 
+where the exact COM port will vary depending on the particular USB port to which the telemetry radio is connected.
 
 
 \subsection{PX4 HITL validation with Raspberry Pi}
@@ -75,16 +69,16 @@ The connection will be done with a USB to USB-C cable, from the battery to the R
 The intent behind testing the power supply at this point in this process is to verify that it will be suitable for its purpose before it actually needed to power the computer onboard the vehicle.
 It is necessary that this power source provides enough power to both maintain the processor running at an appropriate speed and provide power to the external camera in turn, which will be attached to the Pi's board and extract power from it.
 
-\todo[inline]{Image: Close up image and description of custom connector}
+\todo[inline]{Figure \ref{fig:power-supply}: Take picture of pixhawk + rpi with own power supply}
 
 \begin{figure}
   \centering
   \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Picture of Rpi + power module + battery + pixhawk}\label{fig:power-supply}
+  \caption{Connections between the Raspberry Pi and the Pixhawk board for running the AirSim simulator in HITL mode}
+  \label{fig:power-supply}
 \end{figure}
 
 
-% serial activation (enable MAVLINK 2 with baudrate)
 
 A similar connector is used to provide a channel for the Mavlink communication between the flight controller and the onboard computer.
 In this case, one end of the connector is attached to the \texttt{TELEM2} port in the board and the TX/RX pins are attached to the UART pins on the Raspberry's GPIO header.
@@ -92,8 +86,9 @@ For this serial connection to work, both the flight controller and the companion
 The Pixhawk needs to be configured through QGroundControl to enable a secondary Mavlink channel as, by default, only the \texttt{TELEM1} port used by the telemetry radio is configured.
 The necessary parameters to modify and their values are collected in table \ref{tab:telem2-params}.
 On the Raspberry side, the serial port is configured to be used as a terminal by default.
-This can be disabled through the \texttt{raspi-config} command-line utility (Advanced config -> Serial -> Disable\todo{Polish: Check option path on latest OS}).
+This can be disabled through the \texttt{raspi-config} command-line utility (Advanced config -> Serial -> Disable terminal on serial).
 After that, the \texttt{/dev/serial0} address can be used to communicate to the device attached to the UART pins at the baudrate configured through QGroundControl.
+The \texttt{raspi-config} tool and the connector used between the flight controller and the companion computer are show in figure \ref{fig:serial-connection}.
 
 \begin{table}[h!]
  \begin{center}
@@ -110,9 +105,12 @@ After that, the \texttt{/dev/serial0} address can be used to communicate to the 
 
 \begin{figure}
   \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{a) Picture of Rpi raspi-config || b) close-up of pixhawk to pi cable connection}\label{fig:serial-connection}
+  \includegraphics[width=.45\textwidth, keepaspectratio]{img/placeholder.png}
+  \includegraphics[width=.45\textwidth, keepaspectratio]{img/placeholder.png}
+  \caption{a) Picture of Rpi raspi-config || b) close-up of pixhawk to pi cable connection}
+  \label{fig:serial-connection}
 \end{figure}
+\todo[inline]{Figure \ref{fig:serial-connection}: take screenshot of raspi-config for serial and take picture of rpi pins connection}
 
 The test camera utility will be used to validate this configuration.
 At this point, the only physical connection to the ground station running AirSim and/or QGroundControl is through the development-only micro-USB port in the Pixhawk.
@@ -132,6 +130,7 @@ On the right side, the AirSim simulator shows the movements of the vehicle as it
   \caption{a) RPi desktop with pose output || b) AirSim on Windows}
   \label{fig:rpi-airsim-test}
 \end{figure}
+\todo[inline]{Figure \ref{fig:rpi-airsim-test}: take screenshot of rpi desktop and airsim screen while running test-camera in hitl}
 
 \subsection{Performance validation}
 \label{subsec:performance}
@@ -140,8 +139,9 @@ The main question left to answer before the vehicle can take to the air with thi
 To do that, the average time that the program spends on each task in the running loop can be calculated and analyzed for different scenarios.
 Then it will be possible to estimate the maximum speed at which the person being followed by the algorithm can move.
 
-\todo[inline]{Make sure there's a good loop diagram in that section pointed below, and that the enumerated parts are explained in detail}
-From the follow loop presented in section \ref{sec:follow} it is possible to divide the processing cost in several sections that can be measured independently: image processing, offboard control, keyboard input and released thread.
+% Make sure there's a good loop diagram in that section pointed below, and that the enumerated parts are explained in detail
+% Match numbers to added figures
+From the follow loop presented in section \ref{sec:follow} it is possible to divide the processing cost into several sections that can be measured independently: image processing, offboard control, keyboard input, and released thread.
 
 \begin{figure}
   \centering
@@ -149,20 +149,21 @@ From the follow loop presented in section \ref{sec:follow} it is possible to div
   \caption{Diagram image for all simulated hardware performance}
   \label{fig:perf-sitl-sim}
 \end{figure}
+\todo[inline]{Figure \ref{fig:perf-sitl-sim}: draw pie chart of time each section takes for run in airsim + sitl}
 
-Figure \ref{fig:perf-sitl-sim} shows the time used for each of the tasks on an average run of the follow solution with simulated hardware.
+Figure \ref{fig:perf-sitl-sim} shows the time used for each task on an average run of the follow solution with simulated hardware.
 The time measurements have been taken by calculating the time difference between the start and the end of each statement and averaging across every run of the loop.
 The main cost in time of each execution is found in the image processing task, which takes around 91.8\% of the total loop time to run.
-This is where the biggest differences in performance will come from between the simulated hardware and the solution running in the Pixhawk 4 + Raspberry Pi combination.
+This is where the most significant differences in performance will come from between the simulated hardware and the solution running in the Pixhawk 4 + Raspberry Pi combination.
 This image analysis process can be further subdivided to get a finer degree of control over how much time each part takes.
-The three subtasks that make up the image processing are:
+The three subtasks that make up image processing are:
 \begin{enumerate}
-    \item Get frame: request new frame from the video source.
-    \item Process: send frame to MediaPipe library for detection and/or tracking.
-    \item Detect: calculate bounding box coordinates and define valid pose.
+    \item Get frame: request a new frame from the video source.
+    \item Process: send the frame to MediaPipe library for detection and/or tracking.
+    \item Detect: calculate bounding box coordinates and define whether it is a valid pose.
 \end{enumerate}
 
-This further division is shown as well in figure \ref{fig:perf-sitl-sim} with each part taking 60\%, 30\% and 10\% of the total image processing time, respectively, resulting in a performance of around 20 FPS (frames-per-second).
+This further division is shown as well in figure \ref{fig:perf-sitl-sim} with each part taking 60\%, 30\%, and 10\% of the total image processing time, respectively, resulting in a performance of around 20 FPS (frames-per-second).
 
 Similar measurements have been taken for hardware combinations with different degrees of simulation, running the follow solution with offboard mode enabled and connected to the AirSim simulator.
 These are:
@@ -181,10 +182,15 @@ These are:
   \caption{Graph (area??) image for all performance measurements and FPS}
   \label{fig:perf-analysis}
 \end{figure}
+\todo[inline]{Figure \ref{fig:perf-analysis}: draw graph with each task in the horizontal axis and time in the vertical, one line for each combination}
 
-Figure \ref{fig:perf-analysis} shows the measurements taken for all the hardware combinations analysed.
 
-\todo[inline]{Performance: Take measurements and comment results, calculate max speed for each, say its enough}
+Figure \ref{fig:perf-analysis} shows the measurements taken for all the hardware combinations analyzed.
+
+\todo[inline]{Write: comment final results from graph}
+%%
+%% calculate max speed for each, say if enough to run in real tests (yes)
+%%
 
 %% NICE TO HAVE:
 %% Keyboard control actor in unreal that can walk around at a set speed

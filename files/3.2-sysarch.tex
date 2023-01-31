@@ -76,7 +76,6 @@ Figure \ref{fig:offboard-config} shows a summary of all the connections between 
   \label{fig:offboard-config}
 \end{figure}
 
-\todo[inline]{Take pictures: Images of the radios with computer, flight controller}
 
 \subsection{Onboard computer configuration}
 \label{subsec:onboard}
@@ -120,7 +119,6 @@ The camera used for the tests carried out and detailed in section \ref{chap:vali
 Since the frame of the Holybro X500 is not prepared by default to include an onboard camera,
 a custom support has been designed and 3D-printed from PLA plastic to be able to hang the camera from the central rods on the underside of the vehicle frame and ensure that it is attached securely during flight.
 The 3D model of the custom support can be seen in figure \ref{fig:camera-holder-3d} and the print-ready file can be found in the project repository in GitHub \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/data/camera-holder.stl}}.
-\todo{Final check: link works}
 
 \begin{figure}
   \centering
@@ -170,13 +168,14 @@ A diagram of all the connections to the companion computer can be seen in figure
 \label{tab:wiring-telem}
 \end{table}
 
-In comparison with the default baudrate of 57600 on the telemetry radio link established in the previous section the wired serial connection works at a baudrate of 921600, which means that data can be transferred 16 times faster through the link.
-%Main limitation is image processing though, so slower processing power from computer means slower responsiveness to movement all together. Any info about update rate from PX4? Does it depend on the link speed or is it constant?
-\todo[inline]{Final polish: link to performance section}
+Compared to the default baudrate of 57600 on the telemetry radio link established in the previous section, the wired serial connection works at a baudrate of 921600, which means that data can be transferred up to 16 times faster through this link.
+However, the main limitation on the speed of the program comes from the feature detection process on images, so a faster link rate will not necessarily mean any increase in the overall performance.
+In section \ref{subsec:performance}, the behavior of different combinations of hardware is measured further to analyze any challenges to the program's performance.
 
-The offboard configuration allowed the supervision of the output from the program while the vehicle was flying, since the computer stayed stationary on the ground, however in this configuration it is not possible to have a screen connected directly to the companion computer.
+The offboard configuration allowed the supervision of the output from the program while the vehicle was flying since the computer stayed stationary on the ground. 
+However, in this configuration, it is not feasible to have a screen connected directly to the companion computer.
 To fix this situation and be able to monitor during flight, as well as being able to give input directly to the program, it is possible to make use of the WiFi receptor of the Raspberry Pi to configure a remote desktop and connect to it through another computer serving as a ground station;
-then the output from the camera and the image recognition can be seen in real time.
+Then the camera output and image recognition can be seen in real-time.
 
 Figure \ref{fig:onboard-config} shows a summary of all the connections present in the onboard configuration between the three pieces of software that interact together: PX4, Dronecontrol and QGroundControl, with their respective hardware platforms and the attached peripherals.
 

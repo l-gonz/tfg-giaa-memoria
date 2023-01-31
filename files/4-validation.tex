@@ -7,7 +7,7 @@ Figure \ref{fig:validation-chart} shows in order each of the steps followed duri
 In the first section, the application is tested in a purely simulated environment, first individually on each part and finally integrating the flight mechanics simulation 
  with providing images to the computer vision detection software with sending control commands to the flight controller simulation.
  In the second section, the follow detection and guidance solution is tested thoroughly to guarantee that only safe velocity commands are outputted from the PID controllers for any image input that could be received and that their response is according to the desired movement of the vehicle.
- In the third section, and once the software is guaranteed to operate inside the required safety parameters, the simulation is shifted to the dedicated hardware that will be use for real flight: the dedicated autopilot board and the companion computer that will be onboard the vehicle; to ensure that all the connections are working as expected and the devices offer the necessary performance.
+ In the third section, once the software is guaranteed to operate inside the required safety parameters, the simulation is shifted to the dedicated hardware that will be used for real flight: the dedicated autopilot board and the companion computer that will be onboard the vehicle; to ensure that all the connections are working as expected and the devices offer the necessary performance.
  In the fourth and final section, several flight tests are executed with increasing complexity, from the basic controlling of the vehicle with an RC controller to fully autonomous flight with target following.
 
 \begin{figure}
@@ -26,7 +26,7 @@ In the first section, the application is tested in a purely simulated environmen
 % Graphs from test-controller
 % Analysis of error
 
-\todo[inline]{Image: Videos for github}
+´\todo[inline]{Video: record tune tool}
 
 As has been mentioned before, the velocity controller that is the heart of the person following mechanism is based on two PID controllers.
 In order to get velocity outputs for the PID controllers that produce a stable movement of the vehicle, it is necessary to tune the parameters of the controllers until the appropriate combination is found.
@@ -46,7 +46,6 @@ Which means that the controllers running in the simulator will have as their tar
 
 \subsection{Yaw controller}
 
-\todo[inline]{Write: Discuss velocity graphs as well for every section, mention velocity limits}
 
 \begin{figure}
   \centering
@@ -124,6 +123,8 @@ The final values for the coefficients for the yaw controller will then be $K_P=-
 
 
 \subsection{Forward controller}
+\todo[inline]{Test: Controller should end up with (4, 0.1, 0)}
+
 
 A similar process to the one used for the yaw controller must be followed for the forward controller.
 The starting position for the tuning process is, in this case, with the figure closer to the vehicle than the reference position and centered in its field of view.
@@ -131,8 +132,6 @@ Figure \ref{fig:tune-ref-pos-fwd} shows this starting setup with the figure situ
 In this position, the input to the forward controller is 0.47, that is, the bounding box around the detected figure takes up 47\% of the height of the camera field of view.
 The response from the controller will therefore need to be a negative forward velocity that brings the vehicle away from the target person and reduces the perceived figure height.
 Since a negative output velocity reduces the input at the entrance of the controller in a directly proportional manner, the coefficients for this PID controller will need to be positive, contrary to what happened on the yaw controller where the feedback loop was inversely proportional (a positive velocity decreased the input to the yaw controller).
-
-\todo[inline]{Test: Controller should end up with (4, 0.1, 0)}
 
 
 \begin{figure}
@@ -194,7 +193,9 @@ The x coordinate of the figure in the simulated world will remain at $x=500$.
 
 Plots of the changes in normalized horizontal distance and normalized figure height detected by the person recognition algorithm during the time the vehicle takes to reach the target distance from the human figure for each of the positions tested can be seen in figure \ref{fig:validate-yaw}.
 It is considered that the vehicle has reached its target when the error is less than 2\% and the output speed at the controller is less than 10\% of its maximum.
-Furthermore, the whole testing process followed with the developed \texttt{test-controller} tool can be seen in \todo{Image: link video of test-controller tool}.
+Furthermore, the whole testing process followed with the developed \texttt{test-controller} tool can be seen here.
+%%%%%%%%% [here] %%%%%%%%
+\todo{Video: record test-controller tool}
 
 Since each of the starting positions differ both in distance and orientation to the target, both of the controllers are engaged to reach it.
 The yaw controller then introduces a negative yaw velocity when the figure is on the left half of the camera's field of view and a positive yaw velocity when the figure is on the right half to reach the target horizontal distance of 0.5 (figure centered in the image received from the camera);
@@ -218,17 +219,22 @@ Additionally, the \texttt{test-controller} tool is run with varying positions in
 This means the yaw controller will not need to output any velocity.
 The changes over time in the input into the forward controller between each starting position and the target position are shown in figure \ref{fig:validate-fwd}.
 The figure reflects that there is a very big difference in how the controller reacts to closer positions and to further positions.
-\todo[inline]{Write: TODO validate fwd, and rerun}
-- Closer vs further positions
-- Error in detection for x=300
+
+\todo[inline]{Test: rerun validation tool for fwd}
+\todo[inline]{Write: finish explanation for latest graph}
+\todo[inline]{Video: record follow solution in AirSim with final PID tunings (+ screenshot on figure \ref{fig:validate-fwd})}
+% - Closer vs further positions
+% - Error in detection for x=300
 
 \begin{figure}
   \centering
   \includegraphics[width=.8\textwidth, keepaspectratio]{img/pid/validation_fwd.png}
-  \caption{}\label{fig:validate-fwd}
+  \caption{Follow solution running with the tuned PID controllers}
+  \label{fig:validate-fwd}
 \end{figure}
 
-A video of the full follow solution running with the appropriate tunings for the controllers can be seen in \todo{Image: Link video to follow run}.
+A video of the full follow solution running with the appropriate tunings for the controllers can be seen in here.
+%%%%%%%%%%%% [HERE] %%%%%%%%%%%%
 
 
 \clearpage

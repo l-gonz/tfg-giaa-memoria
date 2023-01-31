@@ -6,17 +6,16 @@
   \caption{Structure of the Dronecontrol application and its interactions with the necessary additional software for running in a simulation (green) or in an actual vehicle (blue).}\label{fig:architecture}
 \end{figure}
 
-\todo[inline]{Write: Describe the actual new diagram, blue vs green arrows, data flow, ...}
 
-Figure \ref{fig:architecture} shows the main modules the designed software is composed of and how it interacts with the external libraries.
+Figure \ref{fig:architecture} shows the main modules of the designed software and how it interacts with the external libraries.
 The application consists of three basic parts: 
 the pilot module, in charge of sending instructions to the flight controller and receiving back information on position and state through the \texttt{mavsdk} library, 
 a video source module that handles the retrieval of images from different sources and the necessary processing for image analysis,
 and a control module that directs the interaction between the other two to transform the pixel information first into position points through the \texttt{mediapipe} library and then into instructions for the pilot.
-The upper part of the diagram in figure \ref{fig:architecture} shows the flow of information between the Dronecontrol application and the external systems, with green lines representing its path in a simulated workflow and the blue ones indicating the alternative path for the information in a system with actual quadcopter hardware.
+The upper part of the diagram in figure \ref{fig:architecture} shows the flow of information between the Dronecontrol application and the external systems, with green lines representing its path in a simulated workflow and blue ones indicating the alternative path for the information in a system with actual quadcopter hardware.
 Purple arrows show the input/output of each module within the developed application and how they interconnect with each other.
-Other smaller utilities have also been developed to help test how the systems interact with each other and calibrate different parts of the control behaviour.
-These are described in section \ref{subsec:test-tools}.
+Other smaller utilities have also been developed to help test how the systems interact with each other and calibrate different parts of the control behavior.
+These are described in sections \ref{subsec:cam-tool} and \ref{subsec:pid-tools}.
 A user manual with all the options available in the application can be found in Appendix \ref{app:cli}.
 
 \subsection{Pilot module}
@@ -65,11 +64,11 @@ async def connect(self):
     \end{minted}
 \end{listing}
 
-Many of basic operations that can be executed in the flight controller are implemented in the pilot module with error handling and safety checks, like takeoff, landing, return home or manipulating the vehicle flying velocity directly by providing speeds in body coordinates.
-These actions can be executed directly or added to a queue that runs in on a loop executing them in the order they are added, waiting until the previous action has finished and the vehicle is in the desired state before starting the next.
+Many of basic operations that can be executed in the flight controller are implemented in the pilot module with error handling and safety checks, like takeoff, landing, return home, or manipulating the vehicle flying velocity directly by providing speeds in body coordinates.
+These actions can be executed directly or added to a queue that runs in a loop executing them in the order they are added, waiting until the previous action has finished and the vehicle is in the desired state before starting the next.
 The loop that runs this queue can be seen in Listing~\ref{lst:pilot.queue}.
 There is a maximum time of 10 seconds that each action can use to run
-The loop stops when the asynchronous task it runs on is cancelled with \mintinline{python}{task.cancel()}, which raises a \mintinline{python}{CancelledError} exception in the parallel execution.
+The loop stops when the asynchronous task it runs on is canceled with \mintinline{python}{task.cancel()}, which raises a \mintinline{python}{CancelledError} exception in the parallel execution.
 
 \begin{listing}[h!]
     \caption{Loop where the action queue runs on the pilot module. Each action is awaited until it finishes or the timeout time runs out.}{}
@@ -99,12 +98,14 @@ async def run_queue(self):
     \end{minted}
 \end{listing}
 
+\todo[inline]{Polish: consider removing code or exchanging for diagrams}
+
 \subsection{Video source module}
 \label{subsec:viz-source-module}
 
 The objective of the video source module is to provide a collection of classes to retrieve images from different sources,
-in a way that they can be exchanged for one another without affecting the rest of the application to facilitate testing and be adaptable running in different environments.
-There are three classes of video sources implemented: file, simulator and camera, which inherit from the same \mintinline{python}{VideoSource} base class as shown in Figure~\ref{fig:video-source-inheritance}.
+in a way that they can be exchanged for one another without affecting the rest of the application to facilitate testing and be adaptable to running in different environments.
+There are three classes of video sources implemented: file, simulator, and camera, which inherit from the same \mintinline{python}{VideoSource} base class as shown in figure \ref{fig:video-source-inheritance}.
 
 \begin{figure}
   \centering
@@ -115,7 +116,7 @@ There are three classes of video sources implemented: file, simulator and camera
 
 The \mintinline{python}{FileSource} class is able to open a video file stored in the companion computer and provides images taken frame by frame from it until the video ends.
 This allows the program to replay the image detection algorithms on videos previously captured by the camera tool exposed in section~\ref{subsec:test-tools}.
-The \mintinline{python}{CameraSource} class can access a physical camera attached to the computer running the application via USB and provide the frames captured in real time.
+The \mintinline{python}{CameraSource} class can access a physical camera attached to the computer running the application via USB and provide the frames captured in real-time.
 Both the file and camera sources employ OpenCV's video capture utilities to take care of the file handling and the camera driver management capabilities respectively.
 
 The simulator source uses AirSim's Python library to communicate with the simulator and retrieve images from a simulated camera attached to the 3D model of the vehicle in Unreal Engine.
@@ -143,7 +144,7 @@ In order to hold position while in this mode, the vehicle must receive a stream 
 Sections~\ref{sec:hands} and \ref{sec:follow} offer a more complete explanation of the control module used by the two different solutions developed.
 
 \subsubsection{Camera-testing tool}
-\label{subsec:cam-test-tools}
+\label{subsec:cam-tool}
 
 Several additional utilities have been added to the dronecontrol program to facilitate the development and testing process of the two main control solutions.
 The first tool is accessed through the command \mintinline{bash}{dronecontrol tools test-camera} and can be used for testing the connection between the computer, the flight stack and the camera without using any self-guided control mechanism, as well as evaluating the performance of the MediaPipe hand and pose machine learning solution on real time images.
@@ -183,15 +184,14 @@ The open hand gesture, for example, can then be defined as all five fingers exte
 \begin{figure}
   \centering
   \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
-  \caption{Vector calculations}
+  \caption{Vectors extracted from the detected features to calculate the relative positions of the individual fingers}
   \label{fig:vector-calcs}
 \end{figure}
-\todo[inline]{Draw: hand vectors}
-\todo[inline]{Draw: Include diagram of angles for each pointy gesture ?????}
+\todo[inline]{Figure \ref{fig:vector-calcs}: hand with arrow vectors between pertinent features and angles origins shown}
 
-The full list of gestures detected by the program by calculating these angles is as follows:
+The full list of gestures detected by the program by calculating these angles is shown in figure \ref{fig:hand-gestures} and is as follows:
 \begin{itemize}
-    \item No hand: happens when no landmarks are able to be extracted from the image. As a safety feature, in this case the vehicle stops whichever previous commands it had in its queue and goes into hold flight mode, where it just hovers in the air maintaining its position.
+    \item No hand: happens when no landmarks are able to be extracted from the image. As a safety feature, in this case, the vehicle stops whichever previous commands it had in its queue and goes into hold flight mode, where it just hovers in the air maintaining its position.
     \item Open hand: it is detected when all five fingers are extended, as if gesturing stop, and makes the drone land at its current position.
     \item Fist: it is detected when all five fingers are folded and makes the drone arm and takeoff. If the drone is already in the air nothing happens.
     \item Index finger pointing up: it is detected when only the index finger is extended and it is pointing roughly towards the top of the image ($\pm 30$ degrees) and makes the drone go into offboard mode, where it is possible to receive direct velocity commands.
@@ -200,22 +200,27 @@ The full list of gestures detected by the program by calculating these angles is
     \item Thumb pointing to the right: it is detected when index finger is extended up (to maintain the drone in offboard control) and the thumb is extended pointing towards the right of the screen. This gesture makes the drone pitch forward at a steady speed of 1 m/s.
     \item Thumb pointing to the left: same as the previous gesture, but the drone pitches backward when the thumb point to the left of the screen.
 \end{itemize}
+\todo[inline]{Polish: make sure explanation matches behavior after any code changes}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/placeholder.png}
+  \caption{Gestures detected by the program to control the movement of the drone}
+  \label{fig:hand-gestures}
+\end{figure}
+\todo[inline]{Figure \ref{fig:hand-gestures}: Clean-up screenshots of detected gestures with drawn landmarks over hand and no background}
 
 
 The program execution is described in figure \ref{fig:hands-loop}.
 After all the necessary options have been set, one new thread is started to run the pilot queue loop detailed in \ref{subsec:pilot-module}, which waits for new commands.
 On the main thread, the GUI loop runs endlessly until the user quits the program, queuing actions based on gestures calculated from retrieved images and on user input on the keyboard.
-\todo[inline]{Draw: hand loop diagram}
 \begin{figure}
   \centering
-  \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
-  \caption{Execution flow for the hand-gesture control solution.}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/placeholder.png}
+  \caption{Execution flow for the running loop in the hand-gesture control solution.}
   \label{fig:hands-loop}
 \end{figure}
-
-\todo[inline]{Images: simulators program output image with drawn lines for gestures}
-\todo[inline]{Video: hand control in simulator}
-
+\todo[inline]{Figure \ref{fig:hands-loop}: hand solution loop diagram (MIRO)}
 
 
 
@@ -242,19 +247,35 @@ In this mode, the vehicle will attempt to find a single person in its field of v
 
 During the program execution and while the offboard mode and the follow mechanism is engaged, the system continuously retrieves images from the offboard camera that are fed into the MediaPipe Pose \cite{mp-pose-paper} computer vision library to extract pose landmarks from it in the form of 2D coordinates.
 Figure~\ref{fig:pose-landmarks} shows the available extracted features and their correspondence to the human body.
-These coordinates are used to draw a bounding rectangle around the detected person, as well as for validating that the received landmarks match the general pose of a person standing up.
+These coordinates are used to draw a bounding rectangle around the detected person and to validate that the received landmarks match the general pose of a person standing up.
+Figure \ref{fig:pose-validation} shows some examples of the validation checks being run on the raw landmarks extracted from an image.
 To prevent unwanted movements, the vehicle will always stop and hover every time it becomes impossible to detect a person in the image received or its features do not match the expected geometry.
-\todo[inline]{Images: valid and invalid person detection from simulator camera output}
-After a valid bounding box has been defined around the target person, its position in respect to the field of view of the camera is sent to a control mechanism composed of two independent PID controllers. The theory behind these controllers is explained in section~\ref{subsec:pid-tools}).
+After a valid bounding box has been defined around the target person, its position with respect to the camera's field of view is sent to a control mechanism composed of two independent PID controllers. The theory behind these controllers is explained in section \ref{subsec:pid-tools}.
 
-The first of the PID controllers is in charge of controlling the yaw velocity of the vehicle to respond to horizontal movements in the x direction of the image. 
-\todo[inline]{Draw: coordinate system figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
+  \caption{Valid and invalid poses detected by the follow solution}
+  \label{fig:pose-validation}
+\end{figure}
+\todo[inline]{Figure \ref{fig:pose-validation}: valid and invalid person detection from simulator camera output}
+
+The first of the PID controllers is in charge of controlling the yaw velocity of the vehicle to respond to horizontal movements in the x direction of the image.
 It takes as input the x coordinate of the center point of the bounding box, and its target is the middle point of the screen.
 This controller, therefore, will output velocity commands aimed at maintaining the bounding box centered horizontally in its field of view.
-
 The second PID controller controls the forward velocity of the vehicle to respond to distance changes of the person getting closer or farther away from the drone.
 It takes as input the height of the calculated bounding box as a percentage of the total height of the field of view and works to keep it within a value that matches the desired distance to maintain between the person and the vehicle by moving forwards when the height is too low and backwards when it is too high.
 The exact percentage of the image height that is covered by a person at a given distance depends on the camera used and needs to be obtained empirically for each separate video source.
+Figure \ref{fig:follow-input-calcs} shows how these two inputs are extracted from the coordinates of the bounding box detected around the figure.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
+  \caption{Calculation of horizontal position and height of figure from the detected bounding box}
+  \label{fig:follow-input-calcs}
+\end{figure}
+\todo[inline]{Figure \ref{fig:follow-input-calcs}: Draw calculations over extracted pose from simulator}
+
 
 A summary diagram of the structure of the follow solution can be seen in figure \ref{fig:follow-loop}.
 After connecting to the pilot module according to the starting options, a loop runs continuously until the user quits the program.
@@ -262,24 +283,22 @@ For each execution, a new image is retrieved, pose features are extracted from i
 Then, and only if the vehicle is in offboard flight mode, the calculated positions will be fed into the PID controller to get a velocity output to send to the pilot.
 Keyboard control is also available to send manual commands to the vehicle directly.
 
-\todo[inline]{Draw: follow loop diagram}
 \begin{figure}
   \centering
   \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
-  \caption{Vector calculations}
-  \label{fig:vector-calcs}
+  \caption{Execution flow for the running loop in the follow control solution}
+  \label{fig:follow-loop}
 \end{figure}
-
-\todo[inline]{Images: simulator and output, link video of run}
-
+\todo[inline]{Figure \ref{fig:follow-loop}: follow loop diagram}
 
 
 
 
 \subsection{PID tools}
+\label{subsec:pid-tools}
 
 Two additional utilities have been developed for tuning and measuring the performance of the PID controllers.
-These tools are used in section \ref{sec:test-1-pid} to set the correct values in the coefficients for the controllers empirically.
+These tools are used in section \ref{sec:test-1-pid} to empirically set the correct values in the coefficients for the controllers.
 A proportional-integral-derivative is a control loop mechanism commonly used in control systems requiring continuously modulated control.
 It works by constantly calculating an error value from the difference between the received input on a chosen process variable, which in this case is the detected position of a person in a the frame, and the desired set point for that variable, a position centered in the frame.
 From the error value, and output for the controller is calculated according to this equation:
