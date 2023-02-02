@@ -103,7 +103,7 @@ This will allow seeing the effect that the derivative part has in the controller
 Figures \ref{fig:tune-yaw-der-i0} and \ref{fig:tune-yaw-der-i1} shows the evolution of the position detected by the computer vision system and the velocity that the controller outputs for a sample time of 40 seconds for $K_I=0$ and $K_I=-1$, respectively, with $K_P=-50$.
 For all the tested values, the iteration with $K_I=-1$ on \ref{fig:tune-yaw-der-i1} shows a better convergence towards the target positions than their counterpart values of $K_D$ for $K_I=0$, which indicates that the integral part has been chosen correctly.
 Furthermore, adding any amount to the derivative part does not produce any visible benefit in the step response of the controller and the curve that first stabilizes on the target position continues to be the one for $K_D=0$, while the velocity graph remains approximately the same between $K_D=0$ and $K_D=-2$
-The final values for the coefficients for the yaw controller will then be $K_P=-50$, $K_I=-1$ and $K_D=0$, so the controller will in truth only be a PI controller, and not a full PID controller.
+The final values for the coefficients for the yaw controller will then be $K_P=-50$, $K_I=-1$, and $K_D=0$, so the controller will in truth only be a PI controller and not a complete PID controller.
 
 
 \begin{figure}
@@ -123,7 +123,6 @@ The final values for the coefficients for the yaw controller will then be $K_P=-
 
 
 \subsection{Forward controller}
-\todo[inline]{Test: Controller should end up with (4, 0.1, 0)}
 
 
 A similar process to the one used for the yaw controller must be followed for the forward controller.
@@ -143,41 +142,40 @@ Since a negative output velocity reduces the input at the entrance of the contro
 In general, the forward velocity will always need to be smaller than the yaw velocity since it induces a pitch angle in the vehicle that tilts the camera up and down which can destabilize the camera and cause a loss of sight of the followed figure.
 To achieve that, the coefficients for the forward controller will be reduced by one order of magnitude.
 In the first place, values from $K_P=1$ to $K_P=9$ in increments of 2 have been tested for $K_I=0$ and $K_D=0$ for a sample time of 30 seconds.
-The curves described by the controller for this coefficients are shown in figure \ref{fig:tune-fwd-prop}.
-In comparison with the trajectory described by the yaw controller, the forward controller is in general more unstable since fast movements forward and backward affect the pose detection algorithm.
-This is particularly visible at the start of the each test as slightly different heights are detected in the image from the camera even though the vehicle is in the same position in respect to the human figure.
-It also creates an effect, especially for the bigger $K_P$ values tested, where even as the vehicle begin its movement backwards to its target position, the pose detection mechanism get a better image of the followed person, increasing or decreasing the detected height slightly, so that small spikes of height differences show in the height graphs even though the velocity graph shows that the vehicle's direction of movement remains the same during those approximately 3 seconds at the beginning of each test.
-This is the main reason why the output forward velocity needs to be kept small in the controller.
-In the right graph of figure \ref{fig:tune-fwd-prop}, it is also visible for high values of $K_P$ how the output velocity is high enough that the maximum velocity limit is reached for the forward controller, which is set at 0.4\unitfrac{m}{s}.
-However, even for a value up to $K_P=7$ the trajectory described descends rapidly without ending in big oscillations around the target height, so it is a good value to keep for the final controller.
+The curves described by the controller for these coefficients are shown in figure \ref{fig:tune-fwd-prop}.
+In comparison with the trajectory described by the yaw controller, the forward controller is generally more unstable since fast movements forward and backward affect the pose detection algorithm.
+This is particularly visible at the start of each test as slightly different heights are detected in the image from the camera even though the vehicle is in the same position with respect to the human figure.
+It also creates an effect, especially for the bigger $K_P$ values tested, where, as the vehicle begins its movement back to its target position, the pose detection mechanism gets a slightly different perspective on the followed person which increases the detected height slightly, so that small spikes of detected differences show in the height graphs even though the velocity graph shows that the vehicle's direction of movement remains the same.
+This effect is reduced by keeping the output forward velocity small in the controller.
+In the right graph of figure \ref{fig:tune-fwd-prop}, it is also visible for high values of $K_P$ how the output velocity increases enough that the maximum velocity limit is reached on the forward controller and the output is capped to 0.4\unitfrac{m}{s}.
+For a value up to $K_P=3$, the trajectory described descends rapidly without ending in big oscillations around the target height, so it is an adequate value to keep for the final controller.
 
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/fwd_pos_prop_i0_d0.png}
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/fwd_vel_prop_i0_d0.png}
+  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_pos_prop_i0_d0.png}
+  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_vel_prop_i0_d0.png}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the forward controller is engaged.}\label{fig:tune-fwd-prop}
 \end{figure}
 
 
 The respective tests for $K_I$ and $K_D$ in the forward controller are shown in figures \ref{fig:tune-fwd-int} and \ref{fig:tune-fwd-der}.
-For the integral part, increasing the coefficient causes the controller to overshoot the target in the first instance, but then causes a stable approximation to the target line.
-Since for this application overshooting is not desirable, as it can cause safety issues, the chosen value of $K_I$ will be 0.5, which slightly improves on the performance without overshooting.
-For the derivative part, high values of $K_D$ make the system oscillate more, and for very high values from $K_D=3$ the changes in forward velocity are fast enough that the camera loses track of the figure before regaining it again, which produces the erratic behaviour that can be seen in the purple line on figure \ref{fig:tune-fwd-der}b.
-In this case, the value of $K_D=0.5$ seems to most closely approximate to the target line with minimal oscillations.
-The final values for the coefficients for the forward controller will then be $K_P=7$, $K_I=0.5$ and $K_D=0.5$.
+For the integral part, increasing the coefficient causes the controller to overshoot the target initially but then before starting to approximate to the target position.
+Since for this application, overshooting is not desirable, as it can cause safety issues, the chosen value of $K_I$ will be 0.
+For the derivative part, every value of $K_D$ testes makes the system increase its oscillations, so it will also be left out of the forward controller.
+The final values for the coefficients for the forward controller will then be $K_P=3$, $K_I=0$, and $K_D=0$, which makes it only a proportional controller.
 
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/fwd_pos_p7_int_d0.png}
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/fwd_vel_p7_int_d0.png}
+  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_pos_p3_int_d0.png}
+  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_int_d0.png}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{I}$ and $K_P=7$, $K_D=0$ while the forward controller is engaged.}\label{fig:tune-fwd-int}
 \end{figure}
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/fwd_pos_p7_i05_der.png}
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/fwd_vel_p7_i05_der.png}
+  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_pos_p3_i0_der.png}
+  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_i0_der.png}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{D}$ and $K_P=7$, $K_I=0.5$ while the forward controller is engaged.}\label{fig:tune-fwd-der}
 \end{figure}
 
@@ -195,7 +193,7 @@ Plots of the changes in normalized horizontal distance and normalized figure hei
 It is considered that the vehicle has reached its target when the error is less than 2\% and the output speed at the controller is less than 10\% of its maximum.
 Furthermore, the whole testing process followed with the developed \texttt{test-controller} tool can be seen here.
 %%%%%%%%% [here] %%%%%%%%
-\todo{Video: record test-controller tool}
+\todo[inline]{Video: record test-controller tool}
 
 Since each of the starting positions differ both in distance and orientation to the target, both of the controllers are engaged to reach it.
 The yaw controller then introduces a negative yaw velocity when the figure is on the left half of the camera's field of view and a positive yaw velocity when the figure is on the right half to reach the target horizontal distance of 0.5 (figure centered in the image received from the camera);
@@ -212,29 +210,28 @@ This shows that the controllers can recover from errors in the detection mechani
   \centering
   \includegraphics[width=.45\linewidth]{img/pid/validation_yaw.png}
   \includegraphics[width=.45\linewidth]{img/pid/validation_yaw_2.png}
-  \caption{}\label{fig:validate-yaw}
+  \caption{Changes over time in detected horizontal position and height as input for the controllers with different starting positions in the y-axis}
+  \label{fig:validate-yaw}
 \end{figure}
 
-Additionally, the \texttt{test-controller} tool is run with varying positions in the x axis, which means that the tests are run with the human figure at different distances closer and further away from the vehicle, while maintaining in the center of its field of view (y position will remain 0 for the whole process).
+Additionally, the \texttt{test-controller} tool is run with varying positions in the x-axis, which means that the tests are run with the human figure at different distances closer and further away from the vehicle while maintaining in the center of its field of view (y position will remain 0 for the whole process).
 This means the yaw controller will not need to output any velocity.
 The changes over time in the input into the forward controller between each starting position and the target position are shown in figure \ref{fig:validate-fwd}.
-The figure reflects that there is a very big difference in how the controller reacts to closer positions and to further positions.
-
-\todo[inline]{Test: rerun validation tool for fwd}
-\todo[inline]{Write: finish explanation for latest graph}
-\todo[inline]{Video: record follow solution in AirSim with final PID tunings (+ screenshot on figure \ref{fig:validate-fwd})}
-% - Closer vs further positions
-% - Error in detection for x=300
+The figure reflects that there is a very big difference in how the controller reacts to positions closer and further from the target distance.
+When the person is very close to the vehicle, there are big differences between detected heights, so the vehicle moves fast away from its position.
+However, when the person is further away from the vehicle than the target, big differences in distance are detected as small differences in detected height, which causes the controller to output a lower velocity than for the same distance difference when the person is closer to the vehicle and therefore it will take a longer amount of time to reach the target.
+It is worth noting that even when the person is so close to the vehicle that part of it falls outside of its field of view ($x=300$ in the figure), the pose detection works well enough to mark where the person should continue outside of the image so that it is still possible for the controller to decide the correct direction of movement.
 
 \begin{figure}
   \centering
   \includegraphics[width=.8\textwidth, keepaspectratio]{img/pid/validation_fwd.png}
-  \caption{Follow solution running with the tuned PID controllers}
+  \caption{Changes over time in detected height as input for the forward controller with different starting positions in the x-axis}
   \label{fig:validate-fwd}
 \end{figure}
 
-A video of the full follow solution running with the appropriate tunings for the controllers can be seen in here.
+A video of the complete follow solution running with the appropriate tunings for the controllers can be seen in here.
 %%%%%%%%%%%% [HERE] %%%%%%%%%%%%
+\todo[inline]{Video: record follow solution in AirSim with final PID tunings (+ screenshot on figure \ref{fig:validate-fwd})}
 
 
 \clearpage
