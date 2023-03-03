@@ -87,7 +87,7 @@ The vehicle can be configured either by connecting the flight controller directl
 \todo[inline]{Figure \ref{fig:qgc-config}: take screenshot of sensor config in qgc}
 
 
-\subsection{Introductory tests}
+\subsection{Initial tests}
 \label{sec:test-8-flight}
 
 % Setup:    flight plan
@@ -133,7 +133,7 @@ The full video of the test can be seen here.
 \label{subsec:fl-test-2}
 
 The second test flight will aim to make sure that the custom software can send takeoff and landing commands through a wireless MAVlink channel from the offboard computer (by using the telemetry radio through the developed test tool).
-For this flight, the QGroundControl application cannot be connected to the vehicle since the telemetry radio channel will be blocked by the custom tool.
+For this flight, the QGroundControl application cannot be connected to the vehicle since the telemetry radio channel will be blocked by the dronecontrol application.
 The RC controller will therefore be used as a backup in case anything goes wrong with the software.
 At any moment, the controller can switch flight mode and override the input generated from the dronecontrol application, recovering manual control.
 Since the dronecontrol application can now easily arm the vehicle on its own while sending a takeoff command,

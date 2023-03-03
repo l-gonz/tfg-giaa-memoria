@@ -1,29 +1,103 @@
 \chapter{Conclusions}
 \label{chap:conclusion}
 
-\todo[inline]{Write: short recap with conclusions}
-
+This chapter analyses the results obtained from the project, as well as the obstacles that arose during the development and testing phases.
+Afterwards, the proposed initial objectives are examined for completion, and the lessons learned during the project are exposed, along with some suggestions for future work in the field.
 
 \section{Evaluation of objectives}
 \label{sec:consecucion-objetivos}
 
-% Esta sección es la sección espejo de las dos primeras del capítulo de objetivos, donde se planteaba el objetivo general y se elaboraban los específicos.
-% Es aquí donde hay que debatir qué se ha conseguido y qué no. 
-% Cuando algo no se ha conseguido, se ha de justificar, en términos de qué problemas se han encontrado y qué medidas se han tomado para mitigar esos problemas.
-\todo[inline]{Write: Go through objectives in introduction and debate what's been achieved}
+The main objective of this project was to illustrate how the PX4 platform could be used to develop vision-driven control mechanisms for UAVs.
+This was achieved by building and presenting a complete development environment that can be used for each stage in the process of creating new control solutions, from the concept phases to running tests in the target hardware.
+
+For the more specific objectives, in the first place,
+the tools and systems developed by the Dronecode project, which includes PX4, MavSDK and QGroundControl were leveraged in cooperation with the Dronecontrol written code to reduce the workload of the project by making use of preexisting and stable technologies.
+
+Second, to show the minimum requirements needed to develop an individual control solution, a combination of low-cost and very accessible pieces of hardware were employed to test all the developed software and take the project out of the simulation environment and into a real drone capable of flying.
+Thanks to the platform's modular nature, all of the individual pieces are also interchangeable with other hardware based on budget or availability as long as it can run the same software as the one chosen for the tests in this project.
+
+Third, it has been demonstrated how the development environment, all the presented existing tools and the chosen hardware can be tied together to create viable vision-driven mechanisms for UAVs, 
+by developing two separate control solutions for two different computer-camera-autopilot configurations that show the flexibility of the system and some of the possibilities it offers.
+The viability of these solutions was further validated by carrying out test flights in real-life conditions outside of simulation environments.
+
+Fourth, the testing process presented in chapter \ref{chap:validation} introduces a systematic approach to validating the system that can help carry any new software from the earliest phases of testing to the final flight tests while maintaining safety and reliability by progressively introducing new parts on top of the components already validated, for the smallest possible divisions of both the software and the hardware.
+
+And last, a UAV of the quadcopter type was built to carry out the test flights mentioned before by using a development kit commercialized for easy assembly and already designed to work with the PX4 platform.
+This made it possible to dedicate the most time to developing the desired control solutions without being concerned with the low-level electronics involved in controlling the engines or the basic flight mechanics like takeoff and landing.
 
 
 \section{Lessons learned}
 \label{sec:lessons-learned}
 
-\todo[inline]{Write: Subsection 1 - cosas aprendidas del grado aplicadas al proyecto }
-\todo[inline]{Write: Subsection 2 - cosas aprendidas del tfg en general }
+\subsection{Applied knowledge}
+
+During the development of this project, it became necessary to apply many of the different pieces of knowledge acquired through the course of the bachelor's degree.
+The following subjects have been especially relevant to provide the necessary experience to complete the project:
+
+\begin{enumerate}
+    \item \textbf{Fundamentals of Programming and Computer Science}. This is the first introduction to computer science and programming in the degree. It provides the foundational knowledge of how to write good code that is the basis of this project's development.
+    
+    \item \textbf{Systems and Circuits}. This course serves as an introduction to electricity and circuits. This information has been useful in understanding how the electronics of the drone are powered and how they work together, especially in implementing the custom connectors between the Raspberry Pi and the Pixhawk board.
+    
+    \item \textbf{Architecture of Computer Networks / Telematic Systems}. These two subjects deal with the protocols that make up computer communications. The knowledge they provide on how the UDP, TCP and IP protocols work together, as well as regarding the overall communication between computer networks, has been invaluable in the process of integrating the three separate computers that make up the simulation environment developed for the project (autopilot board, companion computer and simulation computer) and making them communicate with each other in a single network.
+    
+    \item \textbf{Aerospace Engineering}. The lessons learned in this course offered an introduction to the field of aerospace in general and UAVs in particular. It was especially relevant to acquire the basic knowledge of how drones stay in the air and how their movement in their 3 axes is controlled through the four propellers in a quadcopter, which is the basis for the autopilot in this project.
+    
+    \item \textbf{Operating Systems}. This subject provided much of the necessary knowledge to set up and work with Linux operating systems, which has been needed in this project both for the PX4 SITL simulated autopilot and for the configuration of the Raspberry Pi board as a companion computer onboard the aircraft.
+    
+    \item \textbf{Engineering of Information Systems}. This course offered important tools to handle version control in any software project and, more specifically, to work with the GitHub platform to host the code safely and keep track of issues.
+    
+    \item \textbf{Command and Control Systems}. This subject deals with the analysis and design of control systems, including PID controllers like the ones used to regulate the output velocity of the vision-guided follow system implemented in this project. It provided insight into many important concepts like feedback loops, stability and error analysis.
+    
+    \item \textbf{Telematic Services and Applications}. The main takeaway from this subject was the experience it provided in using the Python programming language in complex projects, including package management with \texttt{pip} and how to use some of the most common external libraries for Python.
+    
+    Other lessons obtained during the course of the bachelor's that cannot be pinpointed to an isolated subject but to the combination of many related pieces in the training itinerary, and that has been invaluable for the development of this project, include knowledge on how to investigate and read technical documentation, how different communication systems work and how to use them to their best advantage, or how to manage the development of complex projects.
+\end{enumerate}
+
+
+\subsection{Acquired knowledge}
+
+Throughout the development of this project, there have been many challenges that have required expanding on the knowledge mentioned in the previous section, as well as acquiring new competences in order to find solutions to the problems that surfaced.
+These are some of the main aptitudes developed:
+
+\begin{itemize}
+    \item Python skills: how to organize projects with multiple submodules and create packages from own code, as well as experience in several standard libraries:
+    \begin{itemize}
+        \item Asynchronous programming in Python with the \texttt{asyncio} library.
+        \item Matrix and vector handling with the \texttt{numpy} library.
+        \item Plotting customizable graphs in different UI platforms with the \texttt{matplotlib} library.
+    \end{itemize}
+
+    \item Knowledge of open-source UAV autopilots, including the main different options available, the tools they offer, how they work and how they allow developing new functionality for their platform.
+
+    \item Computer vision: knowledge of the main tasks of classification, localization, landmark detection, and tracking, types of algorithms available and how they are trained in big datasets and how to select one based on the required accuracy and available performance.
+
+    \item OpenCV: how to use the multi-platform library to analyse and manipulate images from different sources.
+
+    \item Raspberry Pi board and Raspberry OS: how to work with serial connections from general I/O pins, how the OS differs from other Linux variants and the limitations it has, and how to improve the performance of Python code to adapt to the limited processing power.
+
+    \item Using Unreal Engine for physics simulation, employing pre-made plugins for the engine and customizing environments, besides working with 3D models to simulate and test computer vision scenarios.
+
+    \item Practical application of a PID to a control problem and how to use trial-and-error to calibrate it for an experimental system with an unknown transfer function.
+
+    \item 3D-modelling in Tinkercad and 3D-printing with PLA plastic to design and build a camera holder adapted to the drone frame.
+
+    \item Using Miro for drawing different kinds of diagrams and image layouts.
+\end{itemize}
 
 
 \section{Future work}
 \label{sec:fut-work}
 
 \todo[inline]{Write: future work}
+
+
+
+- Replace hardware
+- Develop own vision system instead of mediapipe for better detection distance ( 2D to 3D position calculation)
+- Make drone aware of its own position respect person
+- Follow movement of person with roll
+- Add altitude control
 
 % Ningún proyecto ni software se termina, así que aquí vienen ideas y funcionalidades que estaría bien tener implementadas en el futuro.
 

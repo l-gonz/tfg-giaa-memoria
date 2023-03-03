@@ -132,7 +132,7 @@ On the right side, the AirSim simulator shows the movements of the vehicle as it
 \end{figure}
 \todo[inline]{Figure \ref{fig:rpi-airsim-test}: take screenshot of rpi desktop and airsim screen while running test-camera in hitl}
 
-\subsection{Performance validation}
+\subsection{Performance analysis}
 \label{subsec:performance}
 
 The main question left to answer before the vehicle can take to the air with this hardware and software is whether the less powerful processor in the Raspberry Pi 4b, a quad-core ARM Cortex-A72 64-bit SoC running at 1.5GHz, can handle the detection and tracking algorithms with enough performance to get similar results to those obtained with simulated hardware and achieve good reactions to real-time movement.
@@ -141,64 +141,63 @@ Then it will be possible to estimate the maximum speed at which the person being
 
 % Make sure there's a good loop diagram in that section pointed below, and that the enumerated parts are explained in detail
 % Match numbers to added figures
-From the follow loop presented in section \ref{sec:follow} it is possible to divide the processing cost into several sections that can be measured independently: image processing, offboard control, keyboard input, and released thread.
+From the follow loop presented in section \ref{sec:follow}, it is possible to divide the processing cost into several areas that can be measured independently: image processing, offboard control, manual input, and released thread (sleep).
 
 \begin{figure}
   \centering
-  \includegraphics[width=.8\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Diagram image for all simulated hardware performance}
+  \includegraphics[width=.8\textwidth, keepaspectratio]{img/sitl-performance.png}
+  \caption{Average percentages of a loop spent by each task in the follow solution with their corresponding average absolute times in seconds.}
   \label{fig:perf-sitl-sim}
 \end{figure}
-\todo[inline]{Figure \ref{fig:perf-sitl-sim}: draw pie chart of time each section takes for run in airsim + sitl}
 
-Figure \ref{fig:perf-sitl-sim} shows the time used for each task on an average run of the follow solution with simulated hardware.
-The time measurements have been taken by calculating the time difference between the start and the end of each statement and averaging across every run of the loop.
-The main cost in time of each execution is found in the image processing task, which takes around 91.8\% of the total loop time to run.
+Figure \ref{fig:perf-sitl-sim} shows the time used for each task on an average run of the follow solution with simulated hardware (PX4 running in SITL mode with AirSim).
+The time measurements have been taken by calculating the time difference between each statement's start and end and averaging across every run of the loop.
+The main cost in time of each execution is found in the image processing task, which takes around 89\% of the total loop time to run.
 This is where the most significant differences in performance will come from between the simulated hardware and the solution running in the Pixhawk 4 + Raspberry Pi combination.
 This image analysis process can be further subdivided to get a finer degree of control over how much time each part takes.
-The three subtasks that make up image processing are:
+The three subtasks that makeup image processing are:
 \begin{enumerate}
     \item Get frame: request a new frame from the video source.
-    \item Process: send the frame to MediaPipe library for detection and/or tracking.
+    \item Process pose: send the frame to MediaPipe library for detection and/or tracking.
     \item Detect: calculate bounding box coordinates and define whether it is a valid pose.
 \end{enumerate}
 
-This further division is shown as well in figure \ref{fig:perf-sitl-sim} with each part taking 60\%, 30\%, and 10\% of the total image processing time, respectively, resulting in a performance of around 20 FPS (frames-per-second).
+This further division is also shown in figure \ref{fig:perf-sitl-sim}, with each of these subtasks taking 40\%, 48\%, and 1\% of the total image processing time, respectively.
+The total average time for each run of the follow loop is then 0.094 seconds, which results in an average performance of 10.5 FPS (frames-per-second).
 
 Similar measurements have been taken for hardware combinations with different degrees of simulation, running the follow solution with offboard mode enabled and connected to the AirSim simulator.
 These are:
 \begin{enumerate}
     \item All simulated hardware: PX4 on SITL mode + dronecontrol on standalone computer + images from AirSim simulator video source.
     \item Simulated hardware with real images: PX4 on SITL mode + dronecontrol on standalone computer + images from attached camera as video source.
-    \item Test hardware with AC power supply: PX4 on HITL mode on Pixhawk 4 + dronecontrol on Raspberry Pi + images from AirSim simulator video source.
-    \item Test hardware with battery: PX4 on HITL mode on Pixhawk 4 + dronecontrol on Raspberry Pi powered by battery + images from AirSim simulator video source.
-    \item Test hardware with real images: PX4 on HITL mode on Pixhawk 4 + dronecontrol on Raspberry Pi powered by battery + images from attached camera as video source.
+    \item Test hardware with AC power supply: PX4 on HITL mode on Pixhawk 4 + dronecontrol on Raspberry Pi + images from attached camera as video source.
+    \item Test hardware with battery: PX4 on HITL mode on Pixhawk 4 + dronecontrol on Raspberry Pi powered by battery + images from attached camera as video source.
 \end{enumerate}
 
 
 \begin{figure}
   \centering
-  \includegraphics[width=.8\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Graph (area??) image for all performance measurements and FPS}
+  \includegraphics[width=.9\textwidth, keepaspectratio]{img/performance-graph.png}
+  \caption{Average time spent on each task in the follow solution loop and total FPS for the different hardware configurations.}
   \label{fig:perf-analysis}
 \end{figure}
-\todo[inline]{Figure \ref{fig:perf-analysis}: draw graph with each task in the horizontal axis and time in the vertical, one line for each combination}
 
 
-Figure \ref{fig:perf-analysis} shows the measurements taken for all the hardware combinations analyzed.
+Figure \ref{fig:perf-analysis} shows the averages of the measurements taken for all the hardware combinations analyzed.
+In the first test, it can be observed that the retrieval of each single frame from the AirSim simulator takes a much longer time than when an external camera is used.
+This is because the simulation running on Unreal Engine is also limited in performance to what the computer can offer, which is not a cost that will be reflected when the simulation engine is no longer needed.
+In the second test, the images from the simulator are replaced with the feed from an external camera connected to the computer. 
+This results in a much lower cost for image retrieval and the best performance of any of the tests, with an average of 14 FPS and peaks of more than 20 FPS.
+For the third and fourth tests, the image-processing calculations are moved to the onboard Raspberry Pi computer, which increases the time needed for pose-processing by one order of magnitude.
+There is also a noticeable difference in performance in the Raspberry's processor between powering the computer through the AC power supply and through an external battery, stemming from the fact that the former supplies 3A of current to the board and the latter only 2A.
 
-\todo[inline]{Write: comment final results from graph}
-%%
-%% calculate max speed for each, say if enough to run in real tests (yes)
-%%
+With these measurements, it is possible to form an idea of how the board will behave during real flight, with the last test being the closest to the expected flight conditions.
+It should therefore be possible to sustain a performance of around 3 FPS during flight.
+With a time between frames of around 0.3 seconds, and since the field of view of the camera used for flight tests is about four meters wide, the person being followed should be able to move at a speed of 3-4 m/s and remain within the view of the drone.
+
 
 %% NICE TO HAVE:
 %% Keyboard control actor in unreal that can walk around at a set speed
 %% and be followed
 %% EVEN NICER TO HAVE:
 %% Web build of unreal project running dronecontrol
-
-% ¿¿¿???
-% Calculate horizontal field of view at target distance, target can move a third of that distance in the time it takes to run a loop.
-% Speed = distance / loop time
-% ¿¿¿???

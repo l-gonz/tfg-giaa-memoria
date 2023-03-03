@@ -1,0 +1,62 @@
+Disable HITL, set frame, set MAV_1 to TELEM2
+
+#TEST 7  -- First flight
+- QGroundControl on PC, RPi off, RC controller on
+- Map RC switches to arm/disarm, land/takeoff/position
+- Record PC screen / RC controller / drone on flight
+- EXECUTE: Arm -> Takeoff -> Move sideways -> Move up-down -> Land
+
+#TEST 2  -- Offboard config
+- No QGC, RC on, dronecontrol on Windows with telem-radio
+- Map RC switches to kill, land/hold/offboard
+- Record PC screen
+- Record drone flight
+- EXECUTE: dronecontrol tools test-camera -r COM8:57600
+           T -> O -> WASD -> Hold on RC -> WASD -> L
+
+#TEST 3  -- Onboard config
+- QGC on Windows, WiFi area, RPi on
+- Start RDC, set up venv, plug cam
+- Show detected distance and height on image
+- Record PC (camera + shell) / drone in flight
+- Record performance
+- Decide height target
+- EXECUTE: dronecontrol tools test-camera -r /dev/serial0:921600 -p
+           T -> O -> WASD -> Hold on RC -> WASD -> L
+
+#TEST 4  -- Hands
+- No QGC, RPi off, dronecontrol on Windows with telem-radio
+- Set return home height to 5 meters
+- Record PC (camera + shell) / drone in flight
+- EXECUTE: dronecontrol hand -s COM8:57600
+           Open -> Fist -> Offboard -> Index control -> Thumb control -> Open -> Offboard -> Index control -> No hand -> Backhand
+
+
+TEST 5  -- Follow
+- QGC on Windows, WiFi area, RPi on
+- Start RDC, set up venv, plug cam
+- Match height target to test 3
+- Record PC (camera + shell) / drone in flight
+- Record performance
+- EXECUTE: dronecontrol follow -s /dev/serial0:921600
+            T -> O -> Move around -> Deactivate offboard with RC -> R
+- EXECUTE again with model complexity 0, follow:61
+
+
+#TEST 6  -- Bonus: hand on RPi
+- QGC on Windows, WiFi area, RPi on
+- Start RDC, set up venv, plug cam
+- EXECUTE: dronecontrol hand -s /dev/serial0:921600
+
+
+
+
+
+
+
+
+SITL TESTS
+- dronecontrol tools test-camera -w -s -p  (Windows / Linux)
+- dronecontrol hand -p 14550  (Windows)
+- dronecontrol follow --sim 172.19.112.1 (Linux)
+  dronecontrol follow --sim -p 14550 (Windows)
