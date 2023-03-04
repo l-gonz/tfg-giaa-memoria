@@ -89,16 +89,18 @@ These are some of the main aptitudes developed:
 \section{Future work}
 \label{sec:fut-work}
 
-\todo[inline]{Write: future work}
+The work presented in this bachelor's thesis focused on presenting several basic vision-based control solutions for the PX4 autopilot to show the capabilities of the system. Therefore, there are numerous avenues for further research and development in this area that could expand on the work presented here.
 
+\begin{itemize}
+    \item Integration with more sensors: In this work, only a single camera was used as the input source for the computer vision algorithm. In future work, it would be beneficial to investigate the integration of other sensors, such as lidar, radar, or multiple camera systems, to improve the performance of the computer vision algorithm.
 
+    \item More sophisticated computer vision algorithms: The algorithms used in this thesis employ basic image processing techniques to make up a detector-tracker ML pipeline. However, there is still room for improvement in terms of the sophistication of computer vision algorithms. Future work can investigate the use of deep learning-based algorithms, such as convolutional neural networks, to improve the accuracy and robustness of the system.
 
-- Replace hardware
-- Develop own vision system instead of mediapipe for better detection distance ( 2D to 3D position calculation)
-- Make drone aware of its own position respect person
-- Follow movement of person with roll
-- Add altitude control
+    \item Exploration of alternative control algorithms: A simple proportional-integral-derivative (PID) controller was used in this work to control the drone's position. However, there are several alternative control algorithms that could be explored, such as model predictive control or neural network-based controllers.
 
-% Ningún proyecto ni software se termina, así que aquí vienen ideas y funcionalidades que estaría bien tener implementadas en el futuro.
+    \item Multi-drone control: The focus of the project was on controlling a single drone. However, in real-world scenarios, multiple drones may need to be controlled simultaneously. Future work can investigate the use of multi-drone vision-based control algorithms to enable the coordinated control of multiple drones.
 
-% Es un apartado que sirve para dar ideas de cara a futuros TFGs/TFMs.
+    \item Application to other domains: While the focus of this work was on drone control, the PX4 autopilot is compatible with other ground and water-based vehicles, so the proposed computer vision solutions could be applied to other domains, such as robotics or autonomous vehicles.
+\end{itemize}
+
+Overall, the proposed vision-based control solutions for PX4 autopilots are a promising approach that can be further improved through future research. The above-mentioned areas provide several directions for future work that can lead to more accurate, robust, and adaptive control solutions that react to their environment and that can provide autonomous flight for multiple application fields.
