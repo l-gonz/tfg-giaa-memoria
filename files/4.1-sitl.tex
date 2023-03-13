@@ -48,12 +48,11 @@ On the left side, the detection algorithm tracks the joint of the hand present i
   \caption{Hand detection algorithm running on images taken from the computer integrated webcam}\label{fig:sitl-hand}
 \end{figure}
 
-The full execution of a test of the hand-gesture based control solution is shown in video in this link and excerpt of it can be seen in figure \ref{fig:sitl-hand-video}.
-\todo[inline]{Video: Record video of hand-gesture solution running on SITL (+ screenshot on figure \ref{fig:sitl-hand-video})}
+The full execution of a test of the hand-gesture based control solution is shown in this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-hand}{video}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-hand}} in this link and an image extracted from it can be seen in figure \ref{fig:sitl-hand-video}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/video-hand-sitl.png}
   \caption{Single frame from the video showing the full execution of the hand-gesture control solution}
   \label{fig:sitl-hand-video}
 \end{figure}
@@ -87,37 +86,35 @@ This starts the software-in-the-loop execution, which attempts to attach to an a
 Therefore, every time one of PX4 or AirSim stops its execution, both of them have to be restarted in the specific order of first the AirSim simulator and then the PX4 flight controller.
 Figure \ref{fig:airsim-sitl} shows the testing environment after the AirSim simulator and the PX4 console have been started successfully.
 
-\todo[inline]{Figure \ref{fig:airsim-sitl}: Screenshot of PX4 console + Unreal with Airsim scene}
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth, keepaspectratio]{img/placeholder.png}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-sitl.png}
   \caption{AirSim environment connected to PX4 flight stack running in SITL mode}
   \label{fig:airsim-sitl}
 \end{figure}
 
 At this point, it is possible to use the PX4 console to send takeoff and land commands to the simulator and observe the 3D-model of the vehicle climb into the air.
 To test the detection and tracking of human figures from images taken inside the simulator, one can again use the camera testing tool provided with dronecontrol.
-Figure \ref{fig:airsim-sitl-pose} shows the output when the tool is run with the command \mintinline{bash}{dronecontrol tools test-camera --wsl --sim --pose-detection} and a 3D model of a person is situated in front of the drone in the simulated world.
+Figure \ref{fig:airsim-sitl-pose} shows the output when the tool is run with the command:
+\mint{bash}{dronecontrol tools test-camera --wsl --sim --pose-detection} 
+and a 3D model of a person is situated in front of the drone in the simulated world.
 In the image, the computer vision utilities detect the main features of the human body and a bounding box is drawn around it.
 Meanwhile, the logged output from the program shows two calculated positions in the terminal: the x coordinate of the mid point of the bounding box and the percentage of the image height covered by the height of the bounding box.
 These two numbers are the inputs for the PID controllers used in the follow solution as described in section \ref{sec:follow}, so that the output can be used to calibrate the distance from which the drone is to follow the person when that control mode is engaged.
 
-\todo[inline]{Figure \ref{fig:airsim-sitl-pose}: dronecontrol console + Unreal with Airsim scene + image output running test-camera}
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth, keepaspectratio]{img/placeholder.png}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-sitl-pose.png}
   \caption{AirSim, PX4 and dronecontrol applications running side-by-side and connecting to each other}
   \label{fig:airsim-sitl-pose}
 \end{figure}
 
 Now that the testing environment is working as expected and before it is used to tune the PID controllers in the follow solution to the response of the vehicle's movement in the next section, it is possible to verify that the controllers are capable of reacting to changes in the position of the figure by only enabling their proportional term with an appropriately low magnitude to keep the movement slow and smooth.
-The drone movement when running the follow control program with values of 10 and 2 on the proportional term of the yaw and forward controllers, respectively, which can be done with the command \mintinline{bash}{dronecontrol follow --sim --yaw-pid (10, 0, 0) --fwd-pid (2, 0, 0)}, is shown in video format in this link and a frame extracted from it can be seen in figure \ref{fig:airsim-test-follow}.
+The drone movement when running the follow control program with values of 10 and 2 on the proportional term of the yaw and forward controllers, respectively, which can be done with the command \mintinline{bash}{dronecontrol follow --sim --yaw-pid (10, 0, 0) --fwd-pid (2, 0, 0)}, is shown in video in this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-follow}{link}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-follow}} and a frame extracted from it can be seen in figure \ref{fig:airsim-test-follow}.
 
-
- \todo[inline]{Video: Record video of follow solution running on AirSim + SITL (+ screenshot for figure \ref{fig:airsim-test-follow})} 
 \begin{figure}
   \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Single frame from the video showing the movement of the drone in response to changes in position of the tracked person}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/video-follow-sitl.png}
+  \caption{Single frame from the video showing the movement of the drone in response to changes in the position of the tracked person}
   \label{fig:airsim-test-follow}
 \end{figure}

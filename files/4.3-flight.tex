@@ -81,10 +81,11 @@ The vehicle can be configured either by connecting the flight controller directl
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/placeholder.png}
+  \includegraphics[width=0.45\textwidth, keepaspectratio]{img/qgc-config-1.png}
+  \includegraphics[width=0.45\textwidth, keepaspectratio]{img/qgc-config-3.png}\\
+  \includegraphics[width=0.45\textwidth, keepaspectratio]{img/qgc-config-2.png}
   \caption{Screenshot from the QGroundControl calibration and setup tools used to configure the vehicle}\label{fig:qgc-config}
 \end{figure}
-\todo[inline]{Figure \ref{fig:qgc-config}: take screenshot of sensor config in qgc}
 
 
 \subsection{Initial tests}
@@ -105,29 +106,18 @@ With the sticks centered, the vehicle will actively remain locked to a position 
 This is the safest manual mode to test that the standard autopilot works as expected.
 
 Through QGroundControl it is possible to map the different switches in the RC controller to different autopilot commands.
-For this test, one of the switches with two positions will be mapped to arm/disarm, which controls whether the engines of the quadcopter can start or not; and one of the switches with three positions will be mapped to the landing/takeoff/position flight modes respectively, so the main autopilot modes can be tested by moving the switch between the available positions during flight.
+For this test, one of the switches with two positions will be mapped to arm/disarm, which controls whether the engines of the quadcopter can start or not. One of the switches with three positions will be mapped to the landing/takeoff/position flight modes, respectively. The main autopilot modes can be tested by switching between the available positions during flight.
 This configuration exhausts all the channels available in the RC controller employed.
 Other flight modes can be set by using the QGroundControl interface directly.
 
 To carry out the flight, first, the main battery is connected to the socket in the power module.
 This starts up the autopilot, the GPS antenna, the telemetry radio, and the RC receiver.
-Afterward, QGroundControl can be started on a computer that has been connected to the second telemetry radio via USB.
+Afterwards, QGroundControl can be started on a computer that has been connected to the second telemetry radio via USB.
 If everything has worked correctly, the ground station application will automatically connect to the vehicle and situate its position on a satellite map.
 Turning on the RC controller will likewise make it connect to the vehicle, as long as it has been paired correctly, as indicated in the guide linked in the first step of the build process.
 Once all the wireless connections have been established, the drone can take off by first switching to the armed state and then switching to the takeoff flight mode.
 While the drone is in the air, switching to the position flight mode will allow direct control through the joysticks in the controller.
-Figure \ref{fig:flight-test-basic} shows an image from a flight carried out following these steps.
-The full video of the test can be seen here.
-%%%% [HERE] %%%%
 
-\todo[inline]{Figure \ref{fig:flight-test-basic}: record video of flight test with RC control (+screenshot for text)}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Picture from flight tests}
-  \label{fig:flight-test-basic}
-\end{figure}
 
 \subsubsection{Offboard computer flight with test tool}
 \label{subsec:fl-test-2}
@@ -148,24 +138,23 @@ or
 dronecontrol tools test-camera -r /dev/ttyUSB0:57600
 \end{minted}
 
-After a successful connection to the vehicle, the T and L keys in the computer keyboard can be used for takeoff and landing, respectively, and the O key can be used to set the autopilot in offboard flight mode to make it able to receive velocity commands.
-Afterward, the WASD keys can be used to control the forward and sideways velocity of the vehicle and the QE keys to control its yaw velocity.
+After successfully connecting to the vehicle, the T and L keys in the computer keyboard can be used for takeoff and landing, respectively. The O key can be used to set the autopilot in offboard flight mode to enable it to receive velocity commands.
+Afterwards, the WASD keys can be used to control the forward and sideways velocity of the vehicle and the QE keys to control its yaw velocity.
 Figure \ref{fig:flight-test-cam-offboard} displays the output on the terminal window of the computer, where the connection process and the sent velocity commands are shown, and the output on the camera from the offboard computer.
+A video of the entire process can be found \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-offboard}{here}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-offboard}}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\textwidth, keepaspectratio]{img/placeholder.png}
-  \includegraphics[width=.45\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{a) Terminal output from the \texttt{test-camera} tool running on an offboard computer, b) output from the camera of the offboard computer towards the vehicle in flight}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-offboard.png}
+  \caption{Terminal output from the \texttt{test-camera} tool running on an offboard computer and image of the drone flying in response}
   \label{fig:flight-test-cam-offboard}
 \end{figure}
-\todo[inline]{Figure \ref{fig:flight-test-cam-offboard}: take screenshot from test-camera terminal and image output running for quadcopter + offboard companion computer}
 
 \subsubsection{Onboard computer flight with test tool}
 \label{subsec:fl-test-3}
 
 The third and last test flight in this section will ensure that the custom software can send takeoff and landing commands through a cabled MAVlink channel from the onboard computer,
-as well as making sure that the onboard camera can obtain a good image of the field of view of the vehicle during flight.
+as well as ensuring that the onboard camera can obtain a good image of the field of view of the vehicle during flight.
 For that, the same tool will be used as in the last test, 
 but in this instance, it will be run on the Raspberry Pi, and the connection will be established through the wired serial link between this onboard computer and the Pixhawk autopilot board.
 Since the camera connected to the computer sending commands is now looking down on the pilot, it is possible to activate pose detection on the test images received from this onboard camera.
@@ -176,17 +165,16 @@ By this connection, a terminal window can be opened on the desktop, and the foll
 dronecontrol tools test-camera -r /dev/serial0:921600 -p
 \end{minted}
 As opposed to the flight using the telemetry radio, in this test the serial connection runs at a baudrate of 921600, which matches the configured baudrate on the \texttt{TELEM2} port of the Pixhawk board.
-The "-p" option is used to enable pose detection in the output images.
-The terminal and camera output can be seen in figure \ref{fig:flight-test-cam-onboard} and a video recording the remote desktop during the flight can be seen in here.
-%%%% [HERE] %%%%
+The "-p" option enables pose detection in the output images.
+A video of the entire process can be found \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-onboard}{here}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-onboard}} and an image extracted form it can be seen in figure \ref{fig:flight-test-cam-onboard}.
 
 
 \begin{figure}
   \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Pose detection algorithm running on images taken during flight}\label{fig:flight-test-cam-onboard}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-onboard.png}
+  \caption{Pose detection algorithm running on images taken during flight}
+  \label{fig:flight-test-cam-onboard}
 \end{figure}
-\todo[inline]{Figure \ref{fig:flight-test-cam-onboard}: record video of test-camera terminal and image output running for quadcopter + onboard companion computer (+ screenshot for text)}
 
 
 \subsection{Hand gesture control}
@@ -211,29 +199,16 @@ where <device> is the COM port or TTY device the telemetry radio is attached to,
 After the pilot connects, the image from the webcam of the computer will appear on the screen with an outline over any detected hand.
 To start controlling the vehicle, an open palm should be shown to the camera.
 Then, a closed fist will make the drone take off, and pointing up with the index finger will start the offboard flight mode.
-Afterward, moving the index finger right or left will make the vehicle mirror the movement, 
-and moving the thumb right or left will make the vehicle move forward and backward, respectively.
-At any point during the test, an open hand will make the vehicle land at its current place, and losing sight of the controlling hand will make the vehicle return to the starting position before landing as well
-
-\todo[inline]{Figure \ref{fig:flight-test-hand-takeoff}, \ref{fig:flight-test-hand-right}, \ref{fig:flight-test-hand-fwd}: record video side-by-side computer screen with terminal and image output and video from vehicle flying, synced, hand solution on windows (+ 3 screenshots of different movements)}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is taking off}
-  \label{fig:flight-test-hand-takeoff}
-\end{figure}
+Afterwards, moving the index finger right or left will make the vehicle mirror the movement, 
+and moving the thumb right or left will make the vehicle move forward and backwards, respectively.
+At any point during the test, an open hand will make the vehicle land at its current place, and losing sight of the controlling hand will make the vehicle return to the starting position before landing as well.
+A video of the entire process can be found \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-hand}{here}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-hand}} and an image extracted form it can be seen in figure \ref{fig:flight-test-hand}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is moving to the right.}\label{fig:flight-test-hand-right}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Image taken during flight controlled by the hand-gesture solution. Vehicle is moving forward}\label{fig:flight-test-hand-fwd}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-hand.png}
+  \caption{Image taken during flight controlled by the hand-gesture solution. The vehicle is moving forward.}
+  \label{fig:flight-test-hand}
 \end{figure}
 
 \subsection{Target detecting, tracking and following}
@@ -252,20 +227,28 @@ The control application will be started with the following command:
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
 dronecontrol follow -s /dev/serial0:921600
 \end{minted}
-Figure \ref{fig:flight-test-follow} shows the process in the terminal of getting the vehicle to takeoff (T key), activating offboard flight mode (O key), and starting movement tracking of the detected figure.
-The maximum frames per second managed by the program running on the Pi is around %______.
-In practice, this means that the person being tracked by the drone has to move quite slowly for the camera not to lose sight of them before the autopilot can send the command to the vehicle to move to the previously detected position.
-At the end of the program run, the average loop time and average runtime for each of the tasks in the main loop are shown in the terminal.
-From the measures obtained for the test flight carried out, we can see %______________.
-However, for a proof-of-concept scenario, this is an acceptable performance.
-\todo[inline]{Write: Compare performance in follow flight to that in the HITL section}
+This \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}{video}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}} shows the process of getting the vehicle to takeoff (T key), activating offboard flight mode (O key), and starting movement tracking of the detected figure.
+An image extracted from the video can be seen in figure \ref{fig:flight-test-follow}.
 
 
 \begin{figure}
   \centering
-  \includegraphics[width=.6\textwidth, keepaspectratio]{img/placeholder.png}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-follow.png}
   \caption{Terminal and image output of the dronecontrol follow solution running on the Raspberry Pi}
   \label{fig:flight-test-follow}
 \end{figure}
 
-\todo[inline]{Figure \ref{fig:flight-test-follow}: same recording as hand solution (+ screenshot from terminal and image output)}
+The maximum frames per second managed by the program running on the Pi is around 6 FPS when the follow mechanism is engaged and around 8 FPS if it is disabled by switching out of offboard flight mode.
+In practice, this means that the person being tracked by the drone has to move quite slowly for the camera not to lose sight of them before the autopilot can send the command to the vehicle to move to the previously detected position.
+However, for a proof-of-concept scenario, this is acceptable performance.
+At the end of the program run, the average loop time and average runtime for each of the tasks in the main loop are shown in the terminal.
+From the measures obtained for the test flight carried out, the average frame rate calculates to be 3.58 FPS.
+If these measurements are compared to those analyzed in section \ref{subsec:performance}, as shown in figure \ref{fig:flight-performance}, particularly to the test configuration most closely resembling actual flight with the autopilot board running on HITL mode and the companion computer powered by the secondary battery, it is possible to appreciate how close this configuration matches the behaviour during actual flight and therefore validating it as an appropriate environment to test the performance of this type of algorithms.
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth, keepaspectratio]{img/perf-hitl-flight.png}
+  \caption{Terminal and image output of the dronecontrol follow solution running on the Raspberry Pi}
+  \label{fig:flight-performance}
+\end{figure}

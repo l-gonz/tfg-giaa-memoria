@@ -26,7 +26,7 @@ MavSDK utilizes the python standard library \emph{asyncio} to be able to run cor
 Therefore all calls to the library have to be written as async functions that await the result of one or more polls to the flight stack.
 
 \texttt{asyncio} provides support for writing concurrent code using the \texttt{async/await} syntax.
-It is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc; 
+It is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web servers, database connection libraries, distributed task queues, etc; 
 and provides a set of high-level APIs to run Python coroutines concurrently and have full control over their execution.
 The pilot module integrates \texttt{mavsdk} and \texttt{asyncio} and provides a queue for the control module to send actions to be executed in the vehicle one after another.
 
@@ -64,8 +64,8 @@ async def connect(self):
     \end{minted}
 \end{listing}
 
-Many of basic operations that can be executed in the flight controller are implemented in the pilot module with error handling and safety checks, like takeoff, landing, return home, or manipulating the vehicle flying velocity directly by providing speeds in body coordinates.
-These actions can be executed directly or added to a queue that runs in a loop executing them in the order they are added, waiting until the previous action has finished and the vehicle is in the desired state before starting the next.
+Many of the basic operations that can be executed in the flight controller are implemented in the pilot module with error handling and safety checks, like takeoff, landing, return home or manipulating the vehicle flying velocity directly by providing speeds in body coordinates.
+These actions can be executed directly or added to a queue that runs in a loop, executing them in the order they are added, waiting until the previous action has finished and the vehicle is in the desired state before starting the next.
 The loop that runs this queue can be seen in Listing~\ref{lst:pilot.queue}.
 There is a maximum time of 10 seconds that each action can use to run
 The loop stops when the asynchronous task it runs on is canceled with \mintinline{python}{task.cancel()}, which raises a \mintinline{python}{CancelledError} exception in the parallel execution.
@@ -109,25 +109,25 @@ There are three classes of video sources implemented: file, simulator, and camer
 
 \begin{figure}
   \centering
-  \includegraphics[width=8cm, keepaspectratio]{img/uml-video-source.jpg}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/uml-video-source.jpg}
   \caption{Diagram of inheritance on the video source classes available to retrieve image data.}
   \label{fig:video-source-inheritance}
 \end{figure}
 
 The \mintinline{python}{FileSource} class is able to open a video file stored in the companion computer and provides images taken frame by frame from it until the video ends.
 This allows the program to replay the image detection algorithms on videos previously captured by the camera tool exposed in section~\ref{subsec:test-tools}.
-The \mintinline{python}{CameraSource} class can access a physical camera attached to the computer running the application via USB and provide the frames captured in real-time.
-Both the file and camera sources employ OpenCV's video capture utilities to take care of the file handling and the camera driver management capabilities respectively.
+The \mintinline{python}{CameraSource} class can access a physical camera attached to the computer running the application via USB and provide the frames captured in real time.
+Both the file and camera sources employ OpenCV's video capture utilities to take care of the file handling and the camera driver management capabilities, respectively.
 
 The simulator source uses AirSim's Python library to communicate with the simulator and retrieve images from a simulated camera attached to the 3D model of the vehicle in Unreal Engine.
-It connects automatically through localhost, but it can also be provided with an IP to establish connection to the simulator running on a different computer on the local network, for example when the program runs inside WSL and the simulator runs on its host computer.
+It connects automatically through localhost, but it can also be provided with an IP to establish a connection to the simulator running on a different computer on the local network, for example, when the program runs inside WSL and the simulator runs on its host computer.
 
 \subsection{Vision control module}
 \label{subsec:control-module}
 The control module contains the main logic of the application and is in charge of converting the raw images obtained from the video source into commands for the pilot module.
 Two different types of control have been implemented.
-The first one is a proof-of-concept control solution, described in section \ref{sec:hands}, that runs in offboard mode (see section \ref{subsec:offboard}) and translates some predefined hand gestures into simple commands for the aerial vehicle, of which the main purpose is to be able to test the interaction between all the components of the system in a more easily controlled environment, since it uses the simpler configuration of situating the computer with the controller outside of the vehicle.
-The second control system consists of a follow solution more applicable to real-life scenarios where the control and the camera is onboard the vehicle and the presence of a person is detected in the images obtained from the perspective of the drone in order to be able to give the flight controller velocity commands to follow said person and maintain it centered in its view.
+The first one is a proof-of-concept control solution, described in section \ref{sec:hands}, that runs in offboard mode (see section \ref{subsec:offboard}) and translates some predefined hand gestures into simple commands for the aerial vehicle, of which the main purpose is to be able to test the interaction between all the components of the system in a more easily controlled environment since it uses the simpler configuration of situating the computer with the controller outside of the vehicle.
+The second control system consists of a follow solution more applicable to real-life scenarios where the control and the camera are onboard the vehicle, and the presence of a person is detected in the images obtained from the perspective of the drone in order to be able to give the flight controller velocity commands to follow said person and maintain it centred in its view.
 
 The process followed in both solutions consists roughly of the same two parts.
 First the image is sent to the computer vision and machine learning third-party library that extracts the required features from the image in the form of 2D coordinates.
@@ -138,7 +138,7 @@ To engage the module in direct control of the vehicle's velocity it is necessary
 Offboard mode is primarily used for controlling vehicle movement and attitude, and supports only a very limited set of MAVLink messages. This mode requires position or pose/attitude information to be available to the flight controller, e.g. GPS.
 In it, the vehicle obeys a position, velocity or attitude setpoint provided over MAVLink by a MAVLink API (i.e. MAVSDK) running on a companion computer and usually connected via serial cable or wifi.
 A stream of setpoint commands must be received by the vehicle at a rate higher than 2Hz prior to engaging the mode and in order to remain in it.
-If the message rate falls below 2Hz or the connection is lost the vehicle will stop and, after a timeout, the vehicle will attempt to land or perform some other failsafe action according to the parameters configured.
+If the message rate falls below 2Hz or the connection is lost, the vehicle will stop and, after a timeout, the vehicle will attempt to land or perform some other failsafe action according to the parameters configured.
 In order to hold position while in this mode, the vehicle must receive a stream of setpoints for the current position.
 
 Sections~\ref{sec:hands} and \ref{sec:follow} offer a more complete explanation of the control module used by the two different solutions developed.
@@ -147,13 +147,13 @@ Sections~\ref{sec:hands} and \ref{sec:follow} offer a more complete explanation 
 \label{subsec:cam-tool}
 
 Several additional utilities have been added to the dronecontrol program to facilitate the development and testing process of the two main control solutions.
-The first tool is accessed through the command \mintinline{bash}{dronecontrol tools test-camera} and can be used for testing the connection between the computer, the flight stack and the camera without using any self-guided control mechanism, as well as evaluating the performance of the MediaPipe hand and pose machine learning solution on real time images.
+The first tool is accessed through the command \mintinline{bash}{dronecontrol tools test-camera} and can be used for testing the connection between the computer, the flight stack and the camera without using any self-guided control mechanism, as well as evaluating the performance of the MediaPipe hand and pose machine learning solution on real-time images.
 It is also possible to take images and record video from the live camera feed for later analysis.
 Through the command-line options, the test tool can be configured to use any of the three available video sources: camera, simulator or a video file recorded by using the tool itself,
 to connect to an optional hardware or simulated PX4 flight controller by specifying a connection string or IP, respectively,
 to run either in a host computer or a WSL subsystem,
 and to process incoming images with the hand or pose recognition software.
-While the tool is running, the keyboard can be used to send basic commands to a connected vehicle like takeoff, landing or moving along any of its three axis.
+While the tool is running, the keyboard can be used to send basic commands to a connected vehicle like takeoff, landing or moving along any of its three axes.
 A full breakdown of all the tool's options can be found in Appendix \ref{app:cli}.
 
 
@@ -162,7 +162,7 @@ A full breakdown of all the tool's options can be found in Appendix \ref{app:cli
 \section{Proof of concept: hand-gesture solution}
 \label{sec:hands}
 The main purpose of this solution is to test that the flow of the application works as expected, both in simulation and in real flight, and that all the systems are capable of establishing the required connections with each other.
-For that reason it is designed to be able to be run in real flight with the minimal setup of a built drone with its default components and any computer with a camera.
+For that reason, it is designed to be able to be run in real flight with the minimal setup of a built drone with its default components and any computer with a camera.
 
 \begin{figure}
   \centering
@@ -174,7 +174,7 @@ For that reason it is designed to be able to be run in real flight with the mini
 
 This control module runs on a loop that continuously polls for a new frame from the chosen video source and feeds it to the hand detection functionality from MediaPipe \cite{mp-hands-paper}.
 If a hand is detected in the images, 2D coordinates are extracted according to the map shown in figure~\ref{fig:hand-landmarks}.
-These landmarks are then converted into different discrete gestures like open palm, closed fist or an specific finger pointing different directions.
+These landmarks are then converted into different discrete gestures like open palm, closed fist or a specific finger pointing in different directions.
 When a new gesture is detected, the command assigned to it is queued to the pilot module and executed as soon as the previous commands end their execution.
 
 The conversion between landmarks and gestures is performed by drawing vectors from the base of each of the fingers to their tips as well as from the base of the hand (wrist feature) to the base of the fingers and using the dot product vector operation to calculate the relative angles between each finger and the base of the hand, as shown in figure~\ref{fig:vector-calcs}.
@@ -183,32 +183,30 @@ The open hand gesture, for example, can then be defined as all five fingers exte
 
 \begin{figure}
   \centering
-  \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
-  \caption{Vectors extracted from the detected features to calculate the relative positions of the individual fingers}
+  \includegraphics[width=0.9\textwidth, keepaspectratio]{img/hand-vectors.jpg}
+  \caption{Vectors extracted from the detected features to calculate the angles between them and determine their relative positions.}
   \label{fig:vector-calcs}
 \end{figure}
-\todo[inline]{Figure \ref{fig:vector-calcs}: hand with arrow vectors between pertinent features and angles origins shown}
 
 The full list of gestures detected by the program by calculating these angles is shown in figure \ref{fig:hand-gestures} and is as follows:
 \begin{itemize}
     \item No hand: happens when no landmarks are able to be extracted from the image. As a safety feature, in this case, the vehicle stops whichever previous commands it had in its queue and goes into hold flight mode, where it just hovers in the air maintaining its position.
-    \item Open hand: it is detected when all five fingers are extended, as if gesturing stop, and makes the drone land at its current position.
-    \item Fist: it is detected when all five fingers are folded and makes the drone arm and takeoff. If the drone is already in the air nothing happens.
-    \item Index finger pointing up: it is detected when only the index finger is extended and it is pointing roughly towards the top of the image ($\pm 30$ degrees) and makes the drone go into offboard mode, where it is possible to receive direct velocity commands.
+    \item Open hand: it is detected when all five fingers are extended, as if gesturing stop, and makes the drone hold at its current position.
+    \item Fist: it is detected when all five fingers are folded and makes the drone arm and takeoff if it is on the ground or land if it is already in the air.
+    \item Backhand: it is detected when the back of the hand is shown towards the camera, with the thumb pointing upwards and the other fingers pointing to the side, and makes the drone go into return flight mode, where it climbs to a configured, safe altitude and returns to the last takeoff position.
+    \item Index finger pointing up: it is detected when the index finger is extended, and it is pointing roughly towards the top of the image ($\pm 30$ degrees) and makes the drone go into offboard mode, where it is possible to receive direct velocity commands. The drone will remain in this mode while this finger is kept extended, and its movement can be controlled by adding one of the following four commands.
     \item Index finger pointing to the right: same as above but pointing to the right of the image and makes the drone roll towards its right side at a speed of 1 m/s.
-    \item Index finger pointing to the left: same as above but the drone rolls towards its left side.
-    \item Thumb pointing to the right: it is detected when index finger is extended up (to maintain the drone in offboard control) and the thumb is extended pointing towards the right of the screen. This gesture makes the drone pitch forward at a steady speed of 1 m/s.
-    \item Thumb pointing to the left: same as the previous gesture, but the drone pitches backward when the thumb point to the left of the screen.
+    \item Index finger pointing to the left: same as above, but the drone rolls towards its left side.
+    \item Thumb pointing to the right: it is detected when the index finger is extended up (to maintain the drone in offboard control), and the thumb is extended pointing towards the right of the screen. This gesture makes the drone pitch forward at a steady speed of 1 m/s.
+    \item Thumb pointing to the left: same as the previous gesture, but the drone pitches backwards when the thumb point to the left of the screen.
 \end{itemize}
-\todo[inline]{Polish: make sure explanation matches behavior after any code changes}
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Gestures detected by the program to control the movement of the drone}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/hand-gestures.jpg}
+  \caption{Gestures detected by the program to control the movement of the drone. a) Open hand, b) fist, c) backhand, d) index point up, e) index point left, f) index point right, g) thumb point left, h) thumb point right}
   \label{fig:hand-gestures}
 \end{figure}
-\todo[inline]{Figure \ref{fig:hand-gestures}: Clean-up screenshots of detected gestures with drawn landmarks over hand and no background}
 
 
 The program execution is described in figure \ref{fig:hands-loop}.
@@ -247,21 +245,20 @@ In this mode, the vehicle will attempt to find a single person in its field of v
 During the program execution and while the offboard mode and the follow mechanism is engaged, the system continuously retrieves images from the offboard camera that are fed into the MediaPipe Pose \cite{mp-pose-paper} computer vision library to extract pose landmarks from it in the form of 2D coordinates.
 Figure~\ref{fig:pose-landmarks} shows the available extracted features and their correspondence to the human body.
 These coordinates are used to draw a bounding rectangle around the detected person and to validate that the received landmarks match the general pose of a person standing up.
-Figure \ref{fig:pose-validation} shows some examples of the validation checks being run on the raw landmarks extracted from an image.
-To prevent unwanted movements, the vehicle will always stop and hover every time it becomes impossible to detect a person in the image received or its features do not match the expected geometry.
+Figure \ref{fig:pose-validation} shows some examples of the validation checks running on the raw landmarks extracted from an image.
+To prevent unwanted movements, the vehicle will always stop and hover whenever it becomes impossible to detect a person in the image received or its features do not match the expected geometry.
 After a valid bounding box has been defined around the target person, its position with respect to the camera's field of view is sent to a control mechanism composed of two independent PID controllers. The theory behind these controllers is explained in section \ref{subsec:pid-tools}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=8cm, keepaspectratio]{img/placeholder.png}
-  \caption{Valid and invalid poses detected by the follow solution}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/pose-validation.jpg}
+  \caption{Valid versus invalid poses detected by the follow solution}
   \label{fig:pose-validation}
 \end{figure}
-\todo[inline]{Figure \ref{fig:pose-validation}: valid and invalid person detection from simulator camera output}
 
 The first of the PID controllers is in charge of controlling the yaw velocity of the vehicle to respond to horizontal movements in the x direction of the image.
-It takes as input the x coordinate of the center point of the bounding box, and its target is the middle point of the screen.
-This controller, therefore, will output velocity commands aimed at maintaining the bounding box centered horizontally in its field of view.
+It takes as input the x coordinate of the centre point of the bounding box, and its target is the middle point of the screen.
+This controller, therefore, will output velocity commands aimed at maintaining the bounding box centred horizontally in its field of view.
 The second PID controller controls the forward velocity of the vehicle to respond to distance changes of the person getting closer or farther away from the drone.
 It takes as input the height of the calculated bounding box as a percentage of the total height of the field of view and works to keep it within a value that matches the desired distance to maintain between the person and the vehicle by moving forwards when the height is too low and backwards when it is too high.
 The exact percentage of the image height that is covered by a person at a given distance depends on the camera used and needs to be obtained empirically for each separate video source.
@@ -269,11 +266,10 @@ Figure \ref{fig:follow-input-calcs} shows how these two inputs are extracted fro
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/placeholder.png}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/pose-calculations.jpg}
   \caption{Calculation of horizontal position and height of figure from the detected bounding box}
   \label{fig:follow-input-calcs}
 \end{figure}
-\todo[inline]{Figure \ref{fig:follow-input-calcs}: Draw calculations over extracted pose from simulator}
 
 
 A summary diagram of the structure of the follow solution can be seen in figure \ref{fig:follow-loop}.
@@ -284,11 +280,10 @@ Keyboard control is also available to send manual commands to the vehicle direct
 
 \begin{figure}
   \centering
-  \includegraphics[width=8cm, keepaspectratio]{img/follow-loop.jpg}
+  \includegraphics[width=0.8\textwidth, keepaspectratio]{img/follow-loop.jpg}
   \caption{Execution flow for the running loop in the follow control solution}
   \label{fig:follow-loop}
 \end{figure}
-\todo[inline]{Figure \ref{fig:follow-loop}: follow loop diagram}
 
 
 

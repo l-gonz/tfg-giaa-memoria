@@ -58,22 +58,32 @@ More specifically, it aims to:
 % (tiempo natural, p.ej., 6 meses) y a qué nivel de esfuerzo (p.ej., principalmente los 
 % fines de semana).
 
-%%% PHASES
-% 1. Research
-% 2. Development
-% 3. Testing
-% 4. Writing
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth,keepaspectratio]{img/project-timeline.jpg}
+  \caption{High-level overview of how different components interact in the AirSim simulator.}
+  \label{fig:project-timeline}
+\end{figure}
+
+
+- Phase 1: Research on PX4, openCV, existing vision-based control solutions and research (Oct-Dec 21) 10 hours
+- Phase 2: Development of hand solution (Nov 21 - Jan 22) 51 hours
+- Phase 3: Research object tracking and Airsim (Feb 22 - Apr 22)
+- Phase 4: Development of follow solution (Apr 22 - Aug 22)
+- Phase 5: Research Raspberry Pi and hardware (May 22 - Aug 22)
+- Phase 6: Testing (Dec21, June 22 - Sep 22)
+--- Writing: (Apr-May 22, Aug 22 - Mar 23)
 
 \section{Thesis layout}
 \label{sec:layout}
 
-This sections details the structure of this thesis.
+This section details the structure of this thesis.
 The work is composed of five individual chapters that reflect the four distinct phases described in the last section.
 
 \begin{itemize}
-    \item In the first chapter there is a brief introduction to the context in which the project has been developed, as well as the objectives it pursues.
+    \item In the first chapter, there is a brief introduction to the context in which the project has been developed, as well as the objectives it pursues.
     \item Chapter 2 presents the technologies and tools employed in this project and the current state-of-the-art of vision-based control solutions for UAVs.
-    \item The third chapter introduces the simulation environments used for development of the solutions throughout the entire project and the architecture of both the hardware used and the software developed.
+    \item The third chapter introduces the simulation environments used to develop the solutions throughout the entire project and the architecture of both the hardware used and the software developed.
     \item Chapter 4 follows along through the process of testing every part of the system incrementally until reaching the final flight tests.
     \item The last chapter shows the conclusions drawn from the work and presents ideas for future development.
 \end{itemize}

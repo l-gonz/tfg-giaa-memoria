@@ -26,11 +26,9 @@ In the first section, the application is tested in a purely simulated environmen
 % Graphs from test-controller
 % Analysis of error
 
-´\todo[inline]{Video: record tune tool}
-
 As has been mentioned before, the velocity controller that is the heart of the person following mechanism is based on two PID controllers.
 In order to get velocity outputs for the PID controllers that produce a stable movement of the vehicle, it is necessary to tune the parameters of the controllers until the appropriate combination is found.
-In this section the value for the coefficients used for the project will be found empirically with the help of the tuning tool described in section~\ref{subsec:test-tools} and developed for this purpose, and its performance validated with the controller testing tool, both running in the simulated environment with the flight stack in SITL mode so that it is possible to take continuous measures of the response of the PID controllers to step movements of a simulated person present in the 3D world.
+In this section the value for the coefficients used for the project will be found empirically with the help of the tuning tool described in section~\ref{subsec:pid-tools} and developed for this purpose, and its performance validated with the controller testing tool, both running in the simulated environment with the flight stack in SITL mode so that it is possible to take continuous measures of the response of the PID controllers to step movements of a simulated person present in the 3D world.
 In the first place, each of the controllers will be tuned independently of the other by allowing the vehicle only one direction of movement at a time.
 Afterwards, both controllers are engaged at the same time to take measurements of their joint response to a range of different inputs.
 
@@ -120,6 +118,7 @@ The final values for the coefficients for the yaw controller will then be $K_P=-
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{D}$ and $K_P=-50$, $K_I=-1$ while the yaw controller is engaged.}\label{fig:tune-yaw-der-i1}
 \end{figure}
 
+A recording of the whole tuning process for the yaw controller can be seen in this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/tune-yaw-controller}{video}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/tune-yaw-controller}}.
 
 
 \subsection{Forward controller}
@@ -190,14 +189,12 @@ The values for the y coordinate to be tested will be between -150 and 150 units,
 The x coordinate of the figure in the simulated world will remain at $x=500$.
 
 Plots of the changes in normalized horizontal distance and normalized figure height detected by the person recognition algorithm during the time the vehicle takes to reach the target distance from the human figure for each of the positions tested can be seen in figure \ref{fig:validate-yaw}.
-It is considered that the vehicle has reached its target when the error is less than 2\% and the output speed at the controller is less than 10\% of its maximum.
-Furthermore, the whole testing process followed with the developed \texttt{test-controller} tool can be seen here.
-%%%%%%%%% [here] %%%%%%%%
-\todo[inline]{Video: record test-controller tool}
+It is considered that the vehicle has reached its target when the error is less than 2\%, and the output speed at the controller is less than 10\% of its maximum.
+Furthermore, the whole testing process followed with the developed \texttt{test-controller} tool can be seen \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-yaw-controller}{here}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-yaw-controller}}.
 
 Since each of the starting positions differ both in distance and orientation to the target, both of the controllers are engaged to reach it.
-The yaw controller then introduces a negative yaw velocity when the figure is on the left half of the camera's field of view and a positive yaw velocity when the figure is on the right half to reach the target horizontal distance of 0.5 (figure centered in the image received from the camera);
-and the forward controller outputs a negative forward velocity to reduce the detected height of the figure from around 0.44 to the target 0.36, since the figure is 100 units closer to the vehicle than the reference position $x=600$.
+The yaw controller then introduces a negative yaw velocity when the figure is on the left half of the camera's field of view and a positive yaw velocity when the figure is on the right half to reach the target horizontal distance of 0.5 (figure centred in the image received from the camera);
+and the forward controller outputs a negative forward velocity to reduce the detected height of the figure from around 0.44 to the target 0.36 since the figure is 100 units closer to the vehicle than the reference position $x=600$.
 
 Figure \ref{fig:validate-yaw}a shows that the most time is spent on starting the movement towards the target and, after that, there is not much difference between the time it takes to reach the -50 position and reaching the -150 position, the former taking 3 seconds and the later taking around 3.6 seconds.
 In figure \ref{fig:validate-yaw}b all of the trajectories have a very similar graph since the starting distance to the target is practically the same, where the controller makes the vehicle pull backwards so the figure stays far enough, making the detected height decrease.
@@ -228,10 +225,6 @@ It is worth noting that even when the person is so close to the vehicle that par
   \caption{Changes over time in detected height as input for the forward controller with different starting positions in the x-axis}
   \label{fig:validate-fwd}
 \end{figure}
-
-A video of the complete follow solution running with the appropriate tunings for the controllers can be seen in here.
-%%%%%%%%%%%% [HERE] %%%%%%%%%%%%
-\todo[inline]{Video: record follow solution in AirSim with final PID tunings (+ screenshot on figure \ref{fig:validate-fwd})}
 
 
 \clearpage
