@@ -11,18 +11,18 @@ The main objective of this project was to illustrate how the PX4 platform could 
 This was achieved by building and presenting a complete development environment that can be used for each stage in the process of creating new control solutions, from the concept phases to running tests in the target hardware.
 
 For the more specific objectives, in the first place,
-the tools and systems developed by the Dronecode project, which includes PX4, MavSDK and QGroundControl were leveraged in cooperation with the Dronecontrol written code to reduce the workload of the project by making use of preexisting and stable technologies.
+the tools and systems developed by the Dronecode project, which includes PX4, MavSDK and QGroundControl, were leveraged in cooperation with the Dronecontrol written code to reduce the workload of the project by making use of preexisting and stable technologies.
 
-Second, to show the minimum requirements needed to develop an individual control solution, a combination of low-cost and very accessible pieces of hardware were employed to test all the developed software and take the project out of the simulation environment and into a real drone capable of flying.
-Thanks to the platform's modular nature, all of the individual pieces are also interchangeable with other hardware based on budget or availability as long as it can run the same software as the one chosen for the tests in this project.
+Second, to show the minimum requirements needed to develop an individual control solution, a combination of low-cost and accessible hardware was employed to test all the developed software and take the project out of the simulation environment and into a real drone capable of flying.
+Thanks to the platform's modular nature, all the individual pieces are also interchangeable with other hardware based on budget or availability as long as it can run the same software as the one chosen for the tests in this project.
 
 Third, it has been demonstrated how the development environment, all the presented existing tools and the chosen hardware can be tied together to create viable vision-driven mechanisms for UAVs, 
-by developing two separate control solutions for two different computer-camera-autopilot configurations that show the flexibility of the system and some of the possibilities it offers.
+by developing two distinct control solutions for two different computer-camera-autopilot configurations that show the flexibility of the system and some of the possibilities it offers.
 The viability of these solutions was further validated by carrying out test flights in real-life conditions outside of simulation environments.
 
 Fourth, the testing process presented in chapter \ref{chap:validation} introduces a systematic approach to validating the system that can help carry any new software from the earliest phases of testing to the final flight tests while maintaining safety and reliability by progressively introducing new parts on top of the components already validated, for the smallest possible divisions of both the software and the hardware.
 
-And last, a UAV of the quadcopter type was built to carry out the test flights mentioned before by using a development kit commercialized for easy assembly and already designed to work with the PX4 platform.
+Finally, a UAV of the quadcopter type was built to carry out the test flights mentioned before by using a development kit commercialised for easy assembly and already designed to work with the PX4 platform.
 This made it possible to dedicate the most time to developing the desired control solutions without being concerned with the low-level electronics involved in controlling the engines or the basic flight mechanics like takeoff and landing.
 
 
@@ -37,7 +37,7 @@ The following subjects have been especially relevant to provide the necessary ex
 \begin{enumerate}
     \item \textbf{Fundamentals of Programming and Computer Science}. This is the first introduction to computer science and programming in the degree. It provides the foundational knowledge of how to write good code that is the basis of this project's development.
     
-    \item \textbf{Systems and Circuits}. This course serves as an introduction to electricity and circuits. This information has been useful in understanding how the electronics of the drone are powered and how they work together, especially in implementing the custom connectors between the Raspberry Pi and the Pixhawk board.
+    \item \textbf{Systems and Circuits}. This course serves as an introduction to electricity and circuits. This information has been useful in understanding how the drone's electronics are powered and how they work together, especially in implementing the custom connectors between the Raspberry Pi and the Pixhawk board.
     
     \item \textbf{Architecture of Computer Networks / Telematic Systems}. These two subjects deal with the protocols that make up computer communications. The knowledge they provide on how the UDP, TCP and IP protocols work together, as well as regarding the overall communication between computer networks, has been invaluable in the process of integrating the three separate computers that make up the simulation environment developed for the project (autopilot board, companion computer and simulation computer) and making them communicate with each other in a single network.
     
@@ -47,7 +47,7 @@ The following subjects have been especially relevant to provide the necessary ex
     
     \item \textbf{Engineering of Information Systems}. This course offered important tools to handle version control in any software project and, more specifically, to work with the GitHub platform to host the code safely and keep track of issues.
     
-    \item \textbf{Command and Control Systems}. This subject deals with the analysis and design of control systems, including PID controllers like the ones used to regulate the output velocity of the vision-guided follow system implemented in this project. It provided insight into many important concepts like feedback loops, stability and error analysis.
+    \item \textbf{Command and Control Systems}. This subject deals with the analysis and design of control systems, including PID controllers like the ones used to regulate the output velocity of the vision-guided follow system implemented in this project. It provided insight into important concepts like feedback loops, stability and error analysis.
     
     \item \textbf{Telematic Services and Applications}. The main takeaway from this subject was the experience it provided in using the Python programming language in complex projects, including package management with \texttt{pip} and how to use some of the most common external libraries for Python.
     
@@ -57,26 +57,26 @@ The following subjects have been especially relevant to provide the necessary ex
 
 \subsection{Acquired knowledge}
 
-Throughout the development of this project, there have been many challenges that have required expanding on the knowledge mentioned in the previous section, as well as acquiring new competences in order to find solutions to the problems that surfaced.
+Throughout this project's development, many challenges have required expanding on the knowledge mentioned in the previous section and acquiring new competencies to find solutions to the problems that surfaced.
 These are some of the main aptitudes developed:
 
 \begin{itemize}
-    \item Python skills: how to organize projects with multiple submodules and create packages from own code, as well as experience in several standard libraries:
+    \item Python skills: how to organise projects with multiple submodules and create packages from own code, as well as experience in several standard libraries:
     \begin{itemize}
         \item Asynchronous programming in Python with the \texttt{asyncio} library.
         \item Matrix and vector handling with the \texttt{numpy} library.
-        \item Plotting customizable graphs in different UI platforms with the \texttt{matplotlib} library.
+        \item Plotting customisable graphs in different UI platforms with the \texttt{matplotlib} library.
     \end{itemize}
 
-    \item Knowledge of open-source UAV autopilots, including the main different options available, the tools they offer, how they work and how they allow developing new functionality for their platform.
+    \item Knowledge of open-source UAV autopilots, including the main options available, the tools they offer, how they work and how they allow developing new functionality for their platform.
 
-    \item Computer vision: knowledge of the main tasks of classification, localization, landmark detection, and tracking, types of algorithms available and how they are trained in big datasets and how to select one based on the required accuracy and available performance.
+    \item Computer vision: knowledge of the main tasks of classification, localisation, landmark detection, and tracking, types of algorithms available and how they are trained in big datasets and how to select one based on the required accuracy and available performance.
 
     \item OpenCV: how to use the multi-platform library to analyse and manipulate images from different sources.
 
-    \item Raspberry Pi board and Raspberry OS: how to work with serial connections from general I/O pins, how the OS differs from other Linux variants and the limitations it has, and how to improve the performance of Python code to adapt to the limited processing power.
+    \item Raspberry Pi board and Raspberry OS: how to work with serial connections from general I/O pins, how the OS differs from other Linux variants and its limitations, and how to improve the performance of Python code to adapt to the limited processing power.
 
-    \item Using Unreal Engine for physics simulation, employing pre-made plugins for the engine and customizing environments, besides working with 3D models to simulate and test computer vision scenarios.
+    \item Using Unreal Engine for physics simulation, employing pre-made plugins for the engine and customising environments, besides working with 3D models to simulate and test computer vision scenarios.
 
     \item Practical application of a PID to a control problem and how to use trial-and-error to calibrate it for an experimental system with an unknown transfer function.
 
@@ -89,18 +89,18 @@ These are some of the main aptitudes developed:
 \section{Future work}
 \label{sec:fut-work}
 
-The work presented in this bachelor's thesis focused on presenting several basic vision-based control solutions for the PX4 autopilot to show the capabilities of the system. Therefore, there are numerous avenues for further research and development in this area that could expand on the work presented here.
+The work presented in this bachelor's thesis focused on presenting several basic vision-based control solutions for the PX4 autopilot to show the system's capabilities. Therefore, there are numerous avenues for further research and development in this area that could expand on the work presented here.
 
 \begin{itemize}
     \item Integration with more sensors: In this work, only a single camera was used as the input source for the computer vision algorithm. In future work, it would be beneficial to investigate the integration of other sensors, such as lidar, radar, or multiple camera systems, to improve the performance of the computer vision algorithm.
 
-    \item More sophisticated computer vision algorithms: The algorithms used in this thesis employ basic image processing techniques to make up a detector-tracker ML pipeline. However, there is still room for improvement in terms of the sophistication of computer vision algorithms. Future work can investigate the use of deep learning-based algorithms, such as convolutional neural networks, to improve the accuracy and robustness of the system.
+    \item More sophisticated computer vision algorithms: The algorithms used in this thesis employ basic image processing techniques to make up a detector-tracker ML pipeline. However, there is still room for improvement in the sophistication of computer vision algorithms. Future work can investigate the use of deep learning-based algorithms, such as convolutional neural networks, to improve the accuracy and robustness of the system.
 
-    \item Exploration of alternative control algorithms: A simple proportional-integral-derivative (PID) controller was used in this work to control the drone's position. However, there are several alternative control algorithms that could be explored, such as model predictive control or neural network-based controllers.
+    \item Exploration of alternative control algorithms: A simple proportional-integral-derivative (PID) controller was used in this work to control the drone's position. However, several alternative control algorithms, such as model predictive control or neural network-based controllers, could be explored.
 
-    \item Multi-drone control: The focus of the project was on controlling a single drone. However, in real-world scenarios, multiple drones may need to be controlled simultaneously. Future work can investigate the use of multi-drone vision-based control algorithms to enable the coordinated control of multiple drones.
+    \item Multi-drone control: The focus of the project was on controlling a single drone. However, in real-world scenarios, multiple drones may need to be controlled simultaneously. Future work can investigate using multi-drone vision-based control algorithms to enable the coordinated control of multiple drones.
 
     \item Application to other domains: While the focus of this work was on drone control, the PX4 autopilot is compatible with other ground and water-based vehicles, so the proposed computer vision solutions could be applied to other domains, such as robotics or autonomous vehicles.
 \end{itemize}
 
-Overall, the proposed vision-based control solutions for PX4 autopilots are a promising approach that can be further improved through future research. The above-mentioned areas provide several directions for future work that can lead to more accurate, robust, and adaptive control solutions that react to their environment and that can provide autonomous flight for multiple application fields.
+Overall, the proposed vision-based control solutions for PX4 autopilots are a promising approach that can be further improved through future research. The areas mentioned above provide several directions for future work that can lead to more accurate, robust, and adaptive control solutions that react to their environment and that can contribute to providing autonomous flight on multiple application fields.

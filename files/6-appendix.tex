@@ -1,0 +1,214 @@
+\chapter{Installation manuals}
+
+This appendix 
+\url{https://github.com/l-gonz/tfg-giaa-dronecontrol}
+
+\section{SITL: Development environment}
+\label{app:install-dev-env}
+
+This section describes the process of installing all the necessary applications to set up a development environment to run PX4's SITL simulation in a system similar to the one described in section \ref{sec:devenv}.
+The instructions assume a computer running Windows 10/11 as the operating system and Windows Subsystem for Linux installed.
+PX4 details the installation steps of their source code for several platforms in their documentation \cite{install-px4}, where Ubuntu is the recommended platform.
+To make it easier, the dronecontrol repository contains a small shell script that aggregates all the steps and installs all the dependencies with the folder structure that the project expects.
+This includes installing and setting up PX4 and QGroundControl and creating a virtual environment for the project, installing the Python packages and the dronecontrol application.
+
+To run the script, simply clone the repository, navigate to the project folder and execute:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+./install.sh
+\end{minted}
+
+To test the installation of PX4, execute the following line (requires a graphic interface for WSL):
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+./simulator.sh --gazebo
+\end{minted}
+
+To test the installation of dronecontrol, execute:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol tools test-camera -s -c
+\end{minted}
+Camera input is not supported from within WSL, but it should be possible to control the simulated drone with the keyboard.
+
+The next step is to install dronecontrol in the Windows machine to be able to access an integrated or USB camera.
+It requires having Python already installed.
+First, clone the project repository, navigate to the folder and set up the virtual environment:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+pip install virtualenv
+virtualenv venv
+venv\Scripts\activate
+\end{minted}
+
+Then install dronecontrol:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+pip install -r requirements.txt
+pip install -e .
+\end{minted}
+
+Additionally, to make the simulated PX4 application broadcast to the Windows machine on port 14550, it is necessary to edit the file \texttt{px4-rc.mavlink} located in \texttt{Firmware/PX4-Autopilot/etc/init.d-posix} on the project folder in WSL.
+To the mavlink start command for the ground control link on line 14, append -p to enable broadcasting:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+mavlink start -x -u $udp_gcs_port_local -r 4000000 -f
+\end{minted}
+
+To test the installation, with the PX4 simulator still running in WSL, execute:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol tools test-camera -s -c
+\end{minted}
+It should now be possible to both control the drone with the keyboard and obtain images from a camera attached to the computer, as well as run the hand control solution in the simulator.
+
+\subsection{Installation of AirSim}
+
+To run the PX4 software-in-the-loop simulator in AirSim and test the follow solution,
+first, install Unreal Engine at version 4.27 at least from the Epic Games Launcher \footnote{\url{https://www.unrealengine.com/download}} and open the environment found in the AirSim folder of the repository.
+To use AirSim with a different Unreal environment, follow the guide in the AirSim documentation \footnote{\url{https://microsoft.github.io/AirSim/unreal_custenv/}}
+After starting play mode in Unreal for the first time, a \texttt{settings.json} file will appear in an AirSim folder in the user's Documents folder.
+The contents of this file need to be replaced with the configuration file found in section \ref{app:airsim-config} to be able to interact with PX4 running inside WSL, selecting the correct value for \texttt{"UseSerial"} and exchanging the \texttt{"LocalHostIp"} in the file for the IP of the Windows machine in the virtual WSL network.
+This IP can be obtained by typing \texttt{ipconfig} in the Windows command prompt and looking for the IPv4 address under "Ethernet Adapter vEthernet (WSL)".
+
+After the settings have been set, restart play mode in Unreal; the output log should show a message saying "Waiting for TCP connection on port 4560, local IP <Windows-IP>".
+It is now possible to build and start PX4 by executing in WSL:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+./simulator.sh --airsim
+\end{minted}
+
+If the IP has been set correctly in the AirSim settings, 
+PX4 and the simulator will find each other correctly and connect.
+The test-camera tool can be run either from Linux within WSL or from Windows by executing:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol tools test-camera -s -w
+\end{minted}
+
+The follow control solution can be run from Linux with:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol follow --sim 172.19.112.1
+\end{minted}
+and from Windows with:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronecontrol follow --sim -p 14550
+\end{minted}
+
+\section{HITL: Installation on a Raspberry Pi 4}
+\label{app:install-dronecontrol-rpi}
+
+Install dronecontrol
+        
+Set up XRDP to connect from windows PC
+\url{https://linuxize.com/post/how-to-install-xrdp-on-raspberry-pi/}
+
+Set up UART serial connection in RPi: 
+\url{https://discuss.px4.io/t/talking-to-a-px4-fmu-with-a-rpi-via-serial-nousb/14119?page=2}
+
+
+\section{AirSim configuration file}
+\label{app:airsim-config}
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{json}
+{
+    "SettingsVersion": 1.2,
+    "SimMode": "Multirotor",
+    "ClockType": "SteppableClock",
+    "Vehicles": {
+        "PX4": {
+            "VehicleType": "PX4Multirotor",
+            "LockStep": true,
+            "UseSerial": "<true: HITL, false: SITL>"
+            "UseTcp": true,
+            "TcpPort": 4560,
+            "ControlIp": "remote",
+            "ControlPortLocal": 14550,
+            "ControlPortRemote": 14570,
+            "LocalHostIp": "<Windows-IP>",
+            "Sensors":{
+                "Barometer":{
+                    "SensorType": 1,
+                    "Enabled": true
+                }
+            },
+            "Parameters": {
+                "NAV_RCL_ACT": 1,
+                "NAV_DLL_ACT": 0,
+                "COM_RCL_EXCEPT": 7,
+                "LPE_LAT": 47.641468,
+                "LPE_LON": -122.140165
+            }
+        }
+    },
+    "CameraDefaults": {
+        "CaptureSettings": [
+            {
+                "ImageType": 0,
+                "Width": 640,
+                "Height": 400
+            }
+        ]
+    }
+}
+\end{minted}
+
+\chapter{Command-line interface of the application}
+\label{app:cli}
+
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+Usage: dronecontrol tools test-camera [OPTIONS]
+
+Options:
+  -s, --sim TEXT        attach to a simulator through UDP, optionally provide
+                        the IP the simulator listens at
+  -r, --hardware TEXT   attach to a hardware drone through serial, optionally
+                        provide the address of the device that connects to PX4
+  -w, --wsl             expects the program to run on a Linux WSL OS
+  -c, --camera          use a physical camera as source
+  -h, --hand-detection  use hand detection for image processing
+  -p, --pose-detection  use pose detection for image processing
+  -f, --file TEXT       file name to use as video source
+  --help                Show this message and exit.
+
+
+Usage: dronecontrol tools tune [OPTIONS]
+
+Options:
+  --yaw / --forward     test the controller yaw or forward movement
+  --manual              manual tuning
+  -t, --time INTEGER    sample time for each of the values to test
+  -p, --kp-values TEXT  values to test for Kp parameter
+  -i, --ki-values TEXT  values to test for Ki parameter
+  -d, --kd-values TEXT  values to test for Kd parameter
+  -h, --help            Show this message and exit.
+
+
+Usage: dronecontrol tools test-controller [OPTIONS]
+
+Options:
+  --yaw / --forward  test the controller yaw or forward movement
+  -f, --file TEXT    file name to use as data source
+  -h, --help         Show this message and exit.
+
+
+Usage: dronecontrol hand [OPTIONS]
+
+Options:
+  -i, --ip TEXT       pilot IP address, ignored if serial is provided
+  -p, --port INTEGER  port for UDP connections
+  -s, --serial TEXT   connect to drone system through serial, default device
+                      is /dev/ttyUSB0
+  -f, --file PATH     file to use as source instead of the camera
+  -l, --log           log important info and save video
+  -h, --help          Show this message and exit.
+
+
+Usage: dronecontrol follow [OPTIONS]
+
+Options:
+  --ip TEXT          pilot IP address, ignored if serial is provided
+  -p, --port TEXT    pilot UDP port, ignored if serial is provided, default is
+                     14540
+  --sim TEXT         run with AirSim as flight engine, optionally provide ip
+                     the sim listens to
+  -l, --log          log important info and save video
+  -s, --serial TEXT  use serial to connect to PX4 (HITL), optionally provide
+                     the address of the serial port
+  -h, --help         Show this message and exit.
+\end{minted}
+
+% \chapter{PX4 parameters}
+%%% Maybe %%%
+% All parameters changed from their default values
+% Connect Pixhawk to QGC, then check config for changed values

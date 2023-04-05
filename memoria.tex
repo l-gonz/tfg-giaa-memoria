@@ -65,9 +65,7 @@
 \usepackage{url}
 
 %%-- Gráficos y tablas
-\PassOptionsToPackage{
-    dvipdfmx,usenames,dvipsnames,
-    x11names,table}{xcolor}             % Definiciones de colores
+\PassOptionsToPackage{dvipdfmx,usenames,dvipsnames,x11names,table}{xcolor}             % Definiciones de colores
 \PassOptionsToPackage{xetex}{graphicx}
 
 \usepackage{subfig}                     % Subfiguras
@@ -151,9 +149,9 @@
 \usepackage{csquotes}                   % Para traducciones con biblatex
 
 %%-- Glosario de términos
-\usepackage[acronym]{glossaries}
-\makeglossaries
-\loadglsentries{glossary}
+% \usepackage[acronym]{glossaries}
+% \makeglossaries
+% \loadglsentries{glossary}
 
 % % Definición de cabeceras del documento, usando fancyhdr
 % \usepackage{fancyhdr}
@@ -452,11 +450,11 @@ The popular open-source platform PX4 aims to facilitate the programming of unman
 % APÉNDICE(S) %
 \cleardoublepage
 \appendix
-\include{files/xx-appendix.tex}
+\include{files/6-appendix.tex}
 
 % BIBLIOGRAFIA %
 \cleardoublepage
 % https://www.overleaf.com/learn/latex/Bibliography_management_with_biblatex
-\raggedright\printbibliography[heading=bibintoc,title={Referencias}]
+\raggedright\printbibliography[heading=bibintoc,title={References}]
 
 \end{document}
