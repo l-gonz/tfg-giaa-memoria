@@ -15,7 +15,7 @@ The full list of validation steps is, therefore:
 For this purpose and to be able to run with a minimal configuration, the Gazebo simulator \footnote{\url{https://gazebosim.org/home}} included with the base PX4 installation will be used as the 3D environment.
 This simulator works inside Linux on the same computer that runs the SITL PX4.
 To be able to later transition into using the AirSim simulator instead, which runs in Windows, with minimal changes, for this test, PX4, Gazebo and the Dronecontrol program will run inside the Windows Subsystem for Linux.
-The complete installation process necessary to run these tests is explained in appendix \ref{app:install-px4} and \ref{app:install-dronecontrol}.
+The complete installation process necessary to run these tests is explained in appendix \ref{app:install-dev-env} and \ref{app:install-dronecontrol-rpi}.
 
 \begin{figure}
   \centering
@@ -73,7 +73,7 @@ All these characteristics will be checked in the order below:
 \end{enumerate}
 
 In the first place, the AirSim simulator needs to be installed in the Windows host.
-The complete installation process is described in appendix \ref{app:install-airsim}.
+The complete installation process is described in appendix \ref{app:install-dev-env}.
 There are specific configuration parameters that have to be set to be able to connect the AirSim simulator in Windows to the PX4 SITL running inside WSL.
 On the simulator side, AirSim's settings file has to include a line defining the IP address of the network interface to use.
 This parameter, along with the entire configuration file used for SITL testing, can be found in appendix \ref{app:airsim-config}.

@@ -13,7 +13,7 @@
 \usepackage{listing}                    % Listados de código
 
 % Traducciones en XeLaTeX
-\usepackage{polyglossia}
+% \usepackage{polyglossia}
 %\setmainlanguage{spanish}    % Comenta esta línea si tu memoria es en inglés
 
 % Traducciones particulares para español
@@ -80,19 +80,19 @@
 % Más info:
 % https://www.overleaf.com/learn/latex/Biblatex_bibliography_styles
 % https://www.overleaf.com/learn/latex/biblatex_citation_styles
+\usepackage[british]{babel}
 \usepackage[
-    backend=biber,
     style=numeric,
-    sorting=nty
+    sorting=none
     ]{biblatex}
 \addbibresource{memoria.bib}
-\DeclareFieldFormat{url}{\mkbibacro{URL}\addcolon\nobreakspace\url{#1}}
+% \DeclareFieldFormat{url}{\mkbibacro{URL}\addcolon\nobreakspace\url{#1}}
 %\usepackage[nottoc, notlot, notlof, notindex]{tocbibind} %% Opciones de índice
 
 %%-- Matemáticas e ingeniería
 % El paquete units permite mostrar unidades correctamente
 % Permite escribir unidades con espaciado y estilo de fuente correctos
-\usepackage[ugly]{units}         
+\usepackage{units}         
 % Ejemplo de uso: $\unit[100]{m}$ or $\unitfrac[100]{m}{s}$
 % Entornos matemáticos
 \newtheorem{theorem}{Theorem}

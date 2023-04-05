@@ -70,7 +70,7 @@ The loop that runs this queue can be seen in listing \ref{lst:pilot-queue}.
 There is a maximum time of 10 seconds that each action can use to run.
 The loop stops when the asynchronous task it runs on is cancelled with \mintinline{python}{task.cancel()}, which raises a \mintinline{python}{CancelledError} exception in the execution thread.
 
-\begin{listing}[h!]
+\begin{listing}[!ht]
     \caption{Loop where the action queue runs on the pilot module. Each action is awaited until it finishes or the timeout time runs out.}{}
     \label{lst:pilot-queue}
     \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{python}
@@ -115,7 +115,7 @@ Three classes of video sources have been implemented: file, simulator, and camer
 \end{figure}
 
 The \texttt{FileSource} class is able to open a video file stored in the companion computer and provide images taken frame by frame from it until the video completes.
-This allows the program to replay the image detection algorithms on videos previously captured by the camera tool described in section \ref{subsec:test-tools}.
+This allows the program to replay the image detection algorithms on videos previously captured by the camera tool described in section \ref{subsec:cam-tool}.
 The \texttt{CameraSource} class can access a physical camera attached to the computer running the application via USB and provide the captured frames in real time.
 Both the file and camera sources make use of OpenCV's video capture utilities to take care of the file handling and the camera drivers necessary.
 

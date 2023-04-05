@@ -151,7 +151,7 @@ Compared with the trajectory described by the yaw controller, the forward contro
 This is particularly visible at the start of each test as slightly different heights are detected in the image from the camera even though the vehicle is in the same position with respect to the human figure.
 It also creates an effect, especially for the bigger $K_P$ values tested, where, as the vehicle begins its movement back to its target position, the pose detection mechanism gets a slightly different perspective on the followed person, which increases the detected height slightly so that small spikes of detected differences show in the height graphs even though the velocity graph shows that the vehicle's direction of movement remains the same.
 This effect is reduced by keeping the output forward velocity small in the controller.
-In the right graph of figure \ref{fig:tune-fwd-prop}, it is also visible for high values of $K_P$ how the output velocity increases enough that the maximum velocity limit is reached on the forward controller and the output is capped to 0.4\unitfrac{m}{s}.
+In the right graph of figure \ref{fig:tune-fwd-prop}, it is also visible for high values of $K_P$ how the output velocity increases enough that the maximum velocity limit is reached on the forward controller and the output is capped to \unitfrac[0.4]{m}{s}.
 For a value up to $K_P=3$, the trajectory described descends rapidly without ending in significant oscillations around the target height, so it is a fair value to keep for the final controller.
 
 
@@ -187,7 +187,7 @@ The final values for the coefficients for the forward controller will then be $K
 \subsection{PID tuning validation}
 \label{subsec:pid-test-controller}
 
-As a final validation for the tuning obtained previously, the \texttt{test-controller} tool described in section \ref{subsec:test-tools} will be used to check the step response of the controllers to different starting distances for the same coefficients.
+As a final validation for the tuning obtained previously, the \texttt{test-controller} tool described in section \ref{subsec:pid-tools} will be used to check the step response of the controllers to different starting distances for the same coefficients.
 Additionally, for this test, both controllers will be engaged simultaneously to verify that they work well together.
 Firstly, the positions will vary on the y-axis, that is, the figure will move from left to right in the field of view of the vehicle.
 The values for the y coordinate to be tested will be between -150 and 150 units in increments of 50.

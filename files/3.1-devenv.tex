@@ -23,7 +23,7 @@ The simulator generates the input from the sensors based on its internal world r
 This, in turn, generates response actuator controls that are fed back into the simulator in the same way to affect the vehicle's position, velocity, and attitude in the simulated world.
 Simulated communications employ MAVLink messages specific to the mode in use and are not precisely the same as those used during non-simulated flights.
 
-There are many options for simulators supported by PX4, like Gazebo, a robust 3D simulation environment for Linux systems that is particularly suited for testing object avoidance and is commonly used with ROS, or AirSim (\ref{subsec:airsim}), a more resource-intensive cross-platform simulator that leverages the Unreal Engine, typically used for game development and animation, to provide physically and visually realistic simulations.
+There are many options for simulators supported by PX4, like Gazebo, a robust 3D simulation environment for Linux systems that is particularly suited for testing object avoidance and is commonly used with ROS, or AirSim (\ref{subsec:unreal}), a more resource-intensive cross-platform simulator that leverages the Unreal Engine, typically used for game development and animation, to provide physically and visually realistic simulations.
 For this project, AirSim was chosen because of previous experience with Unreal Engine, the easy availability of visual packages to test computer vision features and its native support for running on Windows machines, which is the operating system running on the computer where the tests will take place.
 AirSim offers a library called \texttt{airlib} (\footnote{\url{https://pypi.org/project/airsim/}}), available for Python, that can be used to retrieve images taken from a simulated camera from the perspective of the drone in the simulation world.
 This feature will be necessary when testing the person-recognition utilities used in the program.
@@ -127,7 +127,7 @@ AirSim is compatible with both SITL and HITL simulation modes.
 However, it must be set up to work with an external PX4 flight controller instead of AirSim's own internal \texttt{SimpleFlight} flight stack.
 Appendix \ref{app:airsim-config} contains the required settings file for configuring these modes in AirSim,
 where the \emph{"LocalHostIp"} needs to be exchanged with the IP of the Windows host in the local \texttt{vEthernet (WSL)} network to be able to connect between the simulator in Windows and the flight controller inside WSL.
-This process is detailed further in the AirSim documentation \cite{airsim-doc-wsl} and in appendix \ref{app:install-airsim}.
+This process is detailed further in the AirSim documentation \cite{airsim-px4-wsl} and in appendix \ref{app:install-dev-env}.
 In brief, the Unreal project with AirSim must first be set into play mode, and then the PX4 SITL flight controller must be built and started to attach to an already running simulator.
 Inside the project in WSL, the flight controller can be run with all the necessary configuration for AirSim by using the provided shortcut script \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/simulator.sh}}:
 \begin{minted}{bash}
