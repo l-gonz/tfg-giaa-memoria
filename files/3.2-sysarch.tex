@@ -45,9 +45,9 @@ On an actual UAV, the PX4 software runs on a dedicated piece of hardware like th
 However, it is also possible to simulate this hardware on a standard Linux computer by building the flight stack from the source code.
 This process is described in section (\ref{sec:devenv}).
 
-The Dronecontrol application that runs on the companion computer has been developed using the Python programming language \footnote{\url{https://www.python.org/}}.
+The Dronecontrol application that runs on the companion computer has been developed using the Python programming language\footnote{\url{https://www.python.org/}}.
 It offers good advantages for a project of these characteristics because of its high-level, easy-to-use syntax that usually results in a smaller code base than other comparable languages for small projects, its versatility and its support for object-oriented programming.
-Most importantly, Python is widely used with an official package manager called \texttt{pip} that significantly simplifies the use of external libraries and which gathers in its package index \footnote{\url{https://pypi.org/}} thousands of well-tested utilities,
+Most importantly, Python is widely used with an official package manager called \texttt{pip} that significantly simplifies the use of external libraries and which gathers in its package index\footnote{\url{https://pypi.org/}} thousands of well-tested utilities,
 including many machine learning and image processing projects.
 Moreover, all the necessary libraries for interacting with PX4 through the MAVLink protocol, object detection and tracking, and simulation (MavSDK, OpenCV, AirSim, Mediapipe) offer a version to use with Python.
 As an interpreted language, it can run without complications in any system with Python installed without compiling separate binaries for different operating systems.
@@ -68,7 +68,7 @@ Since the Pixhawk 4 is configured by default to use its \texttt{TELEM1} port for
 To connect to the board from the companion computer, applications like the QGRoundControl (\ref{subsec:qgc}) ground station software can automatically detect a telemetry radio inserted into any USB port on the host computer.
 Additionally, other applications using the MavSDK (\ref{subsec:mavlink}) library can establish a connection by specifying the baudrate and the USB serial port address, usually something similar to \texttt{/dev/ttyUSB0} on Linux and \texttt{COM1} on Windows.
 
-The radio used for the physical tests in this project is the Holybro SiK Telemetry Radio \footnote{\url{http://www.holybro.com/product/transceiver-telemetry-radio-v3/}}.
+The radio used for the physical tests in this project is the Holybro SiK Telemetry Radio\footnote{\url{http://www.holybro.com/product/transceiver-telemetry-radio-v3/}}.
 It is a small, light and inexpensive open-source radio platform that typically allows ranges of more than 300 meters "out of the box" (the range can be extended to several kilometres with a patch antenna on the ground).
 The radios are offered as 915Mhz (Europe) or 433Mhz (US), so they can be used in different regions and comply with the regulations for frequency, hopping channels and power levels.
 They offer 2-way full-duplex communication through an adaptive TDM UART interface, and their antenna allows for an adjustable 100-mW-maximum output power and -117 dBm receive sensitivity.
@@ -110,7 +110,7 @@ In addition, the Raspberry's officially supported operating system, called Raspb
 Since this computer is designed to be easy to integrate with hardware projects, it includes a 40-pin GPIO header (highlighted in figure \ref{fig:rpi4-pinout}) that can be programmed for connecting to any number of external devices.
 
 The Raspberry Pi is powered by a 5V input that can be provided either from its USB-C port or through one of two pins in the header dedicated to this purpose (marked as "5v Power" on figure \ref{fig:rpi4-pinout}).
-In the case of the particular vehicle build used in this project, the power management board supplying the energy (the Holybro PM07 \footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}}) also provides 5V to the flight controller, as well as powering the ESCs to the motors.
+In the case of the particular vehicle build used in this project, the power management board supplying the energy (the Holybro PM07\footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}}) also provides 5V to the flight controller, as well as powering the ESCs to the motors.
 It counts with two power outputs: one connected to the flight controller's \texttt{POWER1} port and another unused one.
 A first attempt at supplying current to the Raspberry Pi from the main battery was tested initially with a connection between the second, free output on the power module and the powering pins on the GPIO header with a custom connector.
 However, the consequent power supply ended up being too unstable for the Pi board, resulting in frequent dips in the supplied current that affected the processing capabilities of the companion computer.
@@ -120,9 +120,9 @@ The main disadvantage of the solution is that it adds one more piece of equipmen
 
 In contrast to the choice of a companion computer, many more possibilities are available regarding the camera that will fly onboard the vehicle.
 The most important characteristics to focus on are a small weight and simple plug-and-play functionality with the onboard computer.
-The camera used in the tests carried out and detailed in section \ref{chap:validation} is a Logitech C920 1080p webcam \footnote{\url{https://www.logitech.com/es-es/products/webcams/c920-pro-hd-webcam.960-001055.html}}.
+The camera used in the tests carried out and detailed in section \ref{chap:validation} is a Logitech C920 1080p webcam\footnote{\url{https://www.logitech.com/es-es/products/webcams/c920-pro-hd-webcam.960-001055.html}}.
 Since the frame of the Holybro X500 is not prepared by default to include an onboard camera, a custom mount has been designed and 3D-printed from PLA plastic to be able to hang the camera from the central rods on the underside of the vehicle frame and ensure that it is attached securely during flight.
-The 3D model of the mount can be seen in figure \ref{fig:camera-holder-3d}, and the print-ready file can be found in the project repository in GitHub \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/data/camera-holder.stl}}.
+The 3D model of the mount can be seen in figure \ref{fig:camera-holder-3d}, and the print-ready file can be found in the project repository in GitHub\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/data/camera-holder.stl}}.
 
 \begin{figure}
   \centering
@@ -156,7 +156,7 @@ The other end of the connector has three female Dupont wires that go into the TX
 according to mapping table \ref{tab:wiring-telem} between the six pins in the telemetry connection of the Pixhawk board and the corresponding GPIO pins in the Raspberry Pi header \cite{pixhawk-manual} \cite{pixhawk-px4}.
 A diagram of all the connections to the companion computer can be seen in figure \ref{fig:wiring}.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \begin{tabular}{|ll||ll|}
 \hline

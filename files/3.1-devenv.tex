@@ -25,7 +25,7 @@ Simulated communications employ MAVLink messages specific to the mode in use and
 
 There are many options for simulators supported by PX4, like Gazebo, a robust 3D simulation environment for Linux systems that is particularly suited for testing object avoidance and is commonly used with ROS, or AirSim (\ref{subsec:unreal}), a more resource-intensive cross-platform simulator that leverages the Unreal Engine, typically used for game development and animation, to provide physically and visually realistic simulations.
 For this project, AirSim was chosen because of previous experience with Unreal Engine, the easy availability of visual packages to test computer vision features and its native support for running on Windows machines, which is the operating system running on the computer where the tests will take place.
-AirSim offers a library called \texttt{airlib} (\footnote{\url{https://pypi.org/project/airsim/}}), available for Python, that can be used to retrieve images taken from a simulated camera from the perspective of the drone in the simulation world.
+AirSim offers a library called \texttt{airlib}\footnote{\url{https://pypi.org/project/airsim/}}, available for Python, that can be used to retrieve images taken from a simulated camera from the perspective of the drone in the simulation world.
 This feature will be necessary when testing the person-recognition utilities used in the program.
 
 \begin{figure}
@@ -58,14 +58,12 @@ All ports in the range 14540-14549 can be used to connect offboard APIs, for exa
 PX4's remote UDP Port 14550 is used for communication with ground control stations, which are expected to listen for connections on this port. QGroundControl listens to this port by default but can be configured to use the others, the same way offboard APIs can use the default ground station port to connect instead.
 PX4 uses a simulation-specific module to connect to the simulator's local TCP port 4560.
 Simulators then exchange information with PX4 using the Simulator MAVLink API shown in figure \ref{fig:simulator-msgs}. 
-PX4 on SITL and the simulator can run either on the same computer or different computers on the same network \cite{px4-simulation}. (https://docs.px4.io/v1.12/en/simulation/)
-\todo
+PX4 on SITL and the simulator can run either on the same computer or different computers on the same network \cite{px4-simulation}.
 
 Since one of the purposes of using AirSim as a simulator is to run it on a Windows computer and the PX4 software-in-the-loop stack runs best on Linux, it is necessary to run a virtualized Linux OS in parallel on the Windows computer and set up a local network so that the simulator and the flight controller firmware can communicate with each other.
-The PX4 development team officially supports running the SITL flight stack in Windows through the Windows Subsystem for Linux (WSL2)\footnote{\url{https://docs.microsoft.com/en-us/windows/wsl/about}}, which allows users to install and run their Ubuntu Development Environment on Windows as if it was running it on a Linux computer.
-The Windows Subsystem for Linux lets developers run a GNU/Linux operating system (including most command-line tools, utilities, and applications) directly on Windows, unmodified, without the overhead of a traditional virtual machine or dual-boot setup \cite{wsl-learn} (https://learn.microsoft.com/en-us/windows/wsl/).
+The PX4 development team officially supports running the SITL flight stack in Windows through the Windows Subsystem for Linux (WSL2) \cite{wsl-learn}, which allows users to install and run their Ubuntu Development Environment on Windows as if it was running it on a Linux computer.
+The Windows Subsystem for Linux lets developers run a GNU/Linux operating system (including most command-line tools, utilities, and applications) directly on Windows, unmodified, without the overhead of a traditional virtual machine or dual-boot setup \cite{wsl-learn}.
 The complete steps needed to configure the system are detailed in appendix \ref{app:install-dev-env}.
-\todo
 
 \begin{figure}
   \centering
@@ -107,7 +105,7 @@ However, Windows is the recommended environment \cite{build-airsim}.
 The source code for the AirSim project includes a built-in Unreal environment that can be used to run tests and contains several 3D shapes like blocks and spheres, as well as a default quadcopter to act as the control vehicle.
 It is also possible to create custom Unreal environments and run AirSim inside them by adding the built plugin and a custom vehicle to the project.
 
-The environment used in this project for testing the Dronecontrol application is derived from the built-in AirSim environment and can be found on the project's repository \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/tree/main/AirSim}}.
+The environment used in this project for testing the Dronecontrol application is derived from the built-in AirSim environment and can be found on the project's repository\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/tree/main/data}}.
 It contains the default quadcopter vehicle, which includes several virtual cameras in order to be able to retrieve images from the vehicle's point of view in the simulated world, with some modifications to the background shapes and colours to provide better contrast to the camera.
 The main addition to the environment is the 3D model of a human figure, to be used for testing the pose detection and tracking mechanisms in the computer vision solution.
 This model is part of a free asset library of human models made by Renderpeople \cite{render-people} obtained from the Unreal Marketplace.
@@ -129,7 +127,7 @@ Appendix \ref{app:airsim-config} contains the required settings file for configu
 where the \emph{"LocalHostIp"} needs to be exchanged with the IP of the Windows host in the local \texttt{vEthernet (WSL)} network to be able to connect between the simulator in Windows and the flight controller inside WSL.
 This process is detailed further in the AirSim documentation \cite{airsim-px4-wsl} and in appendix \ref{app:install-dev-env}.
 In brief, the Unreal project with AirSim must first be set into play mode, and then the PX4 SITL flight controller must be built and started to attach to an already running simulator.
-Inside the project in WSL, the flight controller can be run with all the necessary configuration for AirSim by using the provided shortcut script \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/simulator.sh}}:
+Inside the project in WSL, the flight controller can be run with all the necessary configuration for AirSim by using the provided shortcut script\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/simulator.sh}}:
 \begin{minted}{bash}
 ./simulator.sh --airsim
 \end{minted}

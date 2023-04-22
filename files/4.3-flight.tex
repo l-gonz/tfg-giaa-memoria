@@ -30,7 +30,7 @@ The exact steps that will be executed one after the other to ensure that safety 
 
 
 As mentioned before, the vehicle used in this project is the Holybro X500, a drone designed to work with PX4.
-The detailed instructions to build the vehicle from its Development Kit can be found in the PX4 documentation \footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}}.
+The detailed instructions to build the vehicle from its Development Kit can be found in the PX4 documentation\footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}}.
 Figure \ref{fig:x500-dev-kit} shows all the parts that make up the complete vehicle.
 
 \begin{figure}
@@ -58,18 +58,16 @@ Figure \ref{fig:camera-holder-closeup} shows how the vehicle's underside looks w
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth, keepaspectratio]{img/placeholder.png}
+  \includegraphics[width=1\textwidth, keepaspectratio]{img/full-build.jpg}
   \caption{Complete build of the quadcopter with the main components highlighted}\label{fig:full-build}
 \end{figure}
-\todo[inline]{Figure \ref{fig:full-build}: take picture of complete build and annotate with arrows}
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth, keepaspectratio]{img/placeholder.png}
-  \caption{Underside of the vehicle, with supports holding the main battery and the camera in place}
+  \includegraphics[width=0.7\textwidth, keepaspectratio]{img/underside-2.jpg}
+  \caption{Underside of the vehicle, with the supports for holding the main battery and the camera in place}
   \label{fig:camera-holder-closeup}
 \end{figure}
-\todo[inline]{Figure \ref{fig:camera-holder-closeup}: take picture of underside showing battery and camera holder}
 
 
 After the vehicle has been built, there are additional installation and calibration steps that must be carried out before it can fly, also contained in the guide mentioned above.
@@ -81,9 +79,10 @@ The vehicle can be configured either by connecting the flight controller directl
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.45\textwidth, keepaspectratio]{img/qgc-config-1.png}
-  \includegraphics[width=0.45\textwidth, keepaspectratio]{img/qgc-config-3.png}\\
-  \includegraphics[width=0.45\textwidth, keepaspectratio]{img/qgc-config-2.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=0.5\textwidth, keepaspectratio]{img/qgc-config-1.png}
+  \includegraphics[width=0.5\textwidth, keepaspectratio]{img/qgc-config-3.png}}\\
+  \includegraphics[width=0.5\textwidth, keepaspectratio]{img/qgc-config-2.png}
   \caption{Screenshot from the QGroundControl calibration and setup tools used to configure the vehicle}\label{fig:qgc-config}
 \end{figure}
 
@@ -164,7 +163,7 @@ By this connection, a terminal window can be opened on the desktop, and the foll
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
 dronecontrol tools test-camera -r /dev/serial0:921600 -p
 \end{minted}
-As opposed to the flight using the telemetry radio, in this test the serial connection runs at a baudrate of 921600, which matches the configured baudrate on the \texttt{TELEM2} port of the Pixhawk board.
+As opposed to the flight using the telemetry radio, in this test, the serial connection runs at a baudrate of 921600, which matches the configured baudrate on the \texttt{TELEM2} port of the Pixhawk board.
 The "-p" option enables pose detection in the output images.
 A video of the entire process can be found \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-onboard}{here}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-onboard}} and an image extracted form it can be seen in figure \ref{fig:flight-test-cam-onboard}.
 
@@ -188,7 +187,7 @@ A video of the entire process can be found \href{https://l-gonz.github.io/tfg-gi
 During basic flight tests, all the connections and individual parts of the software were validated in actual flight.
 Now, it is time to integrate the piloting system with the image recognition results to test the developed vision-based control solutions.
 The first solution to be used in flight will be the hand-gesture guidance system, which runs on an offboard computer with more available processing resources and no dependence on battery-supplied power to work.
-The setup will be identical to the second test flight (\ref{subsec:fl-test-2}) with the telemetry radio as the serial link and the onboard companion computer turned off
+The setup will be identical to the second test flight (\ref{subsec:fl-test-2}) with the telemetry radio as the serial link and the onboard companion computer turned off.
 Once the autopilot board is powered up, the control solution can be started with the following command:
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
 dronecontrol hand -s <device>:57600
@@ -248,7 +247,7 @@ If these measurements are compared to those analyzed in section \ref{subsec:perf
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth, keepaspectratio]{img/perf-hitl-flight.png}
+  \includegraphics[width=\textwidth, keepaspectratio]{img/perf-hitl-flight.png}
   \caption{Terminal and image output of the dronecontrol follow solution running on the Raspberry Pi}
   \label{fig:flight-performance}
 \end{figure}

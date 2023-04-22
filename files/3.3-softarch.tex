@@ -2,7 +2,7 @@
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/software-arch.jpg}
+  \makebox[\textwidth][c]{\includegraphics[width=1.2\textwidth, keepaspectratio]{img/software-arch.jpg}}
   \caption{Structure of the Dronecontrol application and its interactions with the necessary additional software for running in a simulation (green) or a vehicle (blue).}
 \label{fig:architecture}
 \end{figure}
@@ -20,9 +20,9 @@ A user manual with all the options available in the application can be found in 
 
 \subsection{Pilot module}
 \label{subsec:pilot-module}
-The purpose of the pilot module \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/common/pilot.py}} is to provide access to the rest of the application to send and receive messages from the PX4 controller through the MavSDK library.
+The purpose of the pilot module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/common/pilot.py}} is to provide access to the rest of the application to send and receive messages from the PX4 controller through the MavSDK library.
 This library provides a simple asynchronous API for managing one or more vehicles, providing programmatic access to vehicle information and telemetry, and control over missions, movement and other operations.
-MavSDK utilizes the Python library \emph{asyncio} to run coroutines in parallel while waiting for the messages provided through the \emph{MAVLink} communication.
+MavSDK utilizes the Python library \texttt{asyncio} to run coroutines in parallel while waiting for the messages provided through the MAVLink communication.
 Therefore all calls to the library have to be written as async functions that await the result of one or more polls to the flight stack.
 
 \texttt{asyncio} provides support for writing concurrent code using the \texttt{async/await} syntax.
@@ -31,10 +31,10 @@ It provides a set of high-level APIs to run Python coroutines concurrently and h
 The pilot module integrates \texttt{mavsdk} and \texttt{asyncio} and provides a queue for the control module to send actions to be executed in the vehicle one after another.
 
 Listing \ref{lst:pilot-connect} shows how to establish a connection to a PX4 vehicle through its physical serial address or virtual UDP one and poll for internal information from the flight controller to decide when the system is ready to receive instructions.
-The MAVSDK library exposes telemetry and other state information through asynchronous generators, which are defined in python as a convenient way to make asynchronous data producers and accessed with the \mintinline{python}{async for} syntax.
+The MAVSDK library exposes telemetry and other state information through asynchronous generators, which are defined in python as a convenient way to make asynchronous data producers and accessed with the \texttt{async\ for} syntax.
 
 
-\begin{listing}[h!]
+\begin{listing}[h]
     \caption{Example of how the communication to the flight stack is established through \texttt{asyncio} and the MAVSDK library}{}
     \label{lst:pilot-connect}
     \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{python}
@@ -70,7 +70,7 @@ The loop that runs this queue can be seen in listing \ref{lst:pilot-queue}.
 There is a maximum time of 10 seconds that each action can use to run.
 The loop stops when the asynchronous task it runs on is cancelled with \mintinline{python}{task.cancel()}, which raises a \mintinline{python}{CancelledError} exception in the execution thread.
 
-\begin{listing}[!ht]
+\begin{listing}[h]
     \caption{Loop where the action queue runs on the pilot module. Each action is awaited until it finishes or the timeout time runs out.}{}
     \label{lst:pilot-queue}
     \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{python}
@@ -103,7 +103,7 @@ async def run_queue(self):
 \subsection{Video source module}
 \label{subsec:viz-source-module}
 
-The objective of the \texttt{video\_source} module \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/common/video_source.py}} is to provide a collection of classes to retrieve images from different sources,
+The objective of the \texttt{video\_source} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/common/video_source.py}} is to provide a collection of classes to retrieve images from different sources,
 in a way that they can be exchanged for one another without affecting the rest of the application to facilitate testing and be adaptable to running in different environments.
 Three classes of video sources have been implemented: file, simulator, and camera, which inherit from the same \texttt{VideoSource} according to the diagram in figure \ref{fig:video-source-inheritance}.
 
@@ -136,7 +136,7 @@ First, the image is sent to the computer vision and machine learning third-party
 Afterwards, various calculations depending on the particular solution are applied to these coordinates to decide which commands are sent to the pilot module.
 The third-party library used for computer vision in the program is the MediaPipe library described in section \ref{subsec:mediapipe}, which offers cross-platform, customizable machine-learning solutions appropriate for live and streaming media.
 
-To engage the module in direct control of the vehicle's velocity, it is necessary to use a special flight mode defined by PX4 for this purpose, called Offboard mode \footnote{\url{https://docs.px4.io/main/en/flight_modes/offboard.html\#offboard-mode}} (not to be confused with the offboard configuration described in section \ref{subsec:offboard}).
+To engage the module in direct control of the vehicle's velocity, it is necessary to use a special flight mode defined by PX4 for this purpose, called Offboard mode\footnote{\url{https://docs.px4.io/main/en/flight_modes/offboard.html\#offboard-mode}} (not to be confused with the offboard configuration described in section \ref{subsec:offboard}).
 Offboard mode primarily controls vehicle movement and attitude and supports only a minimal set of MAVLink messages.
 This mode requires position or pose/attitude information to be available to the flight controller, for example, through a GPS antenna.
 In it, the vehicle obeys a position, velocity or attitude setpoint provided over MAVLink by a MAVLink API (i.e. MAVSDK) running on a companion computer and usually connected via serial cable or wifi.
@@ -149,7 +149,7 @@ Sections \ref{sec:hands} and \ref{sec:follow} further explain the control module
 \label{subsec:cam-tool}
 
 In addition to the main modules, several utilities have been added to the Dronecontrol program to facilitate the development and testing process of the control solutions.
-The first tool is found on the \texttt{test\_camera} module \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/test_camera.py}} and accessed through the command \mintinline{bash}{dronecontrol tools test-camera}.
+The first tool is found on the \texttt{test\_camera} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/test_camera.py}} and accessed through the command \texttt{dronecontrol tools test-camera}.
 It can be used to test the connection between the computer, the flight stack and the camera without using any self-guided control mechanism, as well as to evaluate the performance of the MediaPipe hand and pose machine learning solution on real-time images.
 It is also possible to capture images and record video from the live camera feed for later analysis.
 Through the command-line options, the test tool can be configured to use any of the three available video sources: camera, simulator or any video file; to connect to an optional hardware or simulated PX4 flight controller by specifying a connection string or IP, respectively,
@@ -172,7 +172,7 @@ For that reason, it is designed to run in flight with the minimal setup of a PX4
   \label{fig:hand-landmarks}
 \end{figure}
 
-This control module for this solution is the \texttt{mapper} module \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/hands/mapper.py}}.
+This control module for this solution is the \texttt{mapper} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/hands/mapper.py}}.
 It runs on a loop that continuously polls for a new frame from the chosen video source and feeds it to the hand detection functionality from MediaPipe \cite{mp-hands-paper}.
 If a hand is detected in the images, 2D coordinates are extracted according to the map in figure \ref{fig:hand-landmarks}.
 These landmarks are then converted into discrete gestures like an open palm, closed fist or a specific finger pointing in different directions.
@@ -212,7 +212,7 @@ The full list of gestures detected by the program by calculating these angles is
 
 The program execution is outlined in figure \ref{fig:hands-loop}.
 After all the necessary options have been set, a new thread is started to run the pilot queue loop detailed in \ref{subsec:pilot-module}, which waits for new commands.
-On the main thread, the GUI loop runs endlessly until the user quits the program, queuing actions based on gestures calculated from retrieved images and on user input on the keyboard, according to the mapping defined in the \texttt{input} module \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/common/input.py}}.
+On the main thread, the GUI loop runs endlessly until the user quits the program, queuing actions based on gestures calculated from retrieved images and on user input on the keyboard, according to the mapping defined in the \texttt{input} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/common/input.py}}.
 
 \begin{figure}
   \centering
@@ -220,7 +220,6 @@ On the main thread, the GUI loop runs endlessly until the user quits the program
   \caption{Execution flow for the running loop in the hand-gesture control solution.}
   \label{fig:hands-loop}
 \end{figure}
-
 
  
 \section{Final solution: human following}
@@ -271,7 +270,7 @@ Figure \ref{fig:follow-input-calcs} shows how these two inputs are extracted fro
 \end{figure}
 
 
-A diagram summarizing the structure of the follow module \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/follow/follow.py}} can be seen in figure \ref{fig:follow-loop}.
+A diagram summarizing the structure of the follow module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/follow/follow.py}} can be seen in figure \ref{fig:follow-loop}.
 After connecting to the pilot module with the starting options provided, the main loop runs continuously until the user quits the program.
 For each iteration, a new image is retrieved, pose features are extracted from it, and a bounding box is calculated.
 Then, and only if the vehicle is in offboard flight mode, the calculated positions will be fed into the PID controller to get a velocity output to send to the pilot.
@@ -279,7 +278,7 @@ Keyboard control is also available to send manual commands to the vehicle direct
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth, keepaspectratio]{img/follow-loop.jpg}
+  \includegraphics[width=0.9\textwidth, keepaspectratio]{img/follow-loop.jpg}
   \caption{Execution flow for the running loop in the follow control solution}
   \label{fig:follow-loop}
 \end{figure}
@@ -312,9 +311,9 @@ dt    &   change in time
 
 The PID controllers in this project employ the freely-available \texttt{simple-pid} library for Python \cite{pid-library}, which provides all the necessary error calculations already implemented.
 It is only necessary to provide the coefficients, or tunings, and the set point for the controller and then call it periodically with an updated input value to receive the output.
-In the Dronecontrol application, it is the \texttt{controller} module \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/follow/controller.py}} the one that interacts with the \texttt{simple-pid} library to feed and receive the correct values to the PID controllers calculated from the bounding box around the detected person.
+In the Dronecontrol application, it is the \texttt{controller} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/follow/controller.py}} the one that interacts with the \texttt{simple-pid} library to feed and receive the correct values to the PID controllers calculated from the bounding box around the detected person.
 
-Since the most straightforward way to decide the coefficients for a controller is to test different combinations empirically, a small \texttt{tune\_controller} tool has been developed to help with the process \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/tune_controller.py}}.
+Since the most straightforward way to decide the coefficients for a controller is to test different combinations empirically, a small \texttt{tune\_controller} tool has been developed to help with the process\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/tune_controller.py}}.
 With it, it is possible to specify a range of potential coefficients and test the response of the system on the images retrieved from AirSim and a simulated flight controller (either SITL or HITL can be used).
 For each value to be checked, the simulated person to be followed starts in an offset position from the target centre.
 Then, the controller is engaged with the test values, and its detected position input and calculated velocity output a plotted in a graph for analysis.
@@ -343,7 +342,7 @@ Some of these defences employed are part of the developed code, and others are a
 In the first place, the Dronecontrol computer vision module prevents accepting as valid input objects that may have been detected wrongly as a person by the MediaPipe algorithm.
 This is determined by accepting only received feature points that have a minimum resemblance to a standing human figure, where the bounding box's height is always greater than its width and with the features associated with head, shoulder, hip, knee and ankle stacked from top to bottom in that order.
 If any of these checks fail, or if there is no detection output at all received from the library for the current frame, the vehicle will go into Hold flight mode, discarding queued velocity commands, if any, and making the drone hover over its current position.
-These checks are implemented in the \texttt{image\_processing} module \footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/follow/image_processing.py}} for the follow solution.
+These checks are implemented in the \texttt{image\_processing} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/follow/image_processing.py}} for the follow solution.
 
 The second safety mechanism relates to the PID controllers and the pilot module and works by limiting the maximum possible velocity of the vehicle at all points during the execution.
 This is done both inside the Dronecontrol application by setting up output limits on the PID controllers that prevent the guidance system from sending abnormal velocity commands to the flight controller, and from the PX4 autopilot itself as a fallback in case of issues with the custom MAVLink integration or the companion computer as a whole, by setting the \texttt{MPC\_XY\_VEL\_ALL} parameter in the autopilot configuration which limits the overall horizontal velocity of the vehicle.

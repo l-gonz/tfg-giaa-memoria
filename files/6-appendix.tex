@@ -58,8 +58,8 @@ It should now be possible to both control the drone with the keyboard and obtain
 \subsection{Installation of AirSim}
 
 To run the PX4 software-in-the-loop simulator in AirSim and test the follow solution,
-first, install Unreal Engine at version 4.27 at least from the Epic Games Launcher \footnote{\url{https://www.unrealengine.com/download}} and open the environment found in the AirSim folder of the repository.
-To use AirSim with a different Unreal environment, follow the guide in the AirSim documentation \footnote{\url{https://microsoft.github.io/AirSim/unreal_custenv/}}
+first, install Unreal Engine at version 4.27 at least from the Epic Games Launcher\footnote{\url{https://www.unrealengine.com/download}} and open the environment found in the \texttt{data} folder of the repository.
+To use AirSim with a different Unreal environment, follow the guide in the AirSim documentation\footnote{\url{https://microsoft.github.io/AirSim/unreal_custenv/}}
 After starting play mode in Unreal for the first time, a \texttt{settings.json} file will appear in an AirSim folder in the user's Documents folder.
 The contents of this file need to be replaced with the configuration file found in section \ref{app:airsim-config} to be able to interact with PX4 running inside WSL, selecting the correct value for \texttt{"UseSerial"} and exchanging the \texttt{"LocalHostIp"} in the file for the IP of the Windows machine in the virtual WSL network.
 This IP can be obtained by typing \texttt{ipconfig} in the Windows command prompt and looking for the IPv4 address under "Ethernet Adapter vEthernet (WSL)".

@@ -64,8 +64,9 @@ However, it requires a positive velocity to counteract and induce a yaw velocity
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_prop_i0_d0.png}
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_prop_i0_d0.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\textwidth]{img/pid/yaw/yaw_pos_prop_i0_d0.png}
+  \includegraphics[width=.52\textwidth]{img/pid/yaw/yaw_vel_prop_i0_d0.png}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-prop}
 \end{figure}
 
@@ -85,8 +86,9 @@ However, when the $K_I$ increases in magnitude, it creates initial oscillations 
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_p20_int_d0.png}
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_p20_int_d0.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_pos_p20_int_d0.png}
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p20_int_d0.png}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{I}$ and $K_P=-20$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-int-20}
 \end{figure}
 
@@ -95,8 +97,9 @@ In this graph, $K_I=-1$ makes the controller reach the target position some 3 se
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_p50_int_d0.png}
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_p50_int_d0.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_pos_p50_int_d0.png}
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_int_d0.png}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{I}$ and $K_P=-50$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-int-50}
 \end{figure}
 
@@ -111,15 +114,17 @@ The final values for the coefficients for the yaw controller will then be $K_P=-
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_p50_i0_der.png}
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_p50_i0_der.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_pos_p50_i0_der.png}
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_i0_der.png}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{D}$ and $K_P=-50$, $K_I=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-der-i0}
 \end{figure}
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_pos_p50_i1_der.png}
-  \includegraphics[width=.45\linewidth]{img/pid/yaw/yaw_vel_p50_i1_der.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_pos_p50_i1_der.png}
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_i1_der.png}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{D}$ and $K_P=-50$, $K_I=-1$ while the yaw controller is engaged.}\label{fig:tune-yaw-der-i1}
 \end{figure}
 
@@ -157,8 +162,9 @@ For a value up to $K_P=3$, the trajectory described descends rapidly without end
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_pos_prop_i0_d0.png}
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_vel_prop_i0_d0.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_pos_prop_i0_d0.png}
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_prop_i0_d0.png}}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the forward controller is engaged.}\label{fig:tune-fwd-prop}
 \end{figure}
 
@@ -172,14 +178,16 @@ The final values for the coefficients for the forward controller will then be $K
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_pos_p3_int_d0.png}
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_int_d0.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_pos_p3_int_d0.png}
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_int_d0.png}}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{I}$ and $K_P=7$, $K_D=0$ while the forward controller is engaged.}\label{fig:tune-fwd-int}
 \end{figure}
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_pos_p3_i0_der.png}
-  \includegraphics[width=.45\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_i0_der.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_pos_p3_i0_der.png}
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_i0_der.png}}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{D}$ and $K_P=7$, $K_I=0.5$ while the forward controller is engaged.}\label{fig:tune-fwd-der}
 \end{figure}
 
@@ -210,8 +218,9 @@ However, after less than half a second, the detection was stabilised without aff
 
 \begin{figure}
   \centering
-  \includegraphics[width=.45\linewidth]{img/pid/validation_yaw.png}
-  \includegraphics[width=.45\linewidth]{img/pid/validation_yaw_2.png}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=.52\linewidth]{img/pid/validation_yaw.png}
+  \includegraphics[width=.52\linewidth]{img/pid/validation_yaw_2.png}}
   \caption{Changes over time in detected horizontal position and height as input for the controllers with different starting positions in the y-axis}
   \label{fig:validate-yaw}
 \end{figure}
@@ -227,7 +236,7 @@ It is worth noting that even when the person is so close to the vehicle that par
 
 \begin{figure}
   \centering
-  \includegraphics[width=.8\textwidth, keepaspectratio]{img/pid/validation_fwd.png}
+  \includegraphics[width=.7\textwidth, keepaspectratio]{img/pid/validation_fwd.png}
   \caption{Changes over time in detected height as input for the forward controller with different starting positions in the x-axis}
   \label{fig:validate-fwd}
 \end{figure}
