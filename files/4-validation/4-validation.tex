@@ -1,0 +1,23 @@
+\chapter{Experiments and validation}
+\label{chap:validation}
+
+This chapter explains the process of validating each individual piece necessary for the correct operation of the complete system, from testing the first simulation steps to carrying out thorough flight tests on the final guidance solution.
+Figure \ref{fig:validation-chart} shows the order in which each step is followed during the validation process.
+
+In the first section, the application is tested in a purely simulated environment, first individually for each part and finally integrating the flight mechanics simulation with providing images to the computer vision detection software and with sending control commands to the flight controller simulation.
+In the second section, the follow detection and guidance solution is tested thoroughly to guarantee that only safe velocity commands are outputted from the PID controllers for any image input that could be received and that their response is according to the desired movement of the vehicle.
+In the third section, once the software is guaranteed to operate inside the required safety parameters, the simulation is shifted to the dedicated hardware that will be used for actual flight: the dedicated autopilot board and the companion computer that will be onboard the vehicle; to ensure that all the connections are working as expected and the devices offer the necessary performance.
+In the fourth and final section, several flight tests are executed with increasing complexity, from the basic controlling of the vehicle with an RC controller to fully autonomous flight with target following.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/validation-chart.jpg}
+  \caption{Outline for the validation process}\label{fig:validation-chart}
+\end{figure}
+
+\input{files/4-validation/4.1-sitl}
+\input{files/4-validation/4.2-pid}
+\input{files/4-validation/4.3-hitl}
+\input{files/4-validation/4.4-flight}
+
+\clearpage

@@ -1,55 +1,30 @@
-OUTLINE
-1. Introduction (2)
- 	- Project goals
-	- Timeline -> (Solution development, simulation testing, hardware setup, writing) how it's distributed in time
-	- Structure
-2. State-of-the-art
-	- Drone + object-tracking research (2)
-	- Software, libraries used on the project (3)
-		- PX4
-		- AirSim
-		- MediaPipe
-		- MavSDK, OpenCV, …
-	- Hardware
-	    - Pixhawk
-	    - Raspberry Pi
-	    - Real Sense T265
+FIX OUTLINE - CHAPTER 3
 3. Design and implementation
-	- Diagram of architecture (high-level view of all systems) (5)
-      Hardware-software interaction (hardware setup, connections between flight controller, camera and companion computer, OS)
-	- Development environment (Ubuntu, WSL - Windows, RaspberryPi) (3)
-	- Hand Solution (7)
-      Follow Solution
-	     - 1. Translate 2D coordinates to 3D world position:
-	           %https://stackoverflow.com/questions/12299870/computing-x-y-coordinate-3d-from-image-point
-	           %https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
-	     - 2. Path following
-	     - 3. Control loop with PID
-4. Experiments and validation (20)
-	- Individual module testing (how every part of the system is validated separately)
-	- Simulation setup and results from simulation (SITL, HITL, Jmavsim vs. Airsim, Airsim environments)
-	- Flight tests and results on real-time deployment onboard (hand solution and follow solution)
-5. Conclusions and future work (2)
-	- Achievement of proposed goals (from 1a)
-	- Application of bachelor curriculum
-	- Lessons learned
-	- Future work
-
-APPENDIX
-	- CLI interface
-	- Full installation process (reproduction steps)
-	
-Marco teórico (incorporar a la parte que corresponda):
- - PID controller (design: follow solution)
- - Computer vision, cv2 (design: hand solution, sota: mediapipe ??)
- - Any drone flight mechanics ???
- - Table of baudrates per communication method
-
-
-
-
- Add to the validation chapter:
-
- - To SITL, challenges during the development
- - To HITL, battery challenges
- - Other challenges
+Summary of simulation, system architecture and software architecture
+3.1 Simulation and development environment
+Summary of sim and dev: mention three parts (flight stack, simulation engine, companion)
+3.1.1. SITL and HITL simulation
+        --> define the flight stack (what the simulation is simulating, what is simulation)
+        --> define both types, differences, advantages
+        --> define the feedback loop (3.1 without messages)
+3.1.2. Simulation engine
+        --> analyse 3.2 (expansion of 3.1), explain each component inside [Simulator] and what it means for this particular project
+        --> Options for simulation engines / advantages of AirSim over the rest
+        --> Last element of 3.2 = companion computer / offboard API, where our software is
+        --> (¿ own section ?) Communication between elements of 3.2: flight stack, engine and api (Mavlink / UDP / mavlink messages)
+3.2.3. Development environment
+    SITL configuration
+        --> general (3.3)
+        --> WSL
+        --> analyse connection and ports (3.4, make as clear as 3.3, change port 14550 or explain (doesn't match 3.3))
+        --> how to start
+    HITL configuration
+        --> Pixhawk
+        --> analyse connection and ports (3.5, match clarity)
+        --> how to start
+    AirSim environment
+        --> Unreal project and models
+        --> Unreal configuration / AirSim settings
+    Testing flow
+        --> Simulator start script
+        --> Play unreal, start simulator, start offboard

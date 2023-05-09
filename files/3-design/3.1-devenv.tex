@@ -4,7 +4,7 @@ During the process of developing the application, it became necessary to be able
 This configuration has the twofold advantage of reducing the development time on the one hand since there is no need to be concerned with the interactions between the different hardware components, and the results can be visualized immediately on the computer screen, and on the other hand, of increasing the safety of the process by executing on the vehicle only software that has already been tested to an acceptable point.
 
 Simulators allow PX4 flight code to control a computer-modelled vehicle in a simulated "world" that can be interacted with in the same ways as with an actual vehicle, using QGroundControl, an offboard API or a radio controller.
-PX4 supports two different simulation modes: software-in-the-loop (SITL), where the flight stack runs on a non-dedicated computer, and hardware-in-the-loop (HITL), where the simulation firmware executes on an actual flight controller board.
+PX4 supports two different simulation modes: \acrfull{sitl}, where the flight stack runs on a non-dedicated computer, and \acrfull{hitl}, where the simulation firmware executes on an actual flight controller board.
 Communication into and out of the flight stack uses the MAVLink protocol mentioned in section \ref{subsec:mavlink},
 which allows exchanging messages between drones, ground control stations, and other MAVLink systems \cite{mavlink}.
 When the firmware is simulated, a MAVLink server is always started as part of the running software to enable communication with the simulator program, and any other offboard entry point that could be present.

@@ -149,9 +149,9 @@
 \usepackage{csquotes}                   % Para traducciones con biblatex
 
 %%-- Glosario de términos
-% \usepackage[acronym]{glossaries}
-% \makeglossaries
-% \loadglsentries{glossary}
+\usepackage[acronym]{glossaries}
+\makeglossaries
+\loadglsentries{glossary}
 
 % % Definición de cabeceras del documento, usando fancyhdr
 % \usepackage{fancyhdr}
@@ -420,37 +420,37 @@ The popular open-source platform PX4 aims to facilitate the programming of unman
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % INTRODUCTION %
-\include{files/1-intro}
+\include{files/1-2-intro/1-intro}
 
 % ESTADO DEL ARTE %
 \chapter{State of the art}
 \label{chap:sota}
-\include{files/2.1-literature}
-\include{files/2.2-tech}
+\include{files/1-2-intro/2.1-literature}
+\include{files/1-2-intro/2.2-tech}
 \cleardoublepage
 
 % DISEÑO E IMPLEMENTACIÓN %
 \chapter{Design and implementation}
 \label{chap:design}
-\include{files/3.1-devenv}
-\include{files/3.2-sysarch}
-\include{files/3.3-softarch}
+\include{files/3-design/3.1-devenv}
+\include{files/3-design/3.2-sysarch}
+\include{files/3-design/3.3-softarch}
 \cleardoublepage
 
 % EXPERIMENTOS Y VALIDACIÓN %
-\include{files/4-validation}
+\include{files/4-validation/4-validation}
 
 % CONCLUSIONES %
-\include{files/5-conclusion}
+\include{files/5-6-end/5-conclusion}
 
 % GLOSARIO(S) %
-% \printglossary[type=\acronymtype]
-% \printglossary
+\printglossary[type=\acronymtype]
+\printglossary
 
 % APÉNDICE(S) %
 \cleardoublepage
 \appendix
-\include{files/6-appendix.tex}
+\include{files/5-6-end/6-appendix}
 
 % BIBLIOGRAFIA %
 \cleardoublepage
