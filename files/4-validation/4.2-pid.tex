@@ -19,7 +19,7 @@ So for any changes in the position of the simulated person, the controllers will
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/pid/tune-ref-pos.jpg}
-  \caption{Reference position for the yaw and forward PID controllers. From left to right, the panels show the dronecontrol application window, the AirSim simulator world view and the world location of the human model in the simulator. The distance between the vehicle and the person is 600 units in the x direction and 0 units in the y direction.}
+  \caption{Reference position for the yaw and forward PID controllers. From left to right, the panels show the DroneVisionControl application window, the AirSim simulator world view and the world location of the human model in the simulator. The distance between the vehicle and the person is 600 units in the x direction and 0 units in the y direction.}
   \label{fig:tune-start-pos}
 \end{figure}
 
@@ -36,7 +36,7 @@ So for any changes in the position of the simulated person, the controllers will
 To find the correct coefficients for the controller that governs the yaw velocity of the vehicle, the target person is set in a position slightly to the side on its field of view so that when the controller is engaged, it outputs a rotation of the vehicle to that side.
 Since the forward controller will not be engaged during the test, the target person can be situated closer to the camera to make it easier for the pose detection algorithm to output correct landmarks.
 Figure \ref{fig:tune-ref-pos-yaw} shows the starting position of the simulated environment before each run, where the 3D model has been situated at (500, 100), that is, 100 units to the right of the reference position.
-On the left-most panel of figure \ref{fig:tune-ref-pos-yaw}, the dronecontrol application shows that the input to the yaw controller is 0.62 at this position.
+On the left-most panel of figure \ref{fig:tune-ref-pos-yaw}, the DroneVisionControl application shows that the input to the yaw controller is 0.62 at this position.
 The controller must then output a positive yaw velocity to centre the person in its field of view. 
 This offset position to the right produces an error that is less than zero (set point minus input, $\epsilon = 0.5 - 0.62$ ).
 However, it requires a positive velocity to counteract and induce a yaw velocity to the right, so the coefficients for the yaw controller will need to be negative so that an increased horizontal position results in a positive yaw velocity to decrease it, as indicated by equation \ref{eq:pid}.

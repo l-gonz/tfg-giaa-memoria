@@ -1,7 +1,9 @@
 \section{System architecture}
 \label{sec:sysarch}
 
-\subsection{Top level}
+This section describes the architecture of the interaction between the flight controller and the DroneVisionControl application. It outlines the key components of the system along with their connections, discussing two possible configurations: offboard, where the companion computer acts as a ground station, and onboard, where the companion computer and camera are onboard the vehicle. The following sections explore the details of each configuration.
+
+\subsection{Top-level components}
 
 \begin{figure}
   \centering
@@ -10,71 +12,41 @@
   \label{fig:toplevel}
 \end{figure}
 
-The purpose of the Dronecontrol application is to be able to direct the movement of a UAV through the analysis of the images taken by a camera.
-Since the processing power needed to analyse the images recorded is superior to that offered by the autopilot flight controller, it becomes necessary to use an additional companion computer that can control the camera and leverage machine learning algorithms to extract useful features from the images and transform them into movement directives for the vehicle.
 
-A top-level diagram of the individual parts that comprise the system is shown in figure \ref{fig:toplevel}. The main elements are the flight controller, which will run the PX4 autopilot \ref{subsec:px4}, the companion computer, which will run the developed application, and the camera, which provides the images.
-The flight controller interfaces directly with the companion computer using the MAVLink protocol described in section \ref{subsec:mavlink} through a wireless radio link or a cabled serial connection between the two.
-The camera is connected to the companion computer through a USB cable into any available port on the computer.
-Typically, the type of connection between the flight controller and the computer depends on the system's desired setup.
-There are two main possibilities.
-When the images have to be taken from the vehicle's perspective and move with it, the camera, and therefore the companion computer, flies onboard the vehicle next to the flight controller. 
-In this case, using a direct wire connection between the two is the most convenient, as it provides a faster and more stable link. 
-This onboard configuration is detailed in section \ref{subsec:offboard}.
-The second possibility is that the companion computer acts more like a ground station, directing the vehicle's movement from the ground on an offboard configuration while the flight controller stays onboard the vehicle.
-This configuration is possible when the camera does not need to move with the vehicle.
-Then, it becomes strictly necessary to communicate with the flight controller through a wireless connection, using the pair of telemetry radios provided with the Development Kit of the Holybro X500 (\ref{subsec:pixhawk}).
-Section \ref{subsec:onboard} describes the complete setup required for this configuration.
+The DroneVisionControl application aims to direct the movement of a UAV by analyzing images captured by a camera. Since the processing power needed to analyse the images exceeds the capabilities of the autopilot flight controller, an additional companion computer is necessary. This companion computer will control the camera and utilise machine learning algorithms to extract useful features from the images and convert them into movement directives for the vehicle.
 
-In this project, the flight controller is driven by the PX4 flight stack (\ref{subsec:px4}), and the hardware employed on the autopilot board is optimised for this software.
-PX4 uses sensors to determine the vehicle state, which is needed for stabilisation and to enable autonomous control.
-It minimally requires a gyroscope, accelerometer, magnetometer (compass) and barometer.
-A GPS or other positioning system is also needed to activate all fully automatic flight modes, like planned missions, and some assisted ones, like altitude stabilisation.
-PX4 uses outputs to control motor speed, flight surfaces like ailerons and flaps, camera triggers, parachutes, grippers, and many other types of payloads.
-Most PX4 drones rotate the propellers through brushless motors that the flight controller controls via an Electronic Speed Controller (ESC).
-The ESC converts a signal from the flight controller to an appropriate level of power delivered to the motor.
-They are most commonly powered by Lithium-Polymer (LiPo) batteries, typically connected to the system using a Power Module or Power Management Board, 
-which provides separate power for the flight controller and the ESCs for the motors.
-To manually control the vehicle, a Radio Control (RC) system is used.
-It consists of a remote control unit that uses a transmitter to communicate stick and control positions to a receiver located on the vehicle.
-More complex RC systems can also receive telemetry information from the autopilot to display for the operator.
-Other ways of communicating with the autopilot include telemetry radios, which can provide a wireless MAVLink connection between a ground control station and a vehicle running PX4.
-This makes it possible to tune parameters while a vehicle is in flight, send flight mode commands, inspect telemetry information or change a mission on the fly.
+Figure \ref{fig:toplevel} illustrates a top-level diagram depicting the key components of the system. The main elements include the flight controller, running the PX4 autopilot firmware, the companion computer hosting the developed application, and the camera responsible for image capture.  The camera connects to the companion computer using a USB cable plugged into any available port. The flight controller establishes the communication with the companion computer via the MAVLink protocol described in section \ref{subsec:mavlink}, either through telemetry radios or a direct wire connection. The choice of connection type depends on the desired setup of the system.
 
-On an actual UAV, the PX4 software runs on a dedicated piece of hardware like the Pixhawk 4 flight controller described in section \ref{subsec:pixhawk} that includes all the minimal required sensors for flight as well as interfaces to connect additional actuators and I/O systems (RC, telemetry radio).
-However, it is also possible to simulate this hardware on a standard Linux computer by building the flight stack from the source code.
-This process is described in section (\ref{sec:devenv}).
+In the simplest configuration, the companion computer can function as a ground station, directing the vehicle's movement from the ground while the flight controller remains onboard. This configuration is possible when the camera doesn't need to move with the vehicle. In this scenario, wireless communication becomes critical, so it will be established utilizing a pair of telemetry radios. Section \ref{subsec:offboard} provides a comprehensive guide for this configuration.
 
-The Dronecontrol application that runs on the companion computer has been developed using the Python programming language\footnote{\url{https://www.python.org/}}.
-It offers good advantages for a project of these characteristics because of its high-level, easy-to-use syntax that usually results in a smaller code base than other comparable languages for small projects, its versatility and its support for object-oriented programming.
-Most importantly, Python is widely used with an official package manager called \texttt{pip} that significantly simplifies the use of external libraries and which gathers in its package index\footnote{\url{https://pypi.org/}} thousands of well-tested utilities,
-including many machine learning and image processing projects.
-Moreover, all the necessary libraries for interacting with PX4 through the MAVLink protocol, object detection and tracking, and simulation (MavSDK, OpenCV, AirSim, Mediapipe) offer a version to use with Python.
-As an interpreted language, it can run without complications in any system with Python installed without compiling separate binaries for different operating systems.
+Alternatively, when the camera needs to move with the vehicle to capture images from its perspective, the companion computer and camera are placed onboard the vehicle alongside the flight controller. In this case, a direct wired connection between the two is the most suitable option, offering a faster and more stable link. Details of this configuration are provided in section \ref{subsec:onboard}.
 
-The following sections explore deeper into the differences between the two configurations mentioned before: offboard and onboard companion computer.
+\subsubsection{The flight controller}
+
+The flight controller or autopilot is a circuit board equipped with sensors, and optimized for running the flight stack.
+The autopilot used in this project is the Pixhawk 4, designed by Holybro for the PX4 firmware.
+This board depends on a specific set of hardware components to function properly.
+These components include sensors, which collect environment data for processing, and actuators, which transform the output signals from the controller into movement.
+
+To determine the vehicle's state for stabilization and autonomous control, PX4 relies on sensors such as gyroscopes, accelerometers, magnetometers (compasses), and barometers.
+These are the sensors that are typically included already integrated with the autopilot's board.
+Additionally, a GPS or other positioning system is required to enable fully automatic flight modes and assisted features like altitude stabilization or mission planning.
+
+PX4 utilises outputs to control motor speed, flight surfaces (e.g., ailerons and flaps), camera triggers, parachutes, grippers, and other payloads. Brushless motors, controlled by Electronic Speed Controllers (ESCs) connected to the flight controller, rotate the propellers in most PX4 drones. These drones typically employ Lithium-Polymer (LiPo) batteries, which are connected to the system using a Power Module or Power Management Board, providing separate power for the flight controller and ESCs. 
+
+For manual control of the vehicle, a \acrfull{rc} system is employed, consisting of a remote control unit that communicates stick and control positions to a receiver on the vehicle. Advanced RC systems can also receive telemetry information from the autopilot, providing feedback to the operator. Telemetry radios offer an alternative means of communication with the autopilot, establishing a wireless MAVLink connection between a ground control station and a PX4-powered vehicle. This enables real-time parameter tuning, flight mode commands, telemetry inspection, and on-the-fly mission changes.
+
+In an actual UAV, the PX4 software runs on dedicated hardware like the Pixhawk 4 mentioned. This hardware includes all the essential sensors for flight as well as interfaces to connect additional actuators and I/O systems (RC, telemetry radio). 
+However, on a simulated environment like the one described in section \ref{sec:devenv}, all the hardware components of the sensors and actuators are simulated on the same computer running the flight stack.
+
+\subsubsection{DroneVisionControl and the companion computer}
+
+The DroneVisionControl application that runs on the companion computer utilizes the Python programming language\footnote{\url{https://www.python.org/}}. Python offers several advantages for projects of this nature, including its high-level, easy-to-use syntax, which results in a more concise code base compared to other languages. Other benefits include Python's versatility and support for object-oriented programming. Moreover, Python has a vast ecosystem of external libraries accessible through its official package manager called \texttt{pip}. This package index\footnote{\url{https://pypi.org/}} contains thousands of well-tested utilities, including many designed for machine learning and image processing. Additionally, Python versions of all the necessary libraries for interacting with PX4 via the MAVLink protocol, for object detection and tracking, and for simulation (MavSDK, OpenCV, AirSim, Mediapipe) are available. Being an interpreted language, Python can run seamlessly on any system with Python installed, eliminating the need to compile separate binaries to run in different operating systems.
+
+The following sections will provide an in-depth exploration of the differences between the two configurations mentioned earlier for offboard and onboard companion computers.
 
 \subsection{Offboard computer configuration}
 \label{subsec:offboard}
-
-The offboard configuration allows the flight controller to communicate and receive orders from a companion computer that is not physically connected to its hardware, so it can stay on the ground while the vehicle flies.
-This has the advantage that it allows for a more straightforward configuration without having to be concerned with low-level hardware interactions between the two systems or providing power to the companion computer while in flight.
-It also facilitates using a more powerful computer for image processing since there is no need to account for any added weight to the vehicle.
-However, the camera remains connected to the computer on the ground, so the images will not be taken from the drone's perspective in flight, which limits the real-world applications of the system.
-Other configurations involving a direct connection from a camera to the flight controller and the transmission of its images wirelessly to the companion computer through MAVLink for offboard processing can be feasible with the current technology but fall out of the scope of this project.
-
-In this instance, the wireless link is established through a pair of telemetry radios connecting to a telemetry port on the flight controller and to a USB port in the companion computer.
-Since the Pixhawk 4 is configured by default to use its \texttt{TELEM1} port for this purpose, no additional parameter configuration is needed when using that port.
-To connect to the board from the companion computer, applications like the QGRoundControl (\ref{subsec:qgc}) ground station software can automatically detect a telemetry radio inserted into any USB port on the host computer.
-Additionally, other applications using the MavSDK (\ref{subsec:mavlink}) library can establish a connection by specifying the baudrate and the USB serial port address, usually something similar to \texttt{/dev/ttyUSB0} on Linux and \texttt{COM1} on Windows.
-
-The radio used for the physical tests in this project is the Holybro SiK Telemetry Radio\footnote{\url{http://www.holybro.com/product/transceiver-telemetry-radio-v3/}}.
-It is a small, light and inexpensive open-source radio platform that typically allows ranges of more than 300 meters "out of the box" (the range can be extended to several kilometres with a patch antenna on the ground).
-The radios are offered as 915Mhz (Europe) or 433Mhz (US), so they can be used in different regions and comply with the regulations for frequency, hopping channels and power levels.
-They offer 2-way full-duplex communication through an adaptive TDM UART interface, and their antenna allows for an adjustable 100-mW-maximum output power and -117 dBm receive sensitivity.
-The link is established by default with a baudrate (max bits per second on a serial channel) of 57600, and it can provide air data rates of up to 250 kbps.
-
-Figure \ref{fig:offboard-config} summarises the connections to establish between the PX4 software, the Dronecontrol application, their hardware platforms, and their respective peripherals both onboard the vehicle and at the ground station for the offboard computer configuration setup.
 
 \begin{figure}
   \centering
@@ -83,54 +55,63 @@ Figure \ref{fig:offboard-config} summarises the connections to establish between
   \label{fig:offboard-config}
 \end{figure}
 
+The offboard configuration allows the flight controller to communicate and receive orders from a companion computer that is not physically connected to its hardware, so the latter can remain on the ground while the vehicle flies.
+This configuration offers several advantages, including simplified setup without concerns about hardware interactions and power supply to the companion computer during flight. It also allows for the use of a more powerful computer for image processing without adding weight to the vehicle. However, the camera remains connected to the ground computer, limiting the system's real-world applications as the images are not captured from the drone's perspective during flight. While other configurations involving direct camera-to-flight controller connection and wireless transmission of images for offboard processing are feasible, they are beyond the scope of this project.
+
+In this configuration, the wireless link is established through a pair of telemetry radios.
+These radios connect to a telemetry port on the flight controller and a USB port on the companion computer. 
+Since the Pixhawk 4 is configured by default to use its \texttt{TELEM1} port for this purpose, no additional configuration is needed when using that port.
+Applications like the QGRoundControl ground station software automatically detect a telemetry radio inserted into any USB port on the host computer and establish the connection to the flight controller.
+Additionally, software using the MavSDK library can establish a connection by specifying the USB serial port address and the baudrate of the link, usually something similar to \texttt{/dev/ttyUSB0:57600} on Linux and \texttt{COM1:57600} on Windows.
+
+The radio used for the physical tests in this project is the Holybro SiK Telemetry Radio.
+It is a small, light and inexpensive open-source radio platform that typically allows ranges of more than 300 meters "out of the box" (the range can be extended to several kilometres with a patch antenna on the ground).
+The radios are offered as 915Mhz (Europe) or 433Mhz (US), so they can be used in different regions and comply with the regulations for frequency, hopping channels and power levels.
+They offer 2-way full-duplex communication through an adaptive TDM UART interface, and their antenna allows for an adjustable 100-mW-maximum output power and -117 dBm receive sensitivity.
+The link is established by default with a baudrate (max bits per second on a serial channel) of 57600, and it can provide air data rates of up to 250 kbps.
+
+The project utilizes the Holybro SiK Telemetry Radio\footnote{\url{http://www.holybro.com/product/transceiver-telemetry-radio-v3/}} for physical tests. These radios are small, lightweight, and cost-effective, offering a range of more than 300 meters out of the box (which can be extended with a patch antenna). They operate at either 915MHz (Europe) or 433MHz (US), complying with regional frequency regulations. The radios support two-way full-duplex communication through an adaptive TDM UART interface, with an adjustable maximum output power of 100mW and a receive sensitivity of -117dBm. The default baudrate for the connection is 57600, and the radios can achieve exchange rates of up to 250kbps.
+
+Figure \ref{fig:offboard-config} provides a summary of the connections required for the offboard computer configuration setup, including the PX4 software, the DroneVisionControl application, their respective hardware platforms, and onboard and ground station peripherals.
+
 
 \subsection{Onboard computer configuration}
 \label{subsec:onboard}
 
 The second way of configuring the interaction between the flight controller and the companion computer consists of incorporating both of them together on board the UAV.
-In this case, the connection is made through a serial cable between the telemetry port in the flight controller and a serial port in the companion computer.
-The camera will then be connected through a cable as well to the companion computer and attached to the frame of the vehicle in a way that allows for a practical perspective during flight.
-This configuration makes it possible to develop new control solutions based on images taken directly from the vehicle that reflect the trajectory that it follows.
-Therefore, it becomes possible to adjust the control loop based on previous reactions of the vehicle to commands and establish a feedback loop to maintain a stabilised output.
+This is achieved by connecting the flight controller directly to the companion computer using a serial cable.
+The camera will also be onboard the vehicle, attached to the frame in a way that allows for a practical perspective during flight.
+This configuration makes it possible to develop new control solutions based on images taken directly from the vehicle, creating a feedback loop that adjusts to maintain a stable output based on the reaction of the vehicle to commands.
+Figure \ref{fig:onboard-config} shows a summary of all the connections present in the onboard configuration between the three pieces of software that interact together: PX4, DroneVisionControl and QGroundControl, with their respective hardware platforms and the attached peripherals.
 
-Since, in this configuration, the computer running the visual processing algorithm has to fly on board the vehicle, making a good choice when selecting hardware becomes essential.
-To be able to take into the air, the computer has to be light enough that its weight can be lifted by the propellers while maintaining adequate battery autonomy but also powerful enough that the processor can handle the computer vision algorithms required to extract the necessary features from the images taken from the onboard camera that are to be fed to the control loop.
+\begin{figure}[b!]
+  \centering
+  \includegraphics[width=0.85\textwidth,keepaspectratio]{img/onboard-diagram.jpg}
+  \caption{Onboard configuration connections}
+  \label{fig:onboard-config}
+\end{figure}
 
-\begin{figure}
+\todo[inline]{Fix image: hardware white background rounded edges, software green}
+
+Selecting the appropriate hardware for the onboard computer is crucial in this configuration since the companion computer has to fly along with the flight controller. 
+To be able to take into the air, the computer has to be light enough that its weight can be lifted by the propellers while maintaining adequate battery autonomy.
+It also needs to be powerful enough that its processor can handle computer vision algorithms.
+The Raspberry Pi 4 model chosen for this project and shown in Figure \ref{fig:rpi4-pinout} is one of the most popular small computers available in the market at the time, and it is widely used in all kinds of robotics projects both for education and hobbyists. 
+One of the most crucial advantages of using such a platform is the excellent availability of manuals, guides, and other support found on the web. 
+In addition, the Raspberry’s officially supported operating
+system, called Raspberry Pi OS, is a Debian-based version of Unix, which simplifies the transition from the WSL test environment.
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth,keepaspectratio]{img/rpi4-pinout.png}
-  \caption{The Raspberry Pi 4 microcomputer, with its 40-pin GPIO header marked in red and annotated pinout.}
+  \caption{The Raspberry Pi microcomputer, with its 40-pin GPIO header marked in red and annotated pinout.}
   \source{Adapted from \citetitle{rpi4-pinout} \cite{rpi4-pinout}}
   \label{fig:rpi4-pinout}
 \end{figure}
 
-The Raspberry Pi 4 model chosen for this project and shown in figure \ref{fig:rpi4-pinout} is one of the most popular small computers available in the market at the time, and it is widely used in all kinds of robotics projects both for education and hobbyists.
-One of the most crucial advantages of using such a platform is the excellent availability of manuals, guides, and other support found on the web.
-In addition, the Raspberry's officially supported operating system, called Raspberry Pi OS, is a Debian-based version of Unix optimised for its ARM microcontroller, which simplifies the process of moving from the Ubuntu test environment into the handheld computer.
-Since this computer is designed to be easy to integrate with hardware projects, it includes a 40-pin GPIO header (highlighted in figure \ref{fig:rpi4-pinout}) that can be programmed for connecting to any number of external devices.
-
-The Raspberry Pi is powered by a 5V input that can be provided either from its USB-C port or through one of two pins in the header dedicated to this purpose (marked as "5v Power" on figure \ref{fig:rpi4-pinout}).
-In the case of the particular vehicle build used in this project, the power management board supplying the energy (the Holybro PM07\footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}}) also provides 5V to the flight controller, as well as powering the ESCs to the motors.
-It counts with two power outputs: one connected to the flight controller's \texttt{POWER1} port and another unused one.
-A first attempt at supplying current to the Raspberry Pi from the main battery was tested initially with a connection between the second, free output on the power module and the powering pins on the GPIO header with a custom connector.
-However, the consequent power supply ended up being too unstable for the Pi board, resulting in frequent dips in the supplied current that affected the processing capabilities of the companion computer.
-The devised solution was to add a secondary battery to the vehicle providing power through a USB to USB-C cable.
-This configuration allows the Raspberry to receive power through its default power input, the regulated USB-C port.
-The main disadvantage of the solution is that it adds one more piece of equipment of substantial weight that needs to be secured to the vehicle's frame and carried into the air while in flight.
-
-In contrast to the choice of a companion computer, many more possibilities are available regarding the camera that will fly onboard the vehicle.
-The most important characteristics to focus on are a small weight and simple plug-and-play functionality with the onboard computer.
-The camera used in the tests carried out and detailed in section \ref{chap:validation} is a Logitech C920 1080p webcam\footnote{\url{https://www.logitech.com/es-es/products/webcams/c920-pro-hd-webcam.960-001055.html}}.
-Since the frame of the Holybro X500 is not prepared by default to include an onboard camera, a custom mount has been designed and 3D-printed from PLA plastic to be able to hang the camera from the central rods on the underside of the vehicle frame and ensure that it is attached securely during flight.
-The 3D model of the mount can be seen in figure \ref{fig:camera-holder-3d}, and the print-ready file can be found in the project repository in GitHub\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/data/camera-holder.stl}}.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.6\textwidth, keepaspectratio]{img/cam-holder.jpg}
-  \caption{3D model for the camera mount designed for the Holybro X500 frame.}
-  \label{fig:camera-holder-3d}
-\end{figure}
-
+Since this computer is designed for integration with hardware projects, it includes a 40-pin \acrfull{gpio} header (highlighted in Figure \ref{fig:rpi4-pinout}) for connecting external devices.
+This pin header, along with the standard ports in the Raspberry Pi, will be used to implement the three connections to the companion computer required for the onboard configuration, shown in Figure \ref{fig:wiring}.
+The first connection will provide power to the computer, the second will be a connection to the camera that provides images, and the third one will be the telemetry link to the flight controller.
 
 \begin{figure}
   \centering
@@ -139,22 +120,31 @@ The 3D model of the mount can be seen in figure \ref{fig:camera-holder-3d}, and 
   \label{fig:wiring}
 \end{figure}
 
+The Raspberry Pi is powered by a 5V input that can be supplied via the USB-C port or specific pins on the GPIO header ("5v Power" on Figure \ref{fig:rpi4-pinout}). 
+In the specific vehicle build of this project, the Holybro PM07\footnote{\url{http://www.holybro.com/product/pixhawk-4-power-module-pm07/}} power management board supplies 5V to the flight controller and powers the ESCs for the motors. 
+The power management board features two power outputs: one connected to the flight controller's \texttt{POWER1} port and an unused one. 
+Initially, attempts were made to power the Raspberry Pi from the main battery by connecting the second output on the power module to the GPIO header's powering pins using a custom connector. 
+However, this resulted in an unstable power supply for the Pi board, causing frequent current dips that affected the companion computer's processing capabilities. 
+To address this, a secondary battery was introduced, providing power to the Raspberry Pi via a USB to USB-C cable. 
+This configuration allows the Raspberry Pi to receive power through its default regulated USB-C port. 
+The drawback is the additional weight of the secondary battery, which also needs to be securely attached to the vehicle's frame during flight.
 
-The second wired connection that needs to be established for this configuration is between the flight controller and the companion computer so the MAVLink messages can be exchanged.
-As it is desirable to be able to maintain a wireless link to the vehicle even while the onboard computer is controlling it, the telemetry radio is kept connected to the \texttt{TELEM1} port of the flight controller.
-Then, the companion computer is wired to the secondary telemetry port, \texttt{TELEM2}.
-This port is not configured to be used by default, so it is necessary to modify the configuration of the Pixhawk board either through QGroundControl or the PX4 console to set it up for a companion computer.
-The main parameter that requires changing in the board is the \texttt{MAV\_1\_CONFIG}, which configures the serial port on which a second instance of MAVLink is run (the primary instance is configured with \texttt{MAV\_0\_CONFIG}, set up for telemetry radios).
-This parameter defaults to 0 (disabled) and should be set to 102 to map to \texttt{TELEM2}.
-The secondary MAVLink instance is configured for "Onboard mode" by default, which is the appropriate mode for communicating with a companion computer, instead of the "Normal mode" running on the primary MAVLink instance through \texttt{TELEM1} to communicate with QGroundControl.
-Another parameter to consider is the \texttt{SER\_TEL2\_BAUD}, which regulates the baud rate of the \texttt{TELEM2} port.
-The default rate is 921600, which is appropriate for a serial connection.
-This rate needs to be specified when establishing the connection in the Dronecontrol application through the MAVSDK library.
-PX4 provides a complete overview of all the available parameters for the board configuration in their documentation \cite{px4-docs-params}.
+In contrast to selecting a companion computer, the choice of camera for the onboard system offers greater flexibility. The key considerations are lightweight design and straightforward plug-and-play compatibility with the onboard computer. The camera utilized in the tests outlined in section \ref{chap:validation} is the Logitech C920 1080p webcam\footnote{\url{https://www.logitech.com/es-es/products/webcams/c920-pro-hd-webcam.960-001055.html}}. Since the Holybro X500 frame doesn't natively support an onboard camera, a custom mount was designed and 3D-printed using PLA plastic. This mount securely attaches the camera to the underside of the vehicle frame's central rods, ensuring stability during flight. The 3D model of the mount is depicted in Figure \ref{fig:camera-holder-3d}, and the print-ready file is available in the project's repository in GitHub\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/data/camera-holder.stl}}.
 
-The other end of the connector has three female Dupont wires that go into the TX/RX UART pins of the Raspberry Pi,
-according to mapping table \ref{tab:wiring-telem} between the six pins in the telemetry connection of the Pixhawk board and the corresponding GPIO pins in the Raspberry Pi header \cite{pixhawk-manual} \cite{pixhawk-px4}.
-A diagram of all the connections to the companion computer can be seen in figure \ref{fig:wiring}.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth, keepaspectratio]{img/cam-holder.jpg}
+  \caption{3D model for the camera mount designed for the Holybro X500 frame.}
+  \label{fig:camera-holder-3d}
+\end{figure}
+
+The last wired connection that needs to be established for this configuration is between the flight controller and the companion computer for MAVLink message exchange.
+This connection will use the secondary telemetry port of the flight controller, \texttt{TELEM2}.
+Meanwhile, the telemetry radio will remain connected to the \texttt{TELEM1} port to maintain a wireless link.
+This link can be employed by a ground station (QGroundControl) to override the companion computer's control during flight.
+The telemetry connections on the flight controller use a 6-pin adapter to attach to the \texttt{TELEM} ports.
+On the Raspberry Pi side, the other end of the connector has three female Dupont wires that connect to the TX/RX UART pins. The pins in the telemetry port are mapped to the corresponding GPIO pins on the Raspberry Pi's header according to the wiring table provided in \ref{tab:wiring-telem}.
+This wiring configuration is also depicted in the diagram in Figure \ref{fig:wiring}.
 
 \begin{table}[ht]
 \centering
@@ -173,20 +163,12 @@ A diagram of all the connections to the companion computer can be seen in figure
 \label{tab:wiring-telem}
 \end{table}
 
-Compared to the default baudrate of 57600 on the telemetry radio link established in the previous section, the wired serial connection works at a baudrate of 921600, which means that data can be transferred up to 16 times faster through this link.
-However, the main limitation on speed for the program comes from the feature detection process that runs on the images, so a faster link rate will not necessarily mean any increase in the solution's overall performance.
-In section \ref{subsec:performance}, different combinations of hardware are compared to analyse any challenges to the program's performance.
+By default, the secondary telemetry port, \texttt{TELEM2}, is not enabled for use.
+Its configuration can be changed through a ground station computer connected to the Pixhawk board by using the Parameters section of the QGroundControl application.
+The specific parameters that need to be set are discussed in section \ref{sec:test-5-rpi}.
 
-The offboard configuration allowed the supervision of the output from the program while the vehicle was flying since the computer stayed stationary on the ground. 
-However, having a screen connected directly to the companion computer is not feasible in this configuration.
-To fix this situation and be able to monitor the execution during flight, as well as being able to provide input directly to the program, it is possible to make use of the WiFi antenna of the Raspberry Pi to configure a remote desktop and connect to it through another computer serving as a ground station.
-Then, the camera output and image recognition can be seen in real-time.
+% The key parameter that needs to be changed is \texttt{MAV_1_CONFIG}, which configures the serial port a the second instance of MAVLink. Unlike the primary instance (\texttt{MAV_0_CONFIG}), which is set up for telemetry radios, \texttt{MAV_1_CONFIG} should be set to 102 to map to \texttt{TELEM2}. The secondary MAVLink instance is already configured in "Onboard mode" by default, which is the appropriate mode for communication with a companion computer, as opposed to the "Normal mode" used for communication with QGroundControl through \texttt{TELEM1}. Another parameter to consider is \texttt{SER_TEL2_BAUD}, which determines the baud rate of the \texttt{TELEM2} port. The default rate is 921600, suitable for a serial connection. This rate needs to be specified when establishing the connection in the DroneVisionControl application using the MAVSDK library. A comprehensive overview of all the available parameters for board configuration can be found in the PX4 documentation \cite{px4-docs-params}.
 
-Figure \ref{fig:onboard-config} shows a summary of all the connections present in the onboard configuration between the three pieces of software that interact together: PX4, Dronecontrol and QGroundControl, with their respective hardware platforms and the attached peripherals.
+Compared to the default baud rate of 57600 used for the telemetry radio link established earlier, the wired serial connection operates at a faster rate of 921600. This means that data can be transferred up to 16 times faster through this link. However, it is important to note that the primary limitation on speed for the program lies in the detection and tracking process running on the images. Therefore, a faster link rate does not necessarily result in an overall performance improvement for the solution. In section  \ref{subsec:performance}, different hardware combinations are analyzed to identify any challenges that may impact the program's performance.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth,keepaspectratio]{img/onboard-diagram.jpg}
-  \caption{Onboard configuration connections}
-  \label{fig:onboard-config}
-\end{figure}
+Moving beyond the individual hardware components, it is important to compare the use of this onboard configuration with the previously discussed offboard configuration during testing. While the offboard setup allowed for monitoring the program's output by connecting a screen directly to the companion computer on the ground, such a setup is not feasible in the onboard configuration. However, a solution to this limitation is to leverage the Raspberry Pi's WiFi antenna and configure a remote desktop connection. By connecting to this remote desktop from another computer acting as a ground station, real-time monitoring of the camera output and image recognition can be achieved, along with the capability to provide direct input during flight.

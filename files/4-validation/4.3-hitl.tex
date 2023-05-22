@@ -15,11 +15,11 @@ To do so, the aim is to be able to run the follow solution to send control comma
 QGroundControl contains a specific quadcopter HITL airframe configuration that sets up the board with all the required parameters to activate this new hardware-in-the-loop mode.
 It automatically detects the Pixhawk 4 board when connected to the computer through its Micro-USB port.
 It is also required to make changes to the AirSim configuration for the simulator to work with HITL mode, namely, activating the option to accept connections through serial.
-To test the complete system configuration for HITL described in section \ref{sec:devenv} and outlined in figure \ref{fig:hitl-connections}, the Pixhawk board needs an additional channel of communication to the computer dedicated to the Mavlink exchange with the dronecontrol application.
+To test the complete system configuration for HITL described in section \ref{sec:devenv} and outlined in figure \ref{fig:hitl-connections}, the Pixhawk board needs an additional channel of communication to the computer dedicated to the Mavlink exchange with the DroneVisionControl application.
 The board will therefore have both a direct cable connection to the computer and a telemetry radio on its \texttt{TELEM1} port with a wireless link to its counterparty radio connected to the computer.
-Since the AirSim simulator requires a higher update rate than the dronecontrol application, it will employ the faster, cabled link.
+Since the AirSim simulator requires a higher update rate than the DroneVisionControl application, it will employ the faster, cabled link.
 The simulator can automatically connect to the board when it is started once the \texttt{UseSerial} option in the AirSim settings is set to true.
-The Dronecontrol program will connect through the telemetry radio by specifying the serial port and corresponding baudrate when launching the application.
+The DroneVisionControl program will connect through the telemetry radio by specifying the serial port and corresponding baudrate when launching the application.
 Since the flight stack is now running on a physical controller, it is possible to add an RC antenna to the \texttt{PPM RC} port of the board to be able to fly the vehicle with a remote control unit after it has been bound to the receiver\footnote{\url{https://docs.px4.io/main/en/config/radio.html}}.
 By configuring one of the switches in the RC unit to change to PX4's offboard flight mode, additional checks to the safety measures of interrupting autonomous flight on flight mode changes or loss of signal from the RC controller can be carried out.
 Figure \ref{fig:hitl-setup-picture} shows all the connections mentioned.
@@ -27,12 +27,12 @@ Figure \ref{fig:hitl-setup-picture} shows all the connections mentioned.
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/hitl-setup-picture.jpg}
-  \caption{Pixhawk 4 board connected to the Raspberry Pi running the dronecontrol application and the Windows computer running the AirSim simulator, with telemetry radio for QGroundControl and RC receiver for manual control}
+  \caption{Pixhawk 4 board connected to the Raspberry Pi running the DroneVisionControl application and the Windows computer running the AirSim simulator, with telemetry radio for QGroundControl and RC receiver for manual control}
   \label{fig:hitl-setup-picture}
 \end{figure}
 
 After all the necessary connections are set up, the program can be started with the following command:
-\mintinline{bash}{python -m dronecontrol follow --sim --serial COM[X]:57600}, where the exact COM port will vary depending on the particular USB port to which the telemetry radio is connected.
+\mintinline{bash}{python -m dronevisioncontrol follow --sim --serial COM[X]:57600}, where the exact COM port will vary depending on the particular USB port to which the telemetry radio is connected.
 
 
 \subsection{PX4 HITL validation with Raspberry Pi}
@@ -48,7 +48,7 @@ The main characteristics of the Raspberry Pi that have to be ensured to be able 
 \begin{enumerate}
     \item Capacity to function when power is provided from a battery
     \item Stability of serial connection to the Pixhawk board
-    \item Ability to run the dronecontrol application and all its dependencies
+    \item Ability to run the DroneVisionControl application and all its dependencies
     \item Connection to an external camera
     \item Performance of the computer vision algorithms with reduced processing power
 \end{enumerate}
@@ -105,17 +105,17 @@ At this point, the only physical connection to the ground station running AirSim
 The results from running: \\
 \begin{listing}[h!]
     \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
-dronecontrol tools test-camera --hardware /dev/serial0:921600 --sim <AirSim host IP> --pose-detection
+dronevisioncontrol tools test-camera --hardware /dev/serial0:921600 --sim <AirSim host IP> --pose-detection
     \end{minted}
 \end{listing}\\
 can be seen on figure \ref{fig:rpi-airsim-test}.
-On the right side, the remote connection to the Raspberry's desktop shows the output of the dronecontrol program running the pose detection algorithm on the images received from the simulator.
+On the right side, the remote connection to the Raspberry's desktop shows the output of the DroneVisionControl program running the pose detection algorithm on the images received from the simulator.
 On the left side, the AirSim simulator shows the vehicle's movements as it reacts to the input from the flight controller and the companion computer.
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-rpi-test.png}
-  \caption{Left: AirSim simulator on Windows host, right: RPi desktop with Dronecontrol application and pose output}
+  \caption{Left: AirSim simulator on Windows host, right: RPi desktop with DroneVisionControl application and pose output}
   \label{fig:rpi-airsim-test}
 \end{figure}
 
@@ -155,10 +155,10 @@ The total average time for each run of the follow loop is then 0.094 seconds, wh
 Similar measurements have been taken for hardware combinations with different degrees of simulation, running the follow solution with offboard mode enabled and connected to the AirSim simulator.
 These are:
 \begin{enumerate}
-    \item All simulated hardware: PX4 on SITL mode + dronecontrol on standalone computer + images from AirSim simulator video source.
-    \item Simulated hardware with real images: PX4 on SITL mode + dronecontrol on standalone computer + images from the attached camera as video source.
-    \item Test hardware with AC power supply: PX4 on HITL mode on Pixhawk 4 + dronecontrol on Raspberry Pi + images from the attached camera as video source.
-    \item Test hardware with battery: PX4 on HITL mode on Pixhawk 4 + dronecontrol on Raspberry Pi powered by battery + images from the attached camera as video source.
+    \item All simulated hardware: PX4 on SITL mode + DroneVisionControl on standalone computer + images from AirSim simulator video source.
+    \item Simulated hardware with real images: PX4 on SITL mode + DroneVisionControl on standalone computer + images from the attached camera as video source.
+    \item Test hardware with AC power supply: PX4 on HITL mode on Pixhawk 4 + DroneVisionControl on Raspberry Pi + images from the attached camera as video source.
+    \item Test hardware with battery: PX4 on HITL mode on Pixhawk 4 + DroneVisionControl on Raspberry Pi powered by battery + images from the attached camera as video source.
 \end{enumerate}
 
 

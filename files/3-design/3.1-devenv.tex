@@ -72,7 +72,7 @@ The last option considered to fulfil the requirements of the project is AirSim. 
 
 \subsection{Development environment}
 
-This section discussed the configuration adopted in this project to establish connections between the developed control software, the selected AirSim simulator, and the flight stack. It encompasses both SITL and HITL simulation modes, which allow testing the implementation of the \texttt{drone-vision-control} application within a controlled environment. While the application is designed to leverage the dedicated processing power of a companion computer in real-world scenarios, during simulation, it will primarily operate on the same computer hosting the simulation engine to minimise physical connections between multiple machines.
+This section discussed the configuration adopted in this project to establish connections between the developed control software, the selected AirSim simulator, and the flight stack. It encompasses both SITL and HITL simulation modes, which allow testing the implementation of the DroneVisionControl application within a controlled environment. While the application is designed to leverage the dedicated processing power of a companion computer in real-world scenarios, during simulation, it will primarily operate on the same computer hosting the simulation engine to minimise physical connections between multiple machines.
 
 \subsubsection{SITL configuration}
 
@@ -102,7 +102,7 @@ The complete steps needed to configure the PX4 WSL system are detailed in Append
 The whole set of connections necessary between the three individual components at the transport layer level during SITL simulation is shown in Figure \ref{fig:sitl-connections}.
 The AirSim simulator runs as part of the Unreal Engine application directly on the host Windows system. It connects to the other two components running inside the virtualised Linux subsystem through the established bridge. AirSim and the PX4 flight stack exchange information through the TCP connection to the secondary MAVLink server, as shown in Figure \ref{fig:px4-ports}.
 
-The communication between AirSim and the \texttt{drone-vision-control} application is facilitated through the API layer depicted in Figure \ref{fig:airsim-overview}, which can connect the simulator with a companion computer or other system running additional code. This connection is established using the \texttt{airlib} library developed for Python by the creators of AirSim, which allows easy access to the AirSim API. In this project, the connection between AirSim and the application through \texttt{airlib} transmits only perception data, specifically camera images of the simulated world. 
+The communication between AirSim and the DroneVisionControl application is facilitated through the API layer depicted in Figure \ref{fig:airsim-overview}, which can connect the simulator with a companion computer or other system running additional code. This connection is established using the \texttt{airlib} library developed for Python by the creators of AirSim, which allows easy access to the AirSim API. In this project, the connection between AirSim and the application through \texttt{airlib} transmits only perception data, specifically camera images of the simulated world. 
 For the transmission of other data, such as the current vehicle state from the simulator to the application and the desired state from the application to the simulator, a direct connection between the flight stack and the application is used instead, as this is the only link that can be maintained in a real-world scenario. This direct link is established through the main MAVLink instance of the flight stack, as illustrated in Figure \ref{fig:px4-ports}.
 
 Given that the application is developed in Python, a versatile programming language compatible with multiple platforms, it can be run either on the central Windows system or within the virtualised Linux subsystem. However, running the application on Linux is more advantageous to avoid the need for the MAVLink server to broadcast to the Windows system.
@@ -153,8 +153,6 @@ AirSim is compatible with both SITL and HITL simulation modes and several other 
 The plugin must therefore be configured for this project to work with the desired simulation setup (PX4 + WSL + Airsim).
 This process is explained in the AirSim documentation \cite{build-airsim} by its developers and in Appendix \ref{app:install-dev-env} for more project-specific details.
 Appendix \ref{app:airsim-config} contains the complete settings file used in this project for configuring PX4 with either simulation mode in AirSim, including the parameters that must be individualised for each system.
-\todo[inline]{Move to Appendix A.3}
-%, where the ”LocalHostIp” needs to be exchanged with the IP of the Windows host in the local vEthernet (WSL) network to be able to connect between the simulator in Windows and the flight controller inside WSL. For HITL, the ”UseSerial” setting should be set to true in the AirSim configuration, and the Pixhawk board should be connected to a USB port in the computer. 
 
 
 To start the simulation in AirSim, the following steps must be followed:
@@ -162,7 +160,7 @@ To start the simulation in AirSim, the following steps must be followed:
  \item Attach physical flight controller in HITL mode to simulation computer (HITL only).
  \item Start play mode in Unreal.
  \item Build and start simulated flight stack in WSL (SITL only).
- \item Start companion applications, if any (e.g. \texttt{drone-vison-control}, QGroundControl).
+ \item Start companion applications, if any (e.g. DroneVisionControl, QGroundControl).
 \end{enumerate}
 
 To build and start the PX4 SITL flight stack for AirSim, a small script can be found in the project source code\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/simulator.sh}} that will automatically attach to a running AirSim instance if it is executed with the \texttt{-{}-airsim} option.
