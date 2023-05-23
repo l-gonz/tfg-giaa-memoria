@@ -1,4 +1,8 @@
-\todo[inline]{Summary Chapter 3}
+This chapter focuses on the design and implementation aspects of developing vision-based control solutions for UAVs within the PX4 ecosystem. It begins by discussing simulation as a safe and cost-effective environment for exploring and refining algorithms without the risks associated with real-world flights. The implementation of simulation in PX4 is explored, covering components such as the simulated flight stack and the simulation engine. The specific simulation and development environment for this project, including system configurations and the use of Unreal Engine and AirSim as the simulation engine, is also examined.
+
+The chapter then moves on to describe the system architecture of the interaction between the flight controller and the DroneVisionControl application running on a companion computer. It discusses two possible hardware configurations: one where the companion computer is situated offboard the vehicle and another where it is placed onboard during flight. The key components of the system, including the flight controller, companion computer, and camera, are outlined, along with their connections. Furthermore, the software architecture of the DroneVisionControl application is described, highlighting the modules that make up the application.
+
+To conclude, two control solutions are presented which demonstrate the capabilities of the PX4 ecosystem. The first one is a proof-of-concept solution where the vehicle is controlled from a ground station by hand gestures. The second is a human-following solution that makes the drone maintain a moving person in its field of view.
 
 \section{Simulation and development environment}
 \label{sec:devenv}
@@ -137,8 +141,6 @@ The environment used in this project for testing the \texttt{drone-vison-control
 The main addition to the environment is the 3D model of a human figure, to be used for testing the human detection and tracking mechanisms in the computer vision solution. This model is part of a free asset library of human models made by Renderpeople \cite{render-people} obtained from the Unreal Marketplace.
 Some minor modifications have also been made to the background shapes and colours to provide better contrast for the camera.
 Figure \ref{fig:unreal-env} shows an image of the testing environment as seen from the Unreal viewport in Edit mode.
-
-\todo[inline]{Add here if any additional changes to AirSim environment}
 
 
 \begin{figure}

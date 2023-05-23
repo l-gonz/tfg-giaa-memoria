@@ -173,6 +173,7 @@
 % \renewcommand{\headrulewidth}{0pt}%
 % \renewcommand{\footrulewidth}{0pt}%
 % }
+\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{empty}}} 
 
 %%%%%%%%%%%%%%%%%%%
 %% Own changes
@@ -186,19 +187,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%-- Metadatos del doc
-\title{Memoria del Proyecto}
-\author{Nombre del autor}
+\title{Exploration of vision-based control solutions for PX4-driven UAVs}
+\author{Laura Gonzalez Fernandez}
 
 %%-- Hiperenlaces, siempre se carga al final del preámbulo
 \usepackage[colorlinks]{hyperref}
 \hypersetup{
     pdftoolbar=true,	% Muestra barra de herramientas en Adobe Acrobat
 	pdfmenubar=true,	% Muestra menú en Adobe Acrobat
-	pdftitle={Título doc en ventana del visor o navegador},
-	pdfauthor={Nombre del alumno/a},
-	pdfcreator={ETSII/ETSIT, URJC},
+	pdftitle={TFG - Exploration of vision-based control solutions for PX4-driven UAVs},
+	pdfauthor={Laura Gonzalez Fernandez},
+	pdfcreator={ETSIT, URJC},
 	pdfproducer={XeLaTeX},
-	pdfsubject={Topic1, Topic2, Topic3},
+	pdfsubject={UAV, PX4, control},
 	pdfnewwindow=true,              %links open in new window
     colorlinks=true,                % false: boxed links; true: coloured links
     linkcolor=Firebrick4,           % enlaces internos 
@@ -213,6 +214,9 @@
 
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{verbatim}
+
+\hyphenpenalty 10
+\exhyphenpenalty 10
 %%%---------------------------------------------------------------------------
 
 \begin{document}
@@ -270,18 +274,20 @@ control solutions for PX4-driven UAVs
 Autora : Laura González Fernández \\
 Tutores : Xin Chen, Alejandro Sáez Mollejo
 \end{center}
+\pagenumbering{gobble}
 \end{titlepage}
 
 \newpage
 \mbox{}
-\thispagestyle{empty} % para que no se numere esta pagina
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Para firmar
 \clearpage
-\pagenumbering{gobble}
+\frontmatter
+\pagestyle{empty}
 \chapter*{}
+\thispagestyle{empty}
 
 \vspace{-4cm}
 \begin{center}
@@ -330,6 +336,7 @@ Móstoles/Fuenlabrada, a \qquad$\;\,$ de \qquad\qquad\qquad\qquad de 20XX
 %%%% Dedicatoria
 
 \chapter*{}
+\thispagestyle{empty}
 %\pagenumbering{Roman} % para comenzar la numeración de paginas en numeros romanos
 \begin{flushright}
 \textit{Aquí normalmente \\
@@ -339,9 +346,10 @@ se inserta una dedicatoria corta \\}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Agradecimientos
 
-\chapter*{Agradecimientos}
+\chapter*{Acknowledgements}
+\thispagestyle{empty}
 %\addcontentsline{toc}{chapter}{Agradecimientos} % si queremos que aparezca en el índice
-\markboth{AGRADECIMIENTOS}{AGRADECIMIENTOS} % encabezado 
+\markboth{ACKNOWLEDGEMENTS}{ACKNOWLEDGEMENTS} % encabezado 
 
 Aquí vienen los agradecimientos\ldots
 
@@ -355,6 +363,7 @@ la ayuda prestada\ldots
 %%%% Resumen
 
 \chapter*{Resumen}
+\thispagestyle{empty}
 %\addcontentsline{toc}{chapter}{Resumen} % si queremos que aparezca en el índice
 \markboth{RESUMEN}{RESUMEN} % encabezado
 
@@ -374,6 +383,7 @@ Lo mejor es escribir el resumen al final.
 %%%% Resumen en inglés
 
 \chapter*{Abstract}
+\thispagestyle{empty}
 %\addcontentsline{toc}{chapter}{Summary} % si queremos que aparezca en el índice
 \markboth{ABSTRACT}{ABSTRACT} % encabezado
 
@@ -384,6 +394,7 @@ The popular open-source platform PX4 aims to facilitate the programming of unman
 % Se puede borrar este bloque al acabar el borrador
 
 \listoftodos
+\thispagestyle{empty}
 \markboth{TODO LIST}{TODO LIST} % encabezado
 %%%%--------------------------------------------------------------------
 
@@ -398,18 +409,23 @@ The popular open-source platform PX4 aims to facilitate the programming of unman
 
 %%-- Índice de contenidos
 \tableofcontents 
+\thispagestyle{empty}
 \cleardoublepage
 %%-- Índice de figuras
+
 \addcontentsline{toc}{chapter}{List of figures} % para que aparezca en el indice de contenidos
+\thispagestyle{empty}
 \listoffigures % indice de figuras
+\thispagestyle{empty}
+
 \cleardoublepage
 %%-- Índice de tablas
 %\addcontentsline{toc}{chapter}{Lista de tablas} % para que aparezca en el indice de contenidos
 %\listoftables % indice de tablas
 % \cleardoublepage
 %%-- Índice de fragmentos de código
-\addcontentsline{toc}{chapter}{List of listings} % para que aparezca en el indice de contenidos
-\listoflistings
+% \addcontentsline{toc}{chapter}{List of listings} % para que aparezca en el indice de contenidos
+% \listoflistings
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -418,6 +434,7 @@ The popular open-source platform PX4 aims to facilitate the programming of unman
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
 
 % INTRODUCTION %
 \include{files/1-2-intro/1-intro}
