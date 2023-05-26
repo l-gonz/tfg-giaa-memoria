@@ -435,30 +435,34 @@ The popular open-source platform PX4 aims to facilitate the programming of unman
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
+\pagestyle{headings}
 
 % INTRODUCTION %
 \include{files/1-2-intro/1-intro}
+\cleardoublepage
 
 % ESTADO DEL ARTE %
 \chapter{State of the art}
 \label{chap:sota}
-\include{files/1-2-intro/2.1-literature}
-\include{files/1-2-intro/2.2-tech}
+\input{files/1-2-intro/2.1-literature}
+\input{files/1-2-intro/2.2-tech}
 \cleardoublepage
 
 % DISEÑO E IMPLEMENTACIÓN %
 \chapter{Design and implementation}
 \label{chap:design}
-\include{files/3-design/3.1-devenv}
-\include{files/3-design/3.2-sysarch}
-\include{files/3-design/3.3-softarch}
+\input{files/3-design/3.1-devenv}
+\input{files/3-design/3.2-sysarch}
+\input{files/3-design/3.3-softarch}
 \cleardoublepage
 
 % EXPERIMENTOS Y VALIDACIÓN %
-\include{files/4-validation/4-validation}
+\input{files/4-validation/4-validation}
+\cleardoublepage
 
 % CONCLUSIONES %
-\include{files/5-6-end/5-conclusion}
+\input{files/5-6-end/5-conclusion}
+\cleardoublepage
 
 % GLOSARIO(S) %
 \printglossary[type=\acronymtype]
