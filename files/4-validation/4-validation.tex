@@ -1,17 +1,20 @@
 \chapter{Experiments and validation}
 \label{chap:validation}
 
-This chapter explains the process of validating each individual piece necessary for the correct operation of the complete system, from testing the first simulation steps to carrying out thorough flight tests on the final guidance solution.
-Figure \ref{fig:validation-chart} shows the order in which each step is followed during the validation process.
+This chapter outlines the validation process for each essential component required for the proper functioning of the entire system, ranging from initial simulation tests to comprehensive flight tests conducted on the final guidance solution. The validation process follows the order depicted in Figure \ref{fig:validation-chart}.
 
-In the first section, the application is tested in a purely simulated environment, first individually for each part and finally integrating the flight mechanics simulation with providing images to the computer vision detection software and with sending control commands to the flight controller simulation.
-In the second section, the follow detection and guidance solution is tested thoroughly to guarantee that only safe velocity commands are outputted from the PID controllers for any image input that could be received and that their response is according to the desired movement of the vehicle.
-In the third section, once the software is guaranteed to operate inside the required safety parameters, the simulation is shifted to the dedicated hardware that will be used for actual flight: the dedicated autopilot board and the companion computer that will be onboard the vehicle; to ensure that all the connections are working as expected and the devices offer the necessary performance.
-In the fourth and final section, several flight tests are executed with increasing complexity, from the basic controlling of the vehicle with an RC controller to fully autonomous flight with target following.
+The first section involves testing the application in a purely simulated environment. Initially, each part is tested individually, and subsequently, the flight controller simulation of PX4 is integrated with the flight mechanics simulation in AirSim, which receives control commands and the computer vision detection software running on the received images.
+
+Moving on to the second section, a thorough examination is conducted on the follow solution detection and guidance results to ensure that the PID controllers only generate safe velocity commands for any received image input. Additionally, their response should align with the intended movement of the vehicle. To do this, first, each of the controllers is tuned individually with the help of the SITL simulation, and then their joint response is analyzed.
+
+Once the software adheres to the required safety parameters, the third section moves the simulation to HITL mode on the dedicated hardware that will run the actual flights. This hardware includes the dedicated autopilot board and the standalone companion computer connected to it. The main goal is to verify that all connections are functioning as expected and that the devices deliver the required performance.
+
+Lastly, in the fourth and final section, a series of flight tests are carried out, gradually increasing in complexity. These tests span from basic manual control of the vehicle using an RC controller to fully autonomous target-following flight executing in the complete system.
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/validation-chart.jpg}
+  \makebox[\textwidth][c]{
+  \includegraphics[width=1.2\textwidth, keepaspectratio]{img/validation-chart.jpg}}
   \caption{Outline for the validation process}\label{fig:validation-chart}
 \end{figure}
 

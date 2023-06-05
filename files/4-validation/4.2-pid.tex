@@ -5,18 +5,17 @@
 % Graphs from test-controller
 % Analysis of error
 
-As mentioned before, the velocity controller that is the heart of the person following mechanism is based on two PID controllers.
-In order to get velocity outputs for the PID controllers that produce a stable movement of the vehicle, it is necessary to tune the parameters of the controllers until the appropriate combination is found.
-In this section, the value for the coefficients used for the project will be found empirically with the help of the tuning tool described in section \ref{subsec:pid-tools} and developed for this purpose. Its performance will be validated with the controller testing tool, both running in the simulated environment with the flight stack in SITL mode so that it is possible to take continuous measures of the response of the PID controllers to step movements of a simulated person present in the 3D world.
-In the first place, each controller will be tuned independently of the other by allowing the vehicle only one direction of movement at a time.
-Afterwards, both controllers are engaged simultaneously to measure the joint response to a range of different inputs.
+As mentioned earlier, the person-following mechanism relies on two PID controllers, which serve as the core of the velocity controller. Achieving stable vehicle movement requires tuning the parameters of these controllers to find an appropriate combination.
 
-The controllers are calibrated for a reference position of x=0, y=0 for the vehicle and x=600, y=0 for the person in world coordinates of the simulated environment.
-At these positions, processed images taken from the simulated camera detect the person centred in the field of view and with a height of 36\% of the image height.
-This means that the controllers running in the simulator will have as their target set points 0.5 for the yaw controller and 0.36 for the forward controller. 
-So for any changes in the position of the simulated person, the controllers will send velocity commands to the autopilot to achieve the same relative position between the vehicle and the person as in the reference shown in figure \ref{fig:tune-start-pos}.
+This section focuses on empirically determining the coefficients for the project's PID controllers. To accomplish this, a dedicated tuning tool, described in Section \ref{subsec:pid-tools} and specifically developed for this purpose, will be utilized. The performance of this tool will be validated using the controller testing tool within the simulated environment, with the flight stack operating in SITL mode. This setup allows for continuous measurement of the PID controllers' response to step movements of a simulated person situated in the 3D world.
 
-\begin{figure}
+Initially, each controller will be independently tuned, enabling the vehicle to move in only one direction at a time. Once the individual tuning is completed, both controllers will be engaged simultaneously to assess their combined response to a variety of inputs. Finally, the complete follow control mechanism will be executed using the obtained tuning parameters to evaluate the final behaviour of the system.
+
+During calibration, the vehicle and the target person always start in the same reference position. In the world coordinates of the simulated environment, the positions are x=0 and y=0 for the vehicle and x=600 and y=0 for the person, as depicted in Figure \ref{fig:tune-start-pos}.
+At these positions, the person is detected centred in the field of view, and its calculated height takes up 36\% of the image height. Consequently, the controllers running within the simulator will have target set points of 0.5 for the yaw controller and 0.36 for the forward controller.
+The result of these target points is that for any changes in the position of the simulated person, the controllers will transmit velocity commands to the autopilot to achieve the same relative position between the vehicle and the person as between the reference positions.
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/pid/tune-ref-pos.jpg}
   \caption{Reference position for the yaw and forward PID controllers. From left to right, the panels show the DroneVisionControl application window, the AirSim simulator world view and the world location of the human model in the simulator. The distance between the vehicle and the person is 600 units in the x direction and 0 units in the y direction.}
@@ -220,3 +219,16 @@ It is worth noting that even when the person is so close to the vehicle that par
   \caption{Changes over time in detected height as input for the forward controller with different starting positions in the x-axis}
   \label{fig:validate-fwd}
 \end{figure}
+
+
+
+\todo[inline]{Join with final video}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/video-follow-sitl.png}
+  \caption{Single frame from the video showing the movement of the drone in response to changes in the position of the tracked person}
+  \label{fig:airsim-test-follow}
+\end{figure}
+
+A video showcasing the drone's movement with these parameter values can be viewed \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-follow}{here}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-follow}}, and a frame extracted from the video is displayed in Figure \ref{fig:airsim-test-follow}.
