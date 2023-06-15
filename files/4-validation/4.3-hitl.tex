@@ -1,82 +1,65 @@
 \section{PX4 HITL simulation and validation}
 \label{sec:test-4-hitl}
 
-% Setup:    build drone, HITL configuration
-% Test:     - AirSim + follow on Windows + Pixhawk
-%           - QGroundControl (without program running)
-%           - PX4 to computer connection
-%           - RC on AirSim
-% Results:  images of wiring computer-Pixhawk
 
-The aim of this section is to validate the transition from using a simulated version of the flight stack running on Linux (PX4's software-in-the-loop simulation) to using a physical Pixhawk board with simulated input and output to test the flight controller interaction with the developed program.
-To do so, the aim is to be able to run the follow solution to send control commands through the Pixhawk board and observe the movement of the vehicle in the AirSim simulator in the same manner as in the previous section.
+This section will delve into the practical implementation of the hardware-in-the-loop (HITL) mode using QGroundControl, Pixhawk 4 board, and the AirSim simulator. The objective is to transition from using a simulated version of the flight stack running on Linux (SITL) to executing the PX4 software natively on a physical Pixhawk board with simulated input and output. This simulation mode allows for real-time testing and validation of the system by integrating physical hardware with simulated environments. 
+
+Achieving a seamless interaction between the simulator, board, and external control applications requires several configuration steps and setting up wired connections. This configuration will be explored with the goal of achieving a system that can run the developed control solution, replicating the same behaviour demonstrated in the previous section. In the first instance, the DroneVisionControl application will be run from the simulation computer, as previously demonstrated. However, after the performance of the flight board is validated, it will transition to running on a separate companion computer, the Raspberry Pi 4.
 
 
-QGroundControl contains a specific quadcopter HITL airframe configuration that sets up the board with all the required parameters to activate this new hardware-in-the-loop mode.
-It automatically detects the Pixhawk 4 board when connected to the computer through its Micro-USB port.
-It is also required to make changes to the AirSim configuration for the simulator to work with HITL mode, namely, activating the option to accept connections through serial.
-To test the complete system configuration for HITL described in section \ref{sec:devenv} and outlined in figure \ref{fig:hitl-connections}, the Pixhawk board needs an additional channel of communication to the computer dedicated to the Mavlink exchange with the DroneVisionControl application.
-The board will therefore have both a direct cable connection to the computer and a telemetry radio on its \texttt{TELEM1} port with a wireless link to its counterparty radio connected to the computer.
-Since the AirSim simulator requires a higher update rate than the DroneVisionControl application, it will employ the faster, cabled link.
-The simulator can automatically connect to the board when it is started once the \texttt{UseSerial} option in the AirSim settings is set to true.
-The DroneVisionControl program will connect through the telemetry radio by specifying the serial port and corresponding baudrate when launching the application.
-Since the flight stack is now running on a physical controller, it is possible to add an RC antenna to the \texttt{PPM RC} port of the board to be able to fly the vehicle with a remote control unit after it has been bound to the receiver\footnote{\url{https://docs.px4.io/main/en/config/radio.html}}.
-By configuring one of the switches in the RC unit to change to PX4's offboard flight mode, additional checks to the safety measures of interrupting autonomous flight on flight mode changes or loss of signal from the RC controller can be carried out.
-Figure \ref{fig:hitl-setup-picture} shows all the connections mentioned.
+The steps for setting up the HITL simulation environment include configuring the flight board through QGroundControl, configuring AirSim to connect to a physical board, and adding new communication channels for additional control mechanisms (DroneVisionControl and RC).
+QGroundControl provides a specific quadcopter HITL airframe configuration, which initializes the board with all the necessary parameters to activate the simulation mode. The details of these parameters can be found in Appendix \ref{app:install-hitl}. Configuring the board using QGroundControl is a straightforward process. Simply connecting the Pixhawk 4 board to the computer through its debug Micro-USB port will make QGroundControl automatically detect and establish a connection with the board.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/hitl-setup-picture.jpg}
-  \caption{Pixhawk 4 board connected to the Raspberry Pi running the DroneVisionControl application and the Windows computer running the AirSim simulator, with telemetry radio for QGroundControl and RC receiver for manual control}
-  \label{fig:hitl-setup-picture}
-\end{figure}
 
-After all the necessary connections are set up, the program can be started with the following command:
-\mintinline{bash}{python -m dronevisioncontrol follow --sim --serial COM[X]:57600}, where the exact COM port will vary depending on the particular USB port to which the telemetry radio is connected.
+On the AirSim side, enabling the simulator to work in HITL mode requires making modifications to its configuration file. Specifically, the option to accept serial connections needs to be enabled. This file is described in detail in Appendix \ref{app:airsim-config}.
+It is important to note that both QGroundControl and AirSim cannot simultaneously establish a connection to the Pixhawk board through the same USB port. Only one of them can be active and connected to the board at any given time. Consequently, QGroundControl must be shut off while conducting the simulation to allow AirSim to establish the necessary communication with the board.
+
+
+To test the complete system configuration for HITL, as described in Section \ref{sec:devenv} and outlined in Figure \ref{fig:hitl-connections}, the Pixhawk board requires an additional communication channel dedicated to the MAVLink exchange with the DroneVisionControl application. This channel is achieved by adding a telemetry radio to the board, which will connect to a counterpart radio on the simulation computer. This wireless link, along with the already existing USB connection, will provide the two separate MAVLink channels needed to complete the environment.
+As the AirSim simulator requires a higher update rate compared to the DroneVisionControl application, it is important to keep the Pixhawk to AirSim connection on the wired link. The DroneVisionControl application, on the other hand, sends and receives commands from the Pixhawk at a lower rate, as it depends on the results of the slower computer vision algorithms. The data transmission rate of the radio link is, therefore, sufficient for this application.
+
+Since the flight stack now runs on a physical controller, it becomes possible to attach an RC antenna to the \texttt{PPM RC} port of the board. This antenna allows the vehicle to be flown using an independent RC controller\footnote{\url{https://docs.px4.io/main/en/config/radio.html}}. By configuring the switches in the RC unit for flight mode change or as a kill switch, additional tests can be carried out to verify the developed safety features described in Section \ref{subsec:safety}, like interrupting autonomous flight upon flight mode changes or upon loss of signal from the RC controller.
+
+
+After all the necessary connections are set up, and the AirSim simulator started, the control program can be started with the following command:
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+dronevisioncontrol follow --sim --serial COM[X]:57600
+\end{minted}
+The \texttt{COM[X]:57600} section describes the serial connection to the telemetry radio, where the COM port number will vary depending on the particular USB port to which the telemetry radio is connected, and the baudrate specified is 57600.
+
 
 
 \subsection{PX4 HITL validation with Raspberry Pi}
 \label{sec:test-5-rpi}
 
-% Setup:    Raspberry Pi installation, RPi-Pixhawk connection
-% Test:     - AirSim + follow on RPi + Pixhawk
-%           - Serial connection
-% Results:  wiring, performance metrics
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/hitl-setup-picture.jpg}
+  \caption{Pixhawk 4 board connected to a Raspberry Pi running the DroneVisionControl application and a Windows computer running the AirSim simulator. The setup includes a telemetry radio for QGroundControl and an RC receiver for manual control.}
+  \label{fig:hitl-setup-picture}
+\end{figure}
+\todo[inline]{Improve this image}
 
-The next step in the transition from a fully simulated environment to real flight is to connect the future onboard computer, the Raspberry Pi 4, to the Pixhawk flight controller and proceed with more realistic tests on the exact hardware that will be controlling the drone.
-The main characteristics of the Raspberry Pi that have to be ensured to be able to progress further towards autonomous flight are:
+The next crucial step in transitioning from a fully simulated environment to real flight is to establish a connection between the future onboard computer, the Raspberry Pi 4, and the Pixhawk flight controller. This connection enables conducting more realistic tests using the exact hardware that will control the drone. 
+
+To ensure successful progress towards autonomous flight, several key characteristics of the Raspberry Pi must be addressed:
 \begin{enumerate}
-    \item Capacity to function when power is provided from a battery
-    \item Stability of serial connection to the Pixhawk board
-    \item Ability to run the DroneVisionControl application and all its dependencies
+    \item Capacity to function when powered by a battery.
+    \item Stability of the serial connection to the Pixhawk board.
+    \item Ability to run the DroneVisionControl application and its dependencies.
     \item Connection to an external camera
-    \item Performance of the computer vision algorithms with reduced processing power
+    \item Performance of computer vision algorithms with limited processing power.
 \end{enumerate}
 
-% installation
-% xrdp
-% battery tests
+Figure \ref{fig:hitl-setup-picture} provides an overview of the connections used for HITL testing with the Raspberry Pi. The main addition from the previous section is the direct connection between the Pixhawk board and the Raspberry Pi's I/O pins. While the inclusion of the telemetry radio is not strictly required in this scenario, it enables maintaining a simultaneous connection to QGroundControl on the ground station or simulation computer, facilitating better oversight and monitoring.
 
-The complete installation process of all the required libraries and dependencies for the Raspberry Pi is explained in appendix \ref{app:install-dronecontrol-rpi}.
-The most convenient method of controlling the small computer is through a remote desktop connection, where the screen contents and mouse and keyboard input are transmitted through a local network.
-This way, accessing the Pi's desktop from the ground station computer is possible even during flight.
-One option to achieve this is XRDP\footnote{\url{http://xrdp.org/}}, an open-source implementation of a Microsoft Remote Desktop Protocol server compatible with the Raspberry OS.
+Before any tests can begin, it is necessary to set up the operating system of the Raspberry. A detailed explanation of the complete installation process, along with all the necessary libraries and dependencies for the Raspberry Pi, is included in Appendix \ref{app:install-dronecontrol-rpi}. To conveniently control the Raspberry Pi during the installation, a remote desktop connection is recommended. This allows for transmitting screen contents, as well as mouse and keyboard input, over a local network. Thus, accessing the Pi's desktop from the ground station computer becomes feasible, even during flight. One available option to achieve this is XRDP\footnote{\url{http://xrdp.org/}}, an open-source implementation of a Microsoft Remote Desktop Protocol server that is compatible with the Raspberry OS.
 
-The first hardware connection to test is the power supply to the Raspberry.
-As detailed in section \ref{subsec:onboard}, the selected method for powering the companion computer in the onboard configuration is through a secondary battery.
-The connection will be made with a USB to USB-C cable from the battery to the Raspberry Pi.
-The intent behind testing the power supply at this point in this process is to verify that it will be suitable for its purpose before it is actually needed to power the computer onboard the vehicle.
-This power source must provide enough power to both maintain the processor running at an appropriate speed and provide power to the external camera in turn, which will be attached to the Pi's board and extract power from it.
 
-A similar connector provides a channel for the Mavlink communication between the flight controller and the onboard computer.
-In this case, one end of the connector is attached to the \texttt{TELEM2} port in the board and the TX/RX pins are attached to the UART pins on the Raspberry's GPIO header.
-For this serial connection to work, both the flight controller and the companion computer need some additional configuration.
-The Pixhawk needs to be configured through QGroundControl to enable a secondary Mavlink channel as, by default, only the \texttt{TELEM1} port used by the telemetry radio is configured.
-The necessary parameters to modify and their values are collected in table \ref{tab:telem2-params}.
-On the Raspberry side, the serial port comes configured to be used as a terminal instead of as a hardware serial port.
-This can be fixed through the \texttt{raspi-config} command-line utility with the following steps: Interface options -> Serial Port -> Disable login shell, enable serial port hardware.
-After that, the \texttt{/dev/serial0} address can be used to communicate to the device attached to the UART pins at the baudrate configured through QGroundControl.
-The \texttt{raspi-config} tool and the connector used between the flight controller and the companion computer are shown in figure \ref{fig:serial-connection}.
+The initial hardware connection to test is the power supply to the Raspberry Pi. As discussed in Section \ref{subsec:onboard}, the chosen method for powering the companion computer in the onboard configuration is through a secondary battery. To establish this connection, a USB to USB-C cable will be used, connecting the battery to the Raspberry Pi's power port. The purpose of testing the power supply at this stage is to ensure its suitability before it becomes critical to power the onboard computer on the vehicle during flight. This power source must provide sufficient power to maintain the processor running at an appropriate speed and also supply power to the external camera, which will be connected to the Pi's board and draw power from it.
+
+
+Another important connection is the MAVLink communication channel between the flight controller and the onboard computer. The custom connector described in Section \ref{subsec:onboard} is used for this purpose, with one end attached to the \texttt{TELEM2} port on the Pixhawk board and the TX/RX pins on its other end connected to the UART pins on the Raspberry Pi's GPIO header. For this serial connection to function, additional configuration is required for both the flight controller and the companion computer. In QGroundControl, the Pixhawk must be configured to enable a secondary MAVLink channel. By default, only the \texttt{TELEM1} port, which is used by the telemetry radio, is configured. The necessary parameters to modify and their corresponding values are listed in table \ref{tab:telem2-params}.
 
 \begin{table}[h!]
  \begin{center}
@@ -85,10 +68,13 @@ The \texttt{raspi-config} tool and the connector used between the flight control
     MAV\_1\_CONFIG & TELEM2 \\
     SER\_TEL2\_BAUD & 921600 \\
   \end{tabular}
-  \caption{PX4 parameters that need to be configured to enable Mavlink communication through the secondary telemetry port}
+  \caption{PX4 parameters that require configuration to enable MAVLink communication through the secondary telemetry port.}
   \label{tab:telem2-params}
  \end{center}
 \end{table}
+
+
+On the Raspberry Pi side, the serial port is initially configured for use as a terminal rather than a hardware serial port. This can be rectified using the \texttt{raspi-config} command-line utility by selecting the following steps: Interface options -> Serial Port -> Disable login shell, enable serial port hardware. After making these changes, the \texttt{/dev/serial0} address can be used to communicate with the device at the baud rate configured in QGroundControl. Figure \ref{fig:serial-connection} displays the \texttt{raspi-config} tool and the connector used for the serial connection between the flight controller and the companion computer.
 
 
 \begin{figure}
@@ -100,65 +86,59 @@ The \texttt{raspi-config} tool and the connector used between the flight control
   \label{fig:serial-connection}
 \end{figure}
 
-The test camera utility will be used to validate this configuration.
-At this point, the only physical connection to the ground station running AirSim or QGroundControl is through the development-only micro-USB port in the Pixhawk.
-The results from running: \\
-\begin{listing}[h!]
-    \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
+
+The remaining connections with the ground station's AirSim and QGroundControl are set up through the development-only micro-USB port on the Pixhawk board and the telemetry radio, respectively. To validate the complete configuration, the test camera utility will be used by executing the following command in the Raspberry Pi:
+
+\begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
 dronevisioncontrol tools test-camera --hardware /dev/serial0:921600 --sim <AirSim host IP> --pose-detection
-    \end{minted}
-\end{listing}\\
-can be seen on figure \ref{fig:rpi-airsim-test}.
-On the right side, the remote connection to the Raspberry's desktop shows the output of the DroneVisionControl program running the pose detection algorithm on the images received from the simulator.
-On the left side, the AirSim simulator shows the vehicle's movements as it reacts to the input from the flight controller and the companion computer.
+\end{minted}
+
+The result from the execution are shown in Figure \ref{fig:rpi-airsim-test}. On the right side, the remote connection to the Raspberry Pi's desktop is displayed, showing the output of the DroneVisionControl program running the pose detection algorithm on the images received from the simulator. On the left side of the figure, the AirSim simulator renders the movements of the vehicle as it responds to the input from the flight controller and the companion computer.
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-rpi-test.png}
-  \caption{Left: AirSim simulator on Windows host, right: RPi desktop with DroneVisionControl application and pose output}
+  \caption{Left: AirSim simulator on Windows host. Right: RPi desktop with DroneVisionControl application and pose output.}
   \label{fig:rpi-airsim-test}
 \end{figure}
+
+
+
 
 \subsection{Performance analysis}
 \label{subsec:performance}
 
-The main question left to answer before the vehicle can take to the air with this hardware and software is whether the less powerful processor in the Raspberry Pi 4b, a quad-core ARM Cortex-A72 64-bit SoC running at 1.5GHz, can handle the detection and tracking algorithms with enough performance to get similar results to those obtained with simulated hardware and achieve good reactions to real-time movement.
-To do that, the average time that the program spends on each task in the running loop can be calculated and analyzed for different scenarios.
-Then it will be possible to estimate the maximum speed at which the person being followed by the algorithm can move.
+One crucial question that remains to be answered before the vehicle can take flight using this hardware and software configuration is whether the Raspberry Pi 4b's modest processor, a quad-core ARM Cortex-A72 64-bit SoC running at 1.5GHz, can handle the detection and tracking algorithms with sufficient performance to achieve similar results to those obtained with simulated hardware (SITL) and respond effectively to real-time movement. To address this matter, the average time spent by the program on each task in the running loop can be calculated and analyzed under different scenarios. This analysis will help estimate the maximum speed at which the algorithm can track a person.
 
-% Make sure there's a good loop diagram in that section pointed below, and that the enumerated parts are explained in detail
-% Match numbers to added figures
-From the follow loop presented in section \ref{sec:follow}, it is possible to divide the processing cost into several areas that can be measured independently: image processing, offboard control, manual input, and released thread (sleep).
+% TODOOOO: Make sure there's a good loop diagram in that section pointed below, and that the enumerated parts are explained in detail
+\todo[inline]{Match numbers to added figures}
 
-\begin{figure}
+Based on the running loop for the follow solution described in Section \ref{sec:follow}, the processing cost can be divided into several distinct areas that can be measured independently: image processing, offboard control, manual input, and released thread (sleep). Figure \ref{fig:perf-sitl-sim} illustrates the time allocation for each task during an average run of the follow solution using simulated hardware (PX4 running in SITL mode with AirSim). The time measurements were obtained by calculating the time difference between the start and end of each statement and averaging across every iteration of the main loop.
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=.9\textwidth, keepaspectratio]{img/sitl-performance.png}
   \caption{Average percentages of a loop spent by each task in the follow solution with their corresponding average absolute times in seconds.}
   \label{fig:perf-sitl-sim}
 \end{figure}
 
-Figure \ref{fig:perf-sitl-sim} shows the time used for each task on an average run of the follow solution with simulated hardware (PX4 running in SITL mode with AirSim).
-The time measurements have been taken by calculating the time difference between each statement's start and end and averaging across every iteration of the main loop.
-The main cost in time of each execution is found in the image processing task, which takes around 89\% of the total loop time to run.
-This is where the most significant differences in performance will come from between the simulated hardware and the solution running in the Pixhawk 4 + Raspberry Pi combination.
-This image analysis process can be further subdivided to get a finer degree of control over how much time each part takes.
-The three subtasks that makeup image processing are:
+
+The most time-consuming task is image processing, which accounts for approximately 89\% of the total loop time. This task is where the most significant differences in performance can be expected between the simulated hardware and the solution running on the Pixhawk 4 + Raspberry Pi combination. To gain further insight into the time allocation within the image processing task, the work can be further divided into three subtasks:
 \begin{enumerate}
-    \item Get frame: request a new frame from the video source.
-    \item Process pose: send the frame to MediaPipe library for detection and tracking.
-    \item Detect: calculate bounding box coordinates and define whether it is a valid pose.
+    \item \textbf{Get frame}, which involves requesting a new frame from the video source.
+    \item \textbf{Process pose}, which entails sending the frame to the MediaPipe library for detection and tracking.
+    \item \textbf{Detect}, which involves calculating the bounding box coordinates and determining whether it represents a valid pose.
 \end{enumerate}
+By analyzing the performance of these subtasks, we can gain a better understanding of the individual components contributing to the overall image processing time.
 
-This further division is also shown in figure \ref{fig:perf-sitl-sim}, with each of these subtasks taking 40\%, 48\%, and 1\% of the total image processing time, respectively.
-The total average time for each run of the follow loop is then 0.094 seconds, which results in an average performance of 10.5 FPS (frames-per-second).
+The right graph of Figure \ref{fig:perf-sitl-sim} depicts the additional division of the image processing task, with the subtasks taking 40\%, 48\%, and 1\% of the total loop time, respectively. The average time for each iteration of the loop is 0.095 seconds, resulting in an average performance of 10.5 \acrfull{fps}.
 
-Similar measurements have been taken for hardware combinations with different degrees of simulation, running the follow solution with offboard mode enabled and connected to the AirSim simulator.
-These are:
+Similar measurements were conducted for different hardware combinations, employing varying degrees of simulation while running the follow solution in offboard mode and connected to the AirSim simulator. The hardware combinations tested include:
 \begin{enumerate}
-    \item All simulated hardware: PX4 on SITL mode + DroneVisionControl on standalone computer + images from AirSim simulator video source.
-    \item Simulated hardware with real images: PX4 on SITL mode + DroneVisionControl on standalone computer + images from the attached camera as video source.
-    \item Test hardware with AC power supply: PX4 on HITL mode on Pixhawk 4 + DroneVisionControl on Raspberry Pi + images from the attached camera as video source.
-    \item Test hardware with battery: PX4 on HITL mode on Pixhawk 4 + DroneVisionControl on Raspberry Pi powered by battery + images from the attached camera as video source.
+    \item All simulated hardware: PX4 in SITL mode + DroneVisionControl on the simulation computer + images from the AirSim simulator as the video source.
+    \item Simulated hardware with real images: PX4 in SITL mode + DroneVisionControl on the simulation computer + images from an attached camera as the video source.
+    \item Test hardware with AC power supply: PX4 in HITL mode on Pixhawk 4 + DroneVisionControl on Raspberry Pi + images from an attached camera as the video source.
+    \item Test hardware with battery: PX4 in HITL mode on Pixhawk 4 + DroneVisionControl on Raspberry Pi powered by a battery + images from an attached camera as the video source.
 \end{enumerate}
 
 
@@ -170,21 +150,8 @@ These are:
 \end{figure}
 
 
-Figure \ref{fig:perf-analysis} shows the averages of the measurements taken for all the hardware combinations analyzed.
-In the first test, it can be observed that the retrieval of each new frame from the AirSim simulator takes a much longer time than when an external camera is used.
-This is because the simulation running on Unreal Engine is also limited in performance to what the computer can offer, which is not a cost that will be reflected when the simulation engine is no longer needed.
-In the second test, the images from the simulator are replaced with the feed from an external camera connected to the computer. 
-This results in a much lower cost for image retrieval and the best performance of any of the tests, with an average of 14 FPS and peaks of more than 20 FPS.
-For the third and fourth tests, the image-processing calculations are moved to the onboard Raspberry Pi computer, which increases the time needed for pose-processing by one order of magnitude.
-There is also a noticeable difference in performance in the Raspberry's processor between powering the computer through the AC power supply and through an external battery, stemming from the fact that the former supplies 3A of current to the board and the latter only 2A.
+Figure \ref{fig:perf-analysis} presents the average measurements obtained for all the analyzed hardware combinations. In the first test, it is observed that retrieving each new frame from the AirSim simulator takes significantly more time compared to using an external camera. This discrepancy arises from performance limitations in the simulation running on Unreal Engine, which will not be a factor once the simulation engine is no longer used. In the second test, replacing the simulator images with the feed from an external camera results in faster image retrieval and the highest performance among all the tests, averaging 14 FPS with peaks exceeding 20 FPS.
 
-With these measurements, it is possible to understand how the board will behave during actual flight, with the last test being the closest to the expected flight conditions.
-It should therefore be possible to sustain a performance of around 3 FPS during flight.
-With a time between frames of around 0.3 seconds, and since the field of view of the camera used for flight tests is about four meters wide, the person being followed should be able to move at a speed of 3-4 m/s and remain within the view of the drone.
+In the third and fourth tests, the image processing calculations are performed on the onboard Raspberry Pi computer, leading to a 400\% to 500\% increase in the time required for pose processing. Additionally, there is also a noticeable difference in performance observed for the Raspberry's processor between powering the computer through the AC power supply and through an external battery. This difference stems from the fact that the former supplies 3A of current to the board and the latter only 2A.
 
-
-%% NICE TO HAVE:
-%% Keyboard control actor in unreal that can walk around at a set speed
-%% and be followed
-%% EVEN NICER TO HAVE:
-%% Web build of unreal project running dronecontrol
+These measurements provide insights into the board's expected behaviour during actual flights, with the fourth test (hardware with battery) representing the closest approximation to real flight conditions. From the results, it is expected that a performance of approximately 3 FPS can be sustained during flight, which gives a time between frames of approximately 0.3 seconds. Considering that the camera's field of view for flight tests covers approximately four meters at the target follow distance, the person being tracked should be able to move at a speed of 3-4 m/s with the drone maintaining line of sight.
