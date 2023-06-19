@@ -23,7 +23,7 @@ The chosen vehicle for this project is the Holybro X500, specifically designed t
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.7\textwidth, keepaspectratio]{img/x500-dev-kit.jpg}
+  \includegraphics[width=.9\textwidth, keepaspectratio]{img/x500-dev-kit.jpg}
   \caption{Development kit for the Holybro X500.}
   \source{Adapted from \citetitle{px4-guide} \cite{px4-guide}.}
   \label{fig:x500-dev-kit}
@@ -33,20 +33,21 @@ The chosen vehicle for this project is the Holybro X500, specifically designed t
 Once the standard parts are assembled, the custom additions can be integrated into the remaining space within the frame. The Raspberry Pi companion computer will be positioned between the autopilot and GPS antenna. This placement facilitates a convenient connection between the autopilot and the Raspberry Pi's I/O pins using short cables, preventing excessive wire clutter within the frame. 
 
 
-\begin{figure}
+During flight, the Raspberry Pi will be powered by a dedicated external battery, which supplies power through a 2-ampere USB port. This port will be connected to the Raspberry Pi's original power cable, utilizing its USB-C power supply socket. As explained in Section \ref{sec:test-5-rpi}, this power supply is sufficient to operate the connected camera and run the developed software with satisfactory performance. The battery will be positioned beneath the autopilot, as depicted in Figure \ref{fig:full-build}. 
+
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth, keepaspectratio]{img/full-build.jpg}
   \caption{Complete build of the quadcopter with the main components highlighted.}\label{fig:full-build}
 \end{figure}
-
-During flight, the Raspberry Pi will be powered by a dedicated external battery, which supplies power through a 2-ampere USB port. This port will be connected to the Raspberry Pi's original power cable, utilizing its USB-C power supply socket. As explained in Section \ref{sec:test-5-rpi}, this power supply is sufficient to operate the connected camera and run the developed software with satisfactory performance. The battery will be positioned beneath the autopilot, as depicted in Figure \ref{fig:full-build}. 
 
 
 To ensure the camera is securely mounted on the vehicle's frame, the custom-built support system described in Section \ref{subsec:onboard} will be utilized. The camera holder will be attached to the slide bars beneath the main frame, positioning the camera's weight as close to the centre of mass as possible behind the GPS platform. The main battery, responsible for powering the engines and autopilot, and located on the underside of the carbon frame, can be shifted along the forward axis to balance the added weight from the companion computer, its battery and the camera so that the centre of gravity falls approximately in the centre of the vehicle. Figure \ref{fig:camera-holder-closeup} shows the vehicle's underside with the attached camera and the strap for holding the main battery.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.6\textwidth, keepaspectratio]{img/underside-2.jpg}
+  \includegraphics[width=0.75\textwidth, keepaspectratio]{img/underside-2.jpg}
   \caption{Underside of the vehicle, with the supports for holding the main battery and the camera in place.}
   \label{fig:camera-holder-closeup}
 \end{figure}
@@ -151,7 +152,7 @@ Once the pilot connection is established, the image from the computer's webcam w
 
 A video showcasing the entire process can be accessed on this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-hand}{link}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-hand}}. Additionally, an image extracted from the video can be seen in Figure \ref{fig:flight-test-hand}.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-hand.png}
   \caption{Image taken during flight controlled by the hand-gesture solution. The vehicle is moving forward.}
@@ -169,7 +170,7 @@ dronevisioncontrol follow -s /dev/serial0:921600
 This \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}{video}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}} showcases the process of the vehicle taking off (T key) and activating offboard flight mode (O key) to initiate the tracking of a detected figure. Figure \ref{fig:flight-test-follow} presents an image extracted from this video.
 
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-follow.png}
   \caption{Terminal and image output of the DroneVisionControl follow solution running on the Raspberry Pi}
@@ -184,7 +185,6 @@ At the end of the program execution, the average loop time and average runtime f
 
 Overall, this test flight verifies the effectiveness of the follow control solution and its ability to track and follow a moving target during a real flight scenario, as well as the validity of the simulation process to obtain realistic results.
 
-\todo[inline]{Are frame rates swapped on graphs ????}
 
 \begin{figure}
   \centering

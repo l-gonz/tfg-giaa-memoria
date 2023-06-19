@@ -56,7 +56,7 @@ The following sections will provide an in-depth exploration of the differences b
 \end{figure}
 
 The offboard configuration allows the flight controller to communicate and receive orders from a companion computer that is not physically connected to its hardware, so the latter can remain on the ground while the vehicle flies.
-This configuration offers several advantages, including simplified setup without concerns about hardware interactions and power supply to the companion computer during flight. It also allows for the use of a more powerful computer for image processing without adding weight to the vehicle. However, the camera remains connected to the ground computer, limiting the system's real-world applications as the images are not captured from the drone's perspective during flight. While other configurations involving direct camera-to-flight controller connection and wireless transmission of images for offboard processing are feasible, they are beyond the scope of this project.
+This configuration offers several advantages, including a simplified setup without concerns about hardware interactions and power supply to the companion computer during flight. It also allows for the use of a more powerful computer for image processing without adding weight to the vehicle. However, the camera remains connected to the ground computer, limiting the system's real-world applications as the images are not captured from the drone's perspective during flight. While other configurations involving direct camera-to-flight controller connection and wireless transmission of images for offboard processing are feasible, they are beyond the scope of this project.
 
 In this configuration, the wireless link is established through a pair of telemetry radios.
 These radios connect to a telemetry port on the flight controller and a USB port on the companion computer. 
@@ -87,11 +87,10 @@ Figure \ref{fig:onboard-config} shows a summary of all the connections present i
 \begin{figure}[b!]
   \centering
   \includegraphics[width=0.85\textwidth,keepaspectratio]{img/onboard-diagram.jpg}
-  \caption{Onboard configuration connections}
+  \caption{Overview of the onboard configuration. All connections are contained inside the vehicle's frame.}
   \label{fig:onboard-config}
 \end{figure}
 
-\todo[inline]{Fix image: hardware white background rounded edges, software green}
 
 Selecting the appropriate hardware for the onboard computer is crucial in this configuration since the companion computer has to fly along with the flight controller. 
 To be able to take into the air, the computer has to be light enough that its weight can be lifted by the propellers while maintaining adequate battery autonomy.

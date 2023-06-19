@@ -101,9 +101,8 @@ The complete steps needed to configure the PX4 WSL system are detailed in Append
   \caption{Connection diagram of how the three systems interact with each other during SITL simulation.}
   \label{fig:sitl-connections}
 \end{figure}
-\todo[inline]{Edit: rename dronecontrol, change UDP port, virtual bridge, add airlib/mavsdk/simulator-mavlink to arrows, AirSim - PX4 should be bidirectional arrow}
 
-The whole set of connections necessary between the three individual components at the transport layer level during SITL simulation is shown in Figure \ref{fig:sitl-connections}.
+The complete set of connections necessary between the three individual components at the transport layer level during SITL simulation is shown in Figure \ref{fig:sitl-connections}.
 The AirSim simulator runs as part of the Unreal Engine application directly on the host Windows system. It connects to the other two components running inside the virtualised Linux subsystem through the established bridge. AirSim and the PX4 flight stack exchange information through the TCP connection to the secondary MAVLink server, as shown in Figure \ref{fig:px4-ports}.
 
 The communication between AirSim and the DroneVisionControl application is facilitated through the API layer depicted in Figure \ref{fig:airsim-overview}, which can connect the simulator with a companion computer or other system running additional code. This connection is established using the \texttt{airlib} library developed for Python by the creators of AirSim, which allows easy access to the AirSim API. In this project, the connection between AirSim and the application through \texttt{airlib} transmits only perception data, specifically camera images of the simulated world. 
@@ -120,7 +119,6 @@ Given that the application is developed in Python, a versatile programming langu
   \includegraphics[width=0.8\textwidth,keepaspectratio]{img/hitl-connections.jpg}
   \caption{Connection diagram of how the three systems interact with each other during HITL simulation.}\label{fig:hitl-connections}
 \end{figure}
-\todo[inline]{Rename app}
 
 Transitioning from SITL to HITL simulation involves shifting from the WSL environment to a physical flight board, specifically a Pixhawk flight controller, to run the flight stack firmware. In HITL simulation, the flight board's motors and actuators are blocked, but the internal software functions fully. The Python execution will also be moved from the Linux subsystem to the Windows host. This transition simplifies the testing process by eliminating the need for additional configurations to establish communication between the flight controller and the internal WSL network, which is isolated from external machines by default.
 

@@ -92,11 +92,11 @@ The conversion from landmarks to gestures is performed by the \texttt{gestures} 
 \begin{figure}
   \centering
   \includegraphics[width=0.9\textwidth, keepaspectratio]{img/hand-vectors.jpg}
-  \caption{Vectors extracted from the detected features to calculate the angles between them and determine their relative positions.}
+  \caption{Vectors extracted from the detected features are used to calculate reference angles to determine hand gestures.}
   \label{fig:vector-calcs}
 \end{figure}
 
-The program defines several gestures based on the calculated angles. These gestures are shown in figure \ref{fig:hand-gestures} and detailed in the following list:
+The program defines several gestures based on the calculated angles. These gestures are shown in Figure \ref{fig:hand-gestures} and detailed in the following list:
 \begin{itemize}
     \item No hand: this happens when no landmarks can be extracted from the image. As a safety feature, the vehicle stops whichever previous commands it had in its queue and goes into Hold flight mode, hovering in the air while maintaining its position.
     \item Open hand: all five fingers extended, indicating a stop gesture. The drone holds at its current position.
@@ -186,8 +186,6 @@ For each iteration, an image is retrieved, pose features are extracted, and a bo
   \caption{Execution flow for the running loop in the follow control solution}
   \label{fig:follow-loop}
 \end{figure}
-
-\todo[inline]{Improve: Sleep included in the loop, turn loop arrow around}
 
 A full execution of this solution is shown in flight in Section \ref{subsec:fl-test-5}.
 

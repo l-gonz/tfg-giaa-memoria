@@ -38,7 +38,6 @@ The \texttt{COM[X]:57600} section describes the serial connection to the telemet
   \caption{Pixhawk 4 board connected to a Raspberry Pi running the DroneVisionControl application and a Windows computer running the AirSim simulator. The setup includes a telemetry radio for QGroundControl and an RC receiver for manual control.}
   \label{fig:hitl-setup-picture}
 \end{figure}
-\todo[inline]{Improve this image}
 
 The next crucial step in transitioning from a fully simulated environment to real flight is to establish a connection between the future onboard computer, the Raspberry Pi 4, and the Pixhawk flight controller. This connection enables conducting more realistic tests using the exact hardware that will control the drone. 
 
@@ -110,10 +109,8 @@ The result from the execution are shown in Figure \ref{fig:rpi-airsim-test}. On 
 
 One crucial question that remains to be answered before the vehicle can take flight using this hardware and software configuration is whether the Raspberry Pi 4b's modest processor, a quad-core ARM Cortex-A72 64-bit SoC running at 1.5GHz, can handle the detection and tracking algorithms with sufficient performance to achieve similar results to those obtained with simulated hardware (SITL) and respond effectively to real-time movement. To address this matter, the average time spent by the program on each task in the running loop can be calculated and analyzed under different scenarios. This analysis will help estimate the maximum speed at which the algorithm can track a person.
 
-% TODOOOO: Make sure there's a good loop diagram in that section pointed below, and that the enumerated parts are explained in detail
-\todo[inline]{Match numbers to added figures}
 
-Based on the running loop for the follow solution described in Section \ref{sec:follow}, the processing cost can be divided into several distinct areas that can be measured independently: image processing, offboard control, manual input, and released thread (sleep). Figure \ref{fig:perf-sitl-sim} illustrates the time allocation for each task during an average run of the follow solution using simulated hardware (PX4 running in SITL mode with AirSim). The time measurements were obtained by calculating the time difference between the start and end of each statement and averaging across every iteration of the main loop.
+Based on the running loop for the follow solution described in Section \ref{sec:follow} and shown in Figure \ref{fig:follow-loop}, the processing cost can be divided into several distinct areas that can be measured independently: image processing, offboard control, manual input, and released thread (sleep). Figure \ref{fig:perf-sitl-sim} illustrates the time allocation for each task during an average run of the follow solution using simulated hardware (PX4 running in SITL mode with AirSim). The time measurements were obtained by calculating the time difference between the start and end of each statement and averaging across every iteration of the main loop.
 
 \begin{figure}[H]
   \centering
