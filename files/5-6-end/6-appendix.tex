@@ -6,7 +6,7 @@ This appendix
 \section{SITL: Development environment}
 \label{app:install-dev-env}
 
-This section describes the process of installing all the necessary applications to set up a development environment to run PX4's SITL simulation in a system similar to the one described in section \ref{sec:devenv}.
+This section describes the process of installing all the necessary applications to set up a development environment to run PX4's SITL simulation in a system similar to the one described in Section \ref{sec:devenv}.
 The instructions assume a computer running Windows 10/11 as the operating system and Windows Subsystem for Linux installed.
 PX4 details the installation steps of their source code for several platforms in their documentation \cite{install-px4}, where Ubuntu is the recommended platform.
 To make it easier, the DroneVisionControl repository contains a small shell script that aggregates all the steps and installs all the dependencies with the folder structure that the project expects.
@@ -62,7 +62,7 @@ To run the PX4 software-in-the-loop simulator in AirSim and test the follow solu
 first, install Unreal Engine at version 4.27 at least from the Epic Games Launcher\footnote{\url{https://www.unrealengine.com/download}} and open the environment found in the \texttt{data} folder of the repository.
 To use AirSim with a different Unreal environment, follow the guide in the AirSim documentation\footnote{\url{https://microsoft.github.io/AirSim/unreal_custenv/}}
 After starting play mode in Unreal for the first time, a \texttt{settings.json} file will appear in an AirSim folder in the user's Documents folder.
-The contents of this file need to be replaced with the configuration file found in section \ref{app:airsim-config} to be able to interact with PX4 running inside WSL, selecting the correct value for \texttt{UseSerial} and exchanging the \texttt{LocalHostIp} in the file for the IP of the Windows machine in the virtual WSL network.
+The contents of this file need to be replaced with the configuration file found in Appendix \ref{app:airsim-config} to be able to interact with PX4 running inside WSL, selecting the correct value for \texttt{UseSerial} and exchanging the \texttt{LocalHostIp} in the file for the IP of the Windows machine in the virtual WSL network.
 This IP can be obtained by typing \texttt{ipconfig} in the Windows command prompt and looking for the IPv4 address under "Ethernet Adapter vEthernet (WSL)".
 
 After the settings have been set, restart play mode in Unreal; the output log should show a message saying "Waiting for TCP connection on port 4560, local IP <Windows-IP>".
@@ -90,17 +90,17 @@ dronevisioncontrol follow --sim -p 14550
 \section{HITL: Installation on a Raspberry Pi 4}
 \label{app:install-hitl}
 
-\todo[inline]{Write this part}
+For the Raspberry Pi, the operating system of choice for the tests carried out in this project is the native Raspberry OS, but the configuration and results will be similar if using any other Linux distribution. The main requirement for the OS is that it counts with a graphical interface so that the output of the DroneVisionControl application can be visualised.
 
-% 1. QGroundControl config to set up HITL
+The installation of the DroneVisionControl application is done the same way as in the WSL system. The most significant difference with the SITL configuration comes from the setup of the Pixhawk board to run the hardware-in-the-loop simulation. The changes in configuration are done through the QGroundControl application, which can be connected to the board through a micro-USB cable or wirelessly through the telemetry radios. The steps to enable the HITL simulation are as follows:
+\begin{enumerate}
+    \item Configure the airframe for simulation through the Vehicle Setup screen (Vehicle Setup -> Airframe -> HIL Quadcopter X).
+    \item Enable HITL simulation in the Safety settings (Vehicle Setup -> Safety -> HITL enabled).
+    \item Enable a new MAVLink channel on the secondary telemetry port (Vehicle Setup -> Parameters -> MAV\_1\_CONFIG.
+\end{enumerate}
 
-Install DroneVisionControl
-        
-Set up XRDP to connect from Windows PC
-\url{https://linuxize.com/post/how-to-install-xrdp-on-raspberry-pi/}
-
-Set up UART serial connection in RPi: 
-\url{https://discuss.px4.io/t/talking-to-a-px4-fmu-with-a-rpi-via-serial-nousb/14119?page=2}
+Some additional steps need to be taken to enable a UART serial connection through the RX/TX pins on the GPIO header of the Raspberry Pi. A description of this process can be found in \cite{rpi-uart-setup}.
+Other helpful documentation for setting up XRDP on the Raspberry Pi to start a remote desktop from a standalone PC can be found on \cite{install-xrdp}.
 
 
 \section{AirSim configuration file}

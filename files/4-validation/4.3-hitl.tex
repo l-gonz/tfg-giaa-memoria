@@ -52,7 +52,7 @@ To ensure successful progress towards autonomous flight, several key characteris
 
 Figure \ref{fig:hitl-setup-picture} provides an overview of the connections used for HITL testing with the Raspberry Pi. The main addition from the previous section is the direct connection between the Pixhawk board and the Raspberry Pi's I/O pins. While the inclusion of the telemetry radio is not strictly required in this scenario, it enables maintaining a simultaneous connection to QGroundControl on the ground station or simulation computer, facilitating better oversight and monitoring.
 
-Before any tests can begin, it is necessary to set up the operating system of the Raspberry. A detailed explanation of the complete installation process, along with all the necessary libraries and dependencies for the Raspberry Pi, is included in Appendix \ref{app:install-dronecontrol-rpi}. To conveniently control the Raspberry Pi during the installation, a remote desktop connection is recommended. This allows for transmitting screen contents, as well as mouse and keyboard input, over a local network. Thus, accessing the Pi's desktop from the ground station computer becomes feasible, even during flight. One available option to achieve this is XRDP\footnote{\url{http://xrdp.org/}}, an open-source implementation of a Microsoft Remote Desktop Protocol server that is compatible with the Raspberry OS.
+Before any tests can begin, it is necessary to set up the operating system of the Raspberry. A detailed explanation of the complete installation process, along with all the necessary libraries and dependencies for the Raspberry Pi, is included in Appendix \ref{app:install-hitl}. To conveniently control the Raspberry Pi during the installation, a remote desktop connection is recommended. This allows for transmitting screen contents, as well as mouse and keyboard input, over a local network. Thus, accessing the Pi's desktop from the ground station computer becomes feasible, even during flight. One available option to achieve this is XRDP\footnote{\url{http://xrdp.org/}}, an open-source implementation of a Microsoft Remote Desktop Protocol server that is compatible with the Raspberry OS.
 
 
 The initial hardware connection to test is the power supply to the Raspberry Pi. As discussed in Section \ref{subsec:onboard}, the chosen method for powering the companion computer in the onboard configuration is through a secondary battery. To establish this connection, a USB to USB-C cable will be used, connecting the battery to the Raspberry Pi's power port. The purpose of testing the power supply at this stage is to ensure its suitability before it becomes critical to power the onboard computer on the vehicle during flight. This power source must provide sufficient power to maintain the processor running at an appropriate speed and also supply power to the external camera, which will be connected to the Pi's board and draw power from it.
@@ -72,6 +72,8 @@ Another important connection is the MAVLink communication channel between the fl
  \end{center}
 \end{table}
 
+% The key parameter that needs to be changed is \texttt{MAV_1_CONFIG}, which configures the serial port a the second instance of MAVLink. Unlike the primary instance (\texttt{MAV_0_CONFIG}), which is set up for telemetry radios, \texttt{MAV_1_CONFIG} should be set to 102 to map to \texttt{TELEM2}. The secondary MAVLink instance is already configured in "Onboard mode" by default, which is the appropriate mode for communication with a companion computer, as opposed to the "Normal mode" used for communication with QGroundControl through \texttt{TELEM1}. Another parameter to consider is \texttt{SER_TEL2_BAUD}, which determines the baud rate of the \texttt{TELEM2} port. The default rate is 921600, suitable for a serial connection. This rate needs to be specified when establishing the connection in the DroneVisionControl application using the MAVSDK library. A comprehensive overview of all the available parameters for board configuration can be found in the PX4 documentation \cite{px4-docs-params}.
+
 
 On the Raspberry Pi side, the serial port is initially configured for use as a terminal rather than a hardware serial port. This can be rectified using the \texttt{raspi-config} command-line utility by selecting the following steps: Interface options -> Serial Port -> Disable login shell, enable serial port hardware. After making these changes, the \texttt{/dev/serial0} address can be used to communicate with the device at the baud rate configured in QGroundControl. Figure \ref{fig:serial-connection} displays the \texttt{raspi-config} tool and the connector used for the serial connection between the flight controller and the companion computer.
 
@@ -81,7 +83,7 @@ On the Raspberry Pi side, the serial port is initially configured for use as a t
   \makebox[\textwidth][c]{
   \includegraphics[width=.615\textwidth, keepaspectratio]{img/raspi-config.png}
   \includegraphics[width=.385\textwidth, keepaspectratio]{img/rpi-pixhawk-serial.jpg}}
-  \caption{a) Picture of Raspberry's \texttt{raspi-config} and b) close-up of Pixhawk to Pi cable connection}
+  \caption{a) Picture of Raspberry's \texttt{raspi-config} and b) close-up of Pixhawk to Pi cable connection.}
   \label{fig:serial-connection}
 \end{figure}
 

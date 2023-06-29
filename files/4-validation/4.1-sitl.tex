@@ -83,10 +83,10 @@ These characteristics will be validated in the order below:
 \end{enumerate}
 
 In the first place, the AirSim simulator needs to be installed in the Windows host.
-The complete installation process is described in appendix \ref{app:install-airsim}.
+The complete installation process is described in Appendix \ref{app:install-airsim}.
 There are specific configuration parameters that have to be set to be able to connect the AirSim simulator in Windows to the PX4 SITL simulation running inside WSL.
 On the simulator side, AirSim's settings file has to include a line defining the IP address of the network interface to use.
-This parameter, along with the entire configuration file used for SITL testing, can be found in appendix \ref{app:airsim-config}.
+This parameter, along with the entire configuration file used for SITL testing, can be found in Appendix \ref{app:airsim-config}.
 On the PX4 side, it is necessary to specify that the simulator will attach through a different IP address than \texttt{localhost}.
 This is done by setting the \texttt{PX4\_SIM\_HOST\_ADDR} environment variable in the Linux system to the IP address of the Windows host on the WSL virtual network before starting PX4 as follows:
 \begin{minted}{bash}
@@ -135,7 +135,7 @@ These two values serve as inputs for the PID controllers that drive the follow s
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-sitl-pose.png}
-  \caption{AirSim, PX4 and DroneVisionControl applications running side-by-side and connecting to each other}
+  \caption{AirSim, PX4 and DroneVisionControl applications running side-by-side and connecting to each other.}
   \label{fig:airsim-sitl-pose}
 \end{figure}
 

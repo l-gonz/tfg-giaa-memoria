@@ -47,7 +47,7 @@ This design facilitates testing and adaptability to various environments. Three 
   \label{fig:video-source-inheritance}
 \end{figure}
 
-The \texttt{FileSource} class can open a video file stored on the companion computer and provide frames sequentially until the video is completed. This feature enables the replaying image detection algorithms on previously captured videos using the camera tool described in section \ref{subsec:cam-tool}. The \texttt{CameraSource} class can access a physical camera connected to the computer running the application via USB and provide real-time captured frames. Both the file and camera sources leverage OpenCV's video capture utilities to handle file operations and camera drivers.
+The \texttt{FileSource} class can open a video file stored on the companion computer and provide frames sequentially until the video is completed. This feature enables the replaying image detection algorithms on previously captured videos using the camera tool described in Section \ref{subsec:cam-tool}. The \texttt{CameraSource} class can access a physical camera connected to the computer running the application via USB and provide real-time captured frames. Both the file and camera sources leverage OpenCV's video capture utilities to handle file operations and camera drivers.
 
 The \texttt{SimulatorSource} utilizes AirSim's Python library, \texttt{airlib}, to communicate with the simulator and retrieve images from a camera object attached to the vehicle model in Unreal Engine. It establishes an automatic connection to the simulator via \texttt{localhost}, but it can also be initialized with an IP address to connect to a simulator running on a different computer within the local network. This is particularly useful when the DroneVisionControl runs inside a Linux subsystem (WSL) and the simulator operates on the host Windows system.
 
@@ -76,7 +76,7 @@ For that reason, it is designed to run with as little setup as possible. Flight 
 
 The control module for this solution is the \texttt{mapper} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/hands/mapper.py}}.
 It runs on a loop that continuously polls for a new frame from the chosen video source and feeds it to the hand detection functionality provided by MediaPipe \cite{mp-hands-paper}.
-If a hand is detected in the image, 2D coordinates called landmarks are extracted according to the mapping in figure \ref{fig:hand-landmarks}.
+If a hand is detected in the image, 2D coordinates called landmarks are extracted according to the mapping in Figure \ref{fig:hand-landmarks}.
 These landmarks are then converted into discrete gestures, such as an open palm, closed fist, or finger pointing in different directions. Each detected gesture is assigned a command, which is queued to the pilot module and executed once the previous commands have been completed.
 
 \begin{figure}
@@ -87,7 +87,7 @@ These landmarks are then converted into discrete gestures, such as an open palm,
   \label{fig:hand-landmarks}
 \end{figure}
 
-The conversion from landmarks to gestures is performed by the \texttt{gestures} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/hands/gestures.py}}. Vectors are drawn from the base of each finger to its tip, as well as from the base of the hand (wrist feature) to the base of the fingers. The dot product vector operation is used to calculate the relative angles between each finger and the base of the hand, as shown in figure \ref{fig:vector-calcs}. By comparing these angles to a threshold, the module can determine whether each finger is extended or folded and in which direction it points. For example, an open hand gesture is detected when all five fingers are extended.
+The conversion from landmarks to gestures is performed by the \texttt{gestures} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/hands/gestures.py}}. Vectors are drawn from the base of each finger to its tip, as well as from the base of the hand (wrist feature) to the base of the fingers. The dot product vector operation is used to calculate the relative angles between each finger and the base of the hand, as shown in Figure \ref{fig:vector-calcs}. By comparing these angles to a threshold, the module can determine whether each finger is extended or folded and in which direction it points. For example, an open hand gesture is detected when all five fingers are extended.
 
 \begin{figure}
   \centering
@@ -117,11 +117,11 @@ The program defines several gestures based on the calculated angles. These gestu
 \end{figure}
 
 
-The program execution is outlined in figure \ref{fig:hands-loop}.
+The program execution is outlined in Figure \ref{fig:hands-loop}.
 After all the initial parameters have been set, a secondary thread is started to run the pilot queue detailed in \ref{subsec:pilot-module}, which waits for new commands to be added.
 The main thread runs a GUI loop that continuously processes gestures calculated from retrieved images and generates actions that are queued for the pilot.
 It also recognizes user input on the keyboard to control the vehicle directly, according to the mapping defined in the \texttt{input} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/common/input.py}}.
-\todo[inline]{Link here wherever the mapping is detailed (Appendix?)}
+
 
 \begin{figure}
   \centering
@@ -146,7 +146,7 @@ For safety reasons, the follow mechanism only engages when the flight mode on th
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/pose-landmarks.png}
-  \caption{Landmarks extracted from detected human figures by the MediaPipe Pose solution}
+  \caption{Landmarks extracted from detected human figures by the MediaPipe Pose solution.}
   \source{Adapted from \citetitle{mp-pose} \cite{mp-pose}}
   \label{fig:pose-landmarks}
 \end{figure}
@@ -158,12 +158,12 @@ The extracted landmarks are used to draw a bounding rectangle around the detecte
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/pose-validation.jpg}
-  \caption{Valid versus invalid poses detected by the follow solution}
+  \caption{Valid versus invalid poses detected by the follow solution.}
   \label{fig:pose-validation}
 \end{figure}
 
 Figure \ref{fig:pose-validation} shows some examples of the validation checks running on the raw landmarks extracted from an image.
-To ensure controlled movements, the vehicle will stop and hover if it becomes impossible to detect a person in the image or if the detected features do not match the expected pose. Once a valid bounding box is defined around the target person, its position relative to the camera's field of view is sent to a control mechanism consisting of two independent PID controllers. The theory behind these controllers is explained in section \ref{subsec:pid-tools}.
+To ensure controlled movements, the vehicle will stop and hover if it becomes impossible to detect a person in the image or if the detected features do not match the expected pose. Once a valid bounding box is defined around the target person, its position relative to the camera's field of view is sent to a control mechanism consisting of two independent PID controllers. The theory behind these controllers is explained in Section \ref{subsec:pid-tools}.
 
 The first PID controller is responsible for controlling the yaw velocity of the vehicle to respond to horizontal movements of the person in the image. It aims to keep the person centred horizontally in the field of view by maintaining the x-coordinate of the bounding box's centre at the middle point of the screen.
 The second PID controller controls the forward velocity of the vehicle to respond to changes in the distance between the followed person and the drone. It adjusts the drone's forward movement to keep the height of the bounding box (as a percentage of the total image height) within a desired range. The target height for the controller needs to be set for each video source and desired distance empirically, as it depends on the camera used.
@@ -183,7 +183,7 @@ For each iteration, an image is retrieved, pose features are extracted, and a bo
 \begin{figure}
   \centering
   \includegraphics[width=0.9\textwidth, keepaspectratio]{img/follow-loop.jpg}
-  \caption{Execution flow for the running loop in the follow control solution}
+  \caption{Execution flow for the running loop in the follow control solution.}
   \label{fig:follow-loop}
 \end{figure}
 
@@ -216,7 +216,7 @@ Two additional utilities have been developed for tuning and testing the performa
 
 The first utility is called \texttt{tune\_controller}\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/tune_controller.py}}. Tuning a PID controller typically involves testing different combinations of coefficients empirically. The \texttt{tune\_controller} tool facilitates this process by allowing users to specify a range of potential coefficients and testing the system's response using images retrieved from AirSim and a simulated flight controller (SITL or HITL). The tool sets up a simulated person in an offset position from the target centre, engages the controller with the test values, and plots the detected position input and calculated velocity output on a graph for analysis. After each test, the vehicle returns to the starting position to reset the environment for the next coefficient to be checked. The tool can be executed using the command \texttt{dronevisioncontrol tools tune} and can be started with the option \texttt{--yaw} or \texttt{--forward} to tune a specific controller while deactivating the other one for better visualization. Each coefficient can be tested individually by providing fixed values for the other two parameters.
 
-The second utility is called \texttt{test\_controller}\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/test_controller.py}}. This tool is designed to evaluate the performance of an already-tuned controller with different position inputs for the camera. The objective is to assess how the controller reacts to varying relative positions between the vehicle and the person being followed. The tool engages both the yaw and forward controllers simultaneously to simulate real flight conditions. However, it can be run in either yaw or forward mode to vary distances in one of the two axes (left to right and forward to backwards, respectively). The tool measures how the vehicle responds to increasingly larger differences from the target position. The purpose is to ensure that the controller maintains a stable movement that ensures safety throughout the entire flight. The test tool's execution and results are detailed in section \ref{subsec:pid-test-controller} of the project documentation.
+The second utility is called \texttt{test\_controller}\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/test_controller.py}}. This tool is designed to evaluate the performance of an already-tuned controller with different position inputs for the camera. The objective is to assess how the controller reacts to varying relative positions between the vehicle and the person being followed. The tool engages both the yaw and forward controllers simultaneously to simulate real flight conditions. However, it can be run in either yaw or forward mode to vary distances in one of the two axes (left to right and forward to backwards, respectively). The tool measures how the vehicle responds to increasingly larger differences from the target position. The purpose is to ensure that the controller maintains a stable movement that ensures safety throughout the entire flight. The test tool's execution and results are detailed in Section \ref{subsec:pid-test-controller} of the project documentation.
 
 \subsection{Safety mechanisms}
 \label{subsec:safety}

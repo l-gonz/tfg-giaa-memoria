@@ -49,7 +49,7 @@ The left graph of the figure represents the variation in the horizontal position
   \centering
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\textwidth]{img/pid/yaw/yaw_pos_prop_i0_d0.png}
-  \includegraphics[width=.52\textwidth]{img/pid/yaw/yaw_vel_prop_i0_d0.png}}
+  \includegraphics[width=.52\textwidth]{img/pid/yaw/yaw_vel_prop_i0_d0.jpg}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-prop}
 \end{figure}
 
@@ -66,7 +66,7 @@ Figure \ref{fig:tune-yaw-int-20} illustrates the behaviour of the input and outp
   \centering
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_pos_p20_int_d0.png}
-  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p20_int_d0.png}}
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p20_int_d0.jpg}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{I}$ and $K_P=-20$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-int-20}
 \end{figure}
 
@@ -76,7 +76,7 @@ A similar effect can be observed to a lesser extent in Figure \ref{fig:tune-yaw-
   \centering
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_pos_p50_int_d0.png}
-  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_int_d0.png}}
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_int_d0.jpg}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{I}$ and $K_P=-50$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-int-50}
 \end{figure}
 
@@ -92,7 +92,7 @@ In all the tested scenarios, the iteration with $K_I=-1$ (Figure \ref{fig:tune-y
   \centering
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_pos_p50_i0_der.png}
-  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_i0_der.png}}
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_i0_der.jpg}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{D}$ and $K_P=-50$, $K_I=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-der-i0}
 \end{figure}
 
@@ -100,7 +100,7 @@ In all the tested scenarios, the iteration with $K_I=-1$ (Figure \ref{fig:tune-y
   \centering
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_pos_p50_i1_der.png}
-  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_i1_der.png}}
+  \includegraphics[width=.52\linewidth]{img/pid/yaw/yaw_vel_p50_i1_der.jpg}}
   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{D}$ and $K_P=-50$, $K_I=-1$ while the yaw controller is engaged.}\label{fig:tune-yaw-der-i1}
 \end{figure}
 
@@ -134,7 +134,7 @@ To mitigate this effect, it is important to keep the output forward velocity sma
   \centering
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_pos_prop_i0_d0.png}
-  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_prop_i0_d0.png}}
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_prop_i0_d0.jpg}}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the forward controller is engaged.}\label{fig:tune-fwd-prop}
 \end{figure}
 
@@ -148,14 +148,14 @@ In the case of the derivative component, all tested values of $K_D$ lead to incr
   \centering
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_pos_p3_int_d0.png}
-  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_int_d0.png}}
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_int_d0.jpg}}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{I}$ and $K_P=7$, $K_D=0$ while the forward controller is engaged.}\label{fig:tune-fwd-int}
 \end{figure}
 \begin{figure}[H]
   \centering
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_pos_p3_i0_der.png}
-  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_i0_der.png}}
+  \includegraphics[width=.52\linewidth]{img/pid/fwd/aaa_fwd_vel_p3_i0_der.jpg}}
   \caption{Variation of (a) input height and (b) output velocity for different values of $K_{D}$ and $K_P=7$, $K_I=0.5$ while the forward controller is engaged.}\label{fig:tune-fwd-der}
 \end{figure}
 
@@ -176,7 +176,7 @@ The plots in Figure \ref{fig:validate-yaw} depict the changes in the normalized 
   \makebox[\textwidth][c]{
   \includegraphics[width=.52\linewidth]{img/pid/validation_yaw.png}
   \includegraphics[width=.52\linewidth]{img/pid/validation_yaw_2.png}}
-  \caption{Changes over time in detected horizontal position and height as input for the controllers with different starting positions in the y-axis}
+  \caption{Changes over time in detected horizontal position and height as input for the controllers with different starting positions in the y-axis.}
   \label{fig:validate-yaw}
 \end{figure}
 
@@ -190,7 +190,7 @@ In Figure \ref{fig:validate-yaw}b, the trajectories appear quite similar since t
 \begin{figure}[H]
   \centering
   \includegraphics[width=.7\textwidth, keepaspectratio]{img/pid/validation_fwd.png}
-  \caption{Changes over time in detected height as input for the forward controller with different starting positions in the x-axis}
+  \caption{Changes over time in detected height as input for the forward controller with different starting positions in the x-axis.}
   \label{fig:validate-fwd}
 \end{figure}
 
@@ -206,7 +206,7 @@ Notably, even when the person is so close to the vehicle that part of their figu
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-follow-sitl.png}
-  \caption{Single frame from the video showing the movement of the drone in response to changes in the position of the tracked person}
+  \caption{Single frame from the video showing the movement of the drone in response to changes in the position of the tracked person.}
   \label{fig:airsim-test-follow}
 \end{figure}
 

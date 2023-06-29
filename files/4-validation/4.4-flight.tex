@@ -62,7 +62,7 @@ Once the vehicle construction is complete, additional installation and calibrati
   \includegraphics[width=0.5\textwidth, keepaspectratio]{img/qgc-config-1.png}
   \includegraphics[width=0.5\textwidth, keepaspectratio]{img/qgc-config-3.png}}\\
   \includegraphics[width=0.5\textwidth, keepaspectratio]{img/qgc-config-2.png}
-  \caption{Screenshot from the QGroundControl calibration and setup tools used to configure the vehicle}\label{fig:qgc-config}
+  \caption{Screenshot from the QGroundControl calibration and setup tools used to configure the vehicle.}\label{fig:qgc-config}
 \end{figure}
 
 
@@ -93,8 +93,8 @@ To initiate the test, the main battery is reconnected to the power module. Then,
 
 
 \begin{minted}[escapeinside=||,breaklines,fontsize=\footnotesize, baselinestretch=1]{bash}
-|Windows:| dronevisioncontrol tools test-camera -r COM<X>:57600
-|Linux:| dronevisioncontrol tools test-camera -r /dev/ttyUSB0:57600}
+|Windows:| dronevisioncontrol tools test-camera --hardware COM<X>:57600
+|Linux:| dronevisioncontrol tools test-camera --hardware /dev/ttyUSB0:57600}
 \end{minted}
 
 
@@ -105,7 +105,7 @@ Figure \ref{fig:flight-test-cam-offboard} illustrates the output displayed in th
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-offboard.png}
-  \caption{Terminal output from the \texttt{test-camera} tool running on an offboard computer and image of the drone flying in response}
+  \caption{Terminal output from the \texttt{test-camera} tool running on an offboard computer and image of the drone flying in response.}
   \label{fig:flight-test-cam-offboard}
 \end{figure}
 
@@ -120,7 +120,7 @@ For this test, the same tool used in the previous test will be executed on the R
 
 To initiate the flight test, the main battery needs to be attached to the power module and the secondary battery to the Raspberry Pi. Once the onboard computer has started, it will be operated through a remote desktop connection via WiFi. Using this connection, a terminal window can be opened on the desktop to execute the following command:
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
-dronevisioncontrol tools test-camera -r /dev/serial0:921600 -p
+dronevisioncontrol tools test-camera --hardware /dev/serial0:921600 --pose-detection
 \end{minted}
 
 
@@ -130,7 +130,7 @@ Unlike the telemetry radio flight, this test employs a serial connection running
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-onboard.png}
-  \caption{Pose detection algorithm running on images taken during flight}
+  \caption{Pose detection algorithm running on images taken during flight.}
   \label{fig:flight-test-cam-onboard}
 \end{figure}
 
@@ -143,7 +143,7 @@ During the basic flight tests, all the connections and individual components of 
 
 The first solution to be tested in flight is the hand-gesture guidance system, which runs on an offboard computer without performance constraints and doesn't rely on battery power. The setup for this test will be the same as the second test flight, described in Section \ref{subsec:fl-test-2}, using the telemetry radio for the serial link and disregarding the onboard companion computer. Once the autopilot board is powered up, the control solution is initiated by executing the following command, where <device> is replaced with the appropriate COM port or TTY device to which the telemetry radio is connected, depending on the platform.
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
-dronevisioncontrol hand -s <device>:57600
+dronevisioncontrol hand --serial <device>:57600
 \end{minted}
 
 
@@ -165,7 +165,7 @@ A video showcasing the entire process can be accessed on this \href{https://l-go
 
 The last test to conduct is for the follow control solution. In this section, the companion computer will run the follow program with the aim of tracking and following a moving target outside of simulation. The setup for this test will be the same as the third test flight, described in Section \ref{subsec:fl-test-3}. Without the need for a wireless telemetry connection on the DroneVisionControl side, the telemetry radio can be utilized to track the vehicle's path using the QGroundControl application on a secondary offboard computer. The control application will be started with the following command:
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
-dronevisioncontrol follow -s /dev/serial0:921600
+dronevisioncontrol follow --serial /dev/serial0:921600
 \end{minted}
 This \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}{video}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}} showcases the process of the vehicle taking off (T key) and activating offboard flight mode (O key) to initiate the tracking of a detected figure. Figure \ref{fig:flight-test-follow} presents an image extracted from this video.
 
@@ -173,7 +173,7 @@ This \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-fol
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-follow.png}
-  \caption{Terminal and image output of the DroneVisionControl follow solution running on the Raspberry Pi}
+  \caption{Terminal and image output of the DroneVisionControl follow solution running on the Raspberry Pi.}
   \label{fig:flight-test-follow}
 \end{figure}
 
