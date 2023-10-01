@@ -1,33 +1,27 @@
 \section{PID controller design}
 \label{sec:test-1-pid}
 
-% Process of tuning the PIDs
-% Graphs from test-controller
-% Analysis of error
+To implement the person-following mechanism effectively, a pair of PID controllers is employed to derive velocity outputs from position data obtained through image detection. These controllers are defined by their control parameters: the proportional ($K_D$), integral ($K_I$) and derivative ($K_D$) gains, as shown in Equation \ref{eq:pid}. To optimize their performance, it is necessary to fine-tune the controllers by selecting appropriate values for these parameters. These values will be determined through empirical experimentation, acknowledging that obtaining theoretical optical values through this method, as discussed in \ref{subsec:pid-tools}, is not feasible. Nevertheless, it remains the most straightforward approach to achieve a satisfactory enough performance from the closed-loop system to validate the follow control solution. For each parameter, several values will be explored with the aim of striking a balance between a more aggressive controller (characterized by larger gains) for faster control response and a more robust controller (with smaller gains).
 
-The person-following mechanism relies on two PID controllers to obtain velocity outputs from the positions calculated by the image detection. These controllers need to be tuned to perform their function; that is, appropriate coefficients for the particular system need to be selected for $K_P$, $K_I$ and $K_D$. These coefficients will be chosen experimentally for the project. Even though, as discussed in \ref{subsec:pid-tools}, it is not possible to obtain the theoretical optical values with this method, it is still the simplest way of achieving a good enough behaviour from the closed-loop system to validate the follow control solution. For each of the parameters, several values will be tested. The objective is to find a balance between the more aggressive controller (larger gains) that leads to faster control and the more robust control of smaller gains.
+The procedure will be as follows. First, the sign of the process gain is selected. For the controller to operate as expected, a positive output should result in an increase in the input. If the system works in the opposite way, the feedback will lead to unstable behaviour where the process variable grows exponentially. This behaviour can be fixed by inverting the sign of the output of the controller before it is fed back into the process.
 
-The procedure will be as follows. First, the sign of the process gain is selected. For the controller to work as expected, a positive output results in an increase in the input. If the system works in the opposite way, the feedback will lead to unstable behaviour where the process variable grows exponentially. This behaviour can be fixed by inverting the sign of the output of the controller before it feeds back to the process.
+The second step will focus on selecting the control parameters mentioned before. In the initial phase, the controller operates exclusively as a pure P-controller, with both the I-portion and D-portion deactivated, thereby isolating the proportional gain ($K_P$). To find an optimal value for this parameter, different values of $K_P$ are tested systematically. Starting with a relatively low gain to ensure gradual changes in the process variable, the values are progressively increased until a distinct overshoot is observed, which should quickly diminish without noticeable oscillations.
 
-The second step is selecting the control parameters defined in Equation \ref{eq:pid}. Initially, the controller will be operated as a pure P-controller, with the I-portion and the D-portion turned off to select the proportional gain ($K_D)$. To reach a good parameter, different values of $K_P$ are tested, starting with a low enough gain that the process variable changes slowly and gradually increasing until there is a clear overshoot that quickly subsides and before there starts to be a noticeable oscillation.
+Utilizing a P-only controller inevitably leaves a residual control deviation, preventing the setpoint from being precisely reached. To address this residual error, it becomes necessary to introduce an integral gain that gradually compensates for the error over time. During this phase, the proportional gain remains set at the previously determined value, while the integral gain is gradually increased until the control deviation is adequately mitigated. Once again, an overly aggressive setting should be avoided to prevent undesirable oscillations.
 
-With a P-only controller, there is always a remaining control deviation so that the setpoint will never be hit exactly. To fix this remaining error, it is necessary to add an integral gain that compensates the error over time. In this step, the proportional gain will be set to the value already selected, and the integral gain will be increased gradually until the control deviation is compensated. As before, a too-aggressive setting will lead to unwanted oscillations.
-
-Finally, to improve the controller further, a derivative gain can be added to dampen the initial overshoot in the process variable, following the same gradually increasing procedure. A good value to start is about a tenth of the integral gain \cite{pid-tuning}. 
+A derivative gain can be incorporated to dampen the initial overshoot in the process variable to further enhance the controller's performance. This is accomplished by following a similar incremental approach as before. A suitable starting point for the derivative gain is typically around one-tenth of the integral gain \cite{pid-tuning}.
 
 %------------------------------------------------
 
 \subsubsection{The testing environment}
 
-The method outlined will be applied to the yaw and forward controllers independently by only enabling flight control in one direction at a time.
-The custom tool developed for this project and described in Section \ref{subsec:pid-tools} will be used to facilitate testing many values for the controller parameters and comparing them. This tool allows selecting which controller will be enabled for testing (yaw or forward) and which values will be iterated for the parameters. To tune each gain independently, two of the parameters will be set with one fixed value, and the other will have several values that will be applied sequentially.
+The outlined tuning method will be applied separately to the yaw and forward controllers, with flight control enabled exclusively in one direction at a time. For this purpose, the custom tuning tool developed for this project and detailed in Section \ref{subsec:pid-tools} will be employed to expedite the testing of various controller parameter values and their subsequent comparison. This tool allows designating which controller (yaw or forward) is enabled for testing and which parameter values will be subject to iteration. In each test, two of the parameters will be set with fixed values, while the third parameter is set sequentially to different values. For each of the values in the sequence, the new tunings are applied to the controller and its step response is plotted.
 
-To obtain the step response of the controller under focus, the vehicle and the person model in the simulation environment are situated in an offset position from the reference position to which the controller is defined, i.e., the position at which the input at the controller matches its setpoint.
-In the coordinate system of the simulation environment (AirSim), with the vehicle located at $x=0, y=0$ on the ground plane, the reference position for the person model is $x=600, y=0$. By situating the person at an offset position along either the y or x-axis, a step response according to the chosen parameters will be triggered on the yaw or forward controller, respectively.
-Figure \ref{fig:tune-start-pos} shows the reference position for the controllers.
+To capture the step response of the controller under focus, a deliberate offset is introduced between the vehicle and the person model within the simulation environment. This offset positions them away from the reference position at which the controller's input aligns with its setpoint. In the coordinate system of the simulation environment (AirSim), with the vehicle located at $x=0, y=0$ on the ground plane, the reference position for the person model is $x=600, y=0$. Shifting the person model from that position along either the y-axis or the x-axis will trigger a step response in the yaw or forward controller, respectively. Figure \ref{fig:tune-start-pos} shows the reference position for the controllers.
 
-At the end of the process, the results are visualized in several graphs plotted by the program. The available graphs show the controller input over time and output over time, as well as the actual change in position and velocity measured by the autopilot telemetry over time. The exact telemetry variables depicted depend on the specific controller analysed. The yaw controller graphs focus on the heading in degrees and yaw speed. The forward controller graphs focus on the position along the forward axis in meters and the ground speed.
-Due to the noise introduced by the image detection mechanisms, it is often more useful to tune the controllers by looking at the measured position than the controller input, as the internal autopilot controller helps to smooth the resulting curves.
+At the end of this process, the outcomes are visualized through a series of graphs generated by the program. These graphs offer insights into the controller's input and output over time and the actual changes in position and velocity recorded by the autopilot telemetry during the test. The specific telemetry variables displayed vary according to the particular controller under analysis. The graphs associated with the yaw controller focus on the heading and yaw speed, while those related to the forward controller focus on the position along the forward axis and ground speed.
+
+Given the potential noise introduced by the image detection mechanisms, it is often more advantageous to fine-tune the controllers by examining the measured position rather than the controller input. This approach is preferred as the internal autopilot controller aids in smoothing out the resulting curves, making it easier to see trends and oscillations.
 
 
 %-------------------------------------------------
@@ -41,9 +35,10 @@ Due to the noise introduced by the image detection mechanisms, it is often more 
 
 
 \subsection{Yaw controller}
-The first controller to tune will be the yaw controller. As mentioned, the first step is to select the sign of the process gain. In this case, the process variable or input to the controller is the normalized position of the detected person in the horizontal axis of the camera field of view, with 0 being the person situated on the left edge of the field of view and 1 on the right edge. A positive output on the controller produces a positive yaw velocity, which causes the vehicle to rotate towards the right. In response, the person moves to the left in the camera field of view, resulting in a decreasing input to the controller. Since positive outputs should cause increasing inputs, the sign of the output velocity needs to be inverted to avoid exponentially growing behaviour.
 
-Once the sign is selected and before any parameters are tested, the starting position needs to be decided. In the starting position, the target person model is offset from the reference position shown in Figure \ref{fig:tune-start-pos} to provoke a step response in the controller. For the yaw controller, the offset will be 100 units in the y-axis. With the vehicle situated in the origin in the simulation environment, the person model should be situated at $x=500, y=100$. Figure \ref{fig:tune-ref-pos-yaw} shows the starting position in the simulation.
+The initial focus of the tuning process is on the yaw controller. As mentioned earlier, the first step entails determining the sign of the process gain. In this case, the process variable, or input to the controller, corresponds to the normalized position of the detected person in the horizontal axis of the camera's field of view. Here, a value of 0 denotes the person's location at the left edge of the field of view, while a value of 1 signifies their position at the right edge. When the controller generates a positive output, it results in a positive yaw velocity, causing the vehicle to rotate in a rightward direction. In response, the person within the camera's field of view shifts to the left, reducing the input to the controller. Given that positive outputs should lead to an increase in inputs, the sign of the output velocity needs to be inverted to prevent the undesired exponential growth.
+
+A starting position must be established following the sign's determination and preceding any parameter testing. This starting position introduces an offset for the target person model relative to the reference position illustrated in Figure \ref{fig:tune-start-pos}, provoking a step response within the controller. For the yaw controller, this offset will be 100 units along the y-axis. Given that the vehicle is positioned at the origin in the simulation environment, the person model should be situated at coordinates $x=500, y=100$ before starting the tuning process. Figure \ref{fig:tune-ref-pos-yaw} visually represents this starting position within the simulation environment.
 
 \begin{figure}[H]
   \centering
@@ -83,26 +78,13 @@ The proportional gain is the first parameter that needs to be tuned. The values 
 \subsubsection{Integral component}
 \subsubsection{Derivative component}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \begin{figure}
-%   \centering
-%   \makebox[\textwidth][c]{
-%   \includegraphics[width=.52\textwidth]{img/pid/yaw/yaw_pos_prop_i0_d0.png}
-%   \includegraphics[width=.52\textwidth]{img/pid/yaw/yaw_vel_prop_i0_d0.jpg}}
-%   \caption{Variation of (a) input position and (b) output velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the yaw controller is engaged.}\label{fig:tune-yaw-prop}
-% \end{figure}
-
-
-
 
 
 \subsection{Forward controller}
 
-After the yaw controller is tuned, it is time to move to the forward controller.
-The process will be the same as for the yaw controller. Looking at the process gain in this case, it can be noted that a positive output in the controller creates a positive velocity in the forward direction, drawing the vehicle closer to the target person. The input variable is the height of the detected person in the camera field of view, normalized to the height of the field of view, which increases as the drone gets closer to the target. Therefore, a positive output velocity results in an increasing input to the controller, which means that the controller gain already has the correct sign.
+Once the yaw controller has been tuned, the focus shifts to the forward controller. The tuning process for the forward controller mirrors that of the yaw controller. When examining the process gain in this context, it becomes evident that a positive output generated by the controller induces a positive velocity in the forward direction, bringing the vehicle closer to the target person. The input variable is determined by the height of the detected person within the camera's field of view, normalized to the height of the field of view itself. This value increases as the drone approaches the target. Consequently, a positive output velocity naturally leads to an increasing input to the controller, indicating that the controller gain is already set to the correct sign.
 
-The starting position for tuning the forward controller needs to present an offset from the reference position in the distance between the person and the vehicle (x-axis). To achieve this, the person model will be situated at the $x=500, y=0$ coordinates, with the vehicle remaining at the origin in the simulated world. The chosen starting position (closer than the reference point) will result in an initial negative velocity output to move the vehicle away from the person. Figure \ref{fig:tune-ref-pos-fwd} shows the starting position in the simulator.
+Regarding the start position for the environment to tune the forward controller, in this case, an offset is required in terms of the distance between the person and the vehicle along the x-axis. To achieve this offset, the person model will be positioned at coordinates $x=500, y=0$, while the vehicle remains at the origin within the simulated world. This chosen starting position, which sets the person and the vehicle closer together than at the reference point, will result in an initially negative velocity output as the vehicle moves away from the person. Figure \ref{fig:tune-ref-pos-fwd} illustrates this starting position within the simulator.
 
 
 \begin{figure}[H]
@@ -111,7 +93,9 @@ The starting position for tuning the forward controller needs to present an offs
   \caption{Starting position of the simulator for tuning the forward controller. The human model is situated 450 units forward and centred from the vehicle position.}\label{fig:tune-ref-pos-fwd}
 \end{figure}
 
-
+\subsubsection{Proportional component}
+\subsubsection{Integral component}
+\subsubsection{Derivative component}
 
 \subsection{PID tuning validation}
 \label{subsec:pid-test-controller}
