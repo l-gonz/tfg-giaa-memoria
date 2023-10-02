@@ -3,11 +3,11 @@
 
 This chapter outlines the validation process for each essential component required for the proper functioning of the entire system, ranging from initial simulation tests to comprehensive flight tests conducted on the final guidance solution. The validation process follows the order depicted in Figure \ref{fig:validation-chart}.
 
-The first section involves testing the application in a purely simulated environment. Initially, each part is tested individually, and subsequently, the flight controller simulation of PX4 is integrated with the flight mechanics simulation in AirSim, which receives control commands and the computer vision detection software running on the received images.
+The first section involves testing the integrity of the different components in the simulated environment. Initially, there is a component testing section where each part is tested individually. Afterwards comes the integration testing, where the SITL simulation of the PX4 flight controller is integrated with the AirSim environment and the DroneVisionControl offboard application to validate the exchange of control commands and images for the detection software.
 
-Moving on to the second section, a thorough examination is conducted on the follow solution detection and guidance results to ensure that the PID controllers only generate safe velocity commands for any received image input. Additionally, their response should align with the intended movement of the vehicle. To do this, first, each of the controllers is tuned individually with the help of the SITL simulation, and then their joint response is analyzed.
+In the second section, the simulation tools are employed to tune the PID controllers that drive the behaviour of the follow control solution. The purpose of the tuning process is to find good enough values for the control parameters to be able to validate the vision control solution and determine the limits of the simulation tools. During the process, first, the response of each of the two controllers will be analysed individually and then they will be integrated together to ensure that work in a satisfactory manner.
 
-Once the software adheres to the required safety parameters, the third section moves the simulation to HITL mode on the dedicated hardware that will run the actual flights. This hardware includes the dedicated autopilot board and the standalone companion computer connected to it. The main goal is to verify that all connections are functioning as expected and that the devices deliver the required performance.
+In the third section, once the software is proven to adhere to the established safety requirements, the simulation is moved to the HITL mode, where the software runs on dedicated hardware instead of on the simulation computer. This hardware includes the autopilot board Pixhawk 4 and the Raspberry Pi as its companion computer. The main goal is to verify that all the communication channels function as expected and that the devices deliver the required performance.
 
 Lastly, in the fourth and final section, a series of flight tests are carried out, gradually increasing in complexity. These tests span from basic manual control of the vehicle using an RC controller to fully autonomous target-following flight executing in the complete system.
 
@@ -17,6 +17,7 @@ Lastly, in the fourth and final section, a series of flight tests are carried ou
   \includegraphics[width=1.2\textwidth, keepaspectratio]{img/validation-chart.jpg}}
   \caption{Summary of the validation process followed in this chapter.}\label{fig:validation-chart}
 \end{figure}
+\todo[inline]{Fix up diagram a bit to match phase 2 (Title: PID design, green boxes: Tuning process, Validation process; inside first (grey): yaw and fwd)}
 
 \input{files/4-validation/4.1-sitl}
 \input{files/4-validation/4.2-pid}
