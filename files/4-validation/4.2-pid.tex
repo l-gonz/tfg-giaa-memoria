@@ -136,9 +136,11 @@ The process to select the component gains for the forward controller runs simila
 \subsection{PID controller validation}
 \label{subsec:pid-test-controller}
 
-% Test tuning in follow solution
-% Test lost image / wrong detection, control recovery
-% test return to base ???
+The chosen values for the controllers can now be applied to the complete follow solution to get a clearer picture of the expected performance of the vehicle during flight tests. In this test, the follow application is started, and the drone is made to take off and switch flight mode to offboard control. After the person is detected by the pose mechanisms, the 3D-model is moved around in the simulated world to observe how the vehicle reacts. The expected result is that the movement is appreciatively more responsive than on the follow test run with the non-tuned P-only controller at the end of Section \ref{sec:test-3-airsim} (\emph{Verify integration with follow solution}). To provide a visual demonstration, a video showcasing the test described can be accessed \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-follow}{here}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-follow}}. Additionally, Figure \ref{fig:airsim-test-follow} displays a frame extracted from the video, giving a glimpse of the drone's behaviour during the follow operation.
 
-The selected coefficients for the controllers can now be applied to the complete follow solution in order to assess the expected performance of the vehicle in real flights. To provide a visual demonstration, a video showcasing the drone's movement using these parameter values can be accessed \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-follow}{here}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-follow}}. Additionally, Figure \ref{fig:airsim-test-follow} displays a frame extracted from the video, giving a glimpse of the drone's behaviour during the follow operation.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/video-follow-sitl.png}
+  \caption{Single frame from the video showing the movement of the drone in response to changes in the position of the tracked person.}\label{fig:airsim-test-follow}
+\end{figure}
 
