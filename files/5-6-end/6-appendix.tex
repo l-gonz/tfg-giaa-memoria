@@ -235,3 +235,138 @@ Options:
 %%% Maybe %%%
 % All parameters changed from their default values
 % Connect Pixhawk to QGC, then check config for changed values
+
+
+\chapter{PID tuning graphs}
+
+
+\section{Yaw controller}
+\label{app:yaw-pid-results}
+
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_yaw_2.1.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_yaw_2.2.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) computed error and (b) output velocity for different values of $K_{I}$ and $K_P=100$, $K_D=0$ while the yaw controller is engaged.}
+    \label{fig:tune-yaw-int-io}
+\end{figure}
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_yaw_2.3.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_yaw_2.4.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) measured yaw heading and (b) measured yaw velocity for different values of $K_{I}$ and $K_P=100$, $K_D=0$ while the yaw controller is engaged.}
+    \label{fig:tune-yaw-int-measures}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_yaw_3.1.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_yaw_3.2.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) computed error and (b) output velocity for different values of $K_{D}$ and $K_P=100$, $K_I=30$ while the yaw controller is engaged.}
+    \label{fig:tune-yaw-der-io}
+\end{figure}
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_yaw_3.3.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_yaw_3.4.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) measured yaw heading and (b) measured yaw velocity for different values of $K_{D}$ and $K_P=100$, $K_I=30$ while the yaw controller is engaged.}
+    \label{fig:tune-yaw-der-measures}
+\end{figure}
+
+\section{Forward controller}
+\label{app:fwd-pid-results}
+
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_1.1.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_1.2.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) computed error and (b) output velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the forward controller is engaged.}
+    \label{fig:tune-fwd-prop-io}
+\end{figure}
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_1.3.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_1.4.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) measured forward position and (b) measured absolute ground velocity for different values of $K_{P}$ and $K_I=0$, $K_D=0$ while the forward controller is engaged.}
+    \label{fig:tune-fwd-prop-measures}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_2.1.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_2.2.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) computed error and (b) output velocity for different values of $K_{I}$ and $K_P=4$, $K_D=0$ while the forward controller is engaged.}
+    \label{fig:tune-fwd-int-io}
+\end{figure}
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_2.3.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_2.4.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) measured forward position and (b) measured absolute ground velocity for different values of $K_{I}$ and $K_P=4$, $K_D=0$ while the forward controller is engaged.}
+    \label{fig:tune-fwd-int-measures}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_3.1.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_3.2.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) computed error and (b) output velocity for different values of $K_{D}$ and $K_P=4$, $K_I=1$ while the forward controller is engaged.}
+    \label{fig:tune-fwd-der-io}
+\end{figure}
+\begin{figure}[H]
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_3.3.pgf}}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\linewidth}
+        \centering
+        \scalebox{0.55}{\input{img/pid-3/tune_fwd_3.4.pgf}}
+    \end{minipage}
+    \caption{Variation of (a) measured forward position and (b) measured absolute ground velocity for different values of $K_{D}$ and $K_P=4$, $K_I=1$ while the forward controller is engaged.}
+    \label{fig:tune-fwd-der-measures}
+\end{figure}
