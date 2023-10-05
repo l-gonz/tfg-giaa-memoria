@@ -3,7 +3,7 @@
 
 The intention behind developing a UAV control solution that implements tracking and following of humans is to demonstrate the capabilities of the PX4 open-source development platform and its related projects, MAVLink and MAVSDK. The goal is to showcase how complex real-life applications can be designed without relying on expensive proprietary hardware. The follow application requires only a PX4-enabled flight controller installed in an aerial vehicle, a companion computer of appropriate dimensions mounted on board the vehicle, and a camera connected to the companion computer via USB.
 
-In this solution, the vehicle will attempt to find a single person in its field of view and follow their movements by changing its yaw and forward velocity to match horizontal movements and distance changes, respectively.
+In this solution, the vehicle will attempt to detect a single person in its field of view and follow their movements by changing its yaw and forward velocity to match horizontal movements and distance changes, respectively.
 During program execution, the drone can be controlled via an RC controller, an external ground station application or keyboard input directly to the companion computer through, for example, a remote shell (SSH) or a desktop sharing program.
 
 For safety reasons, the follow mechanism only engages when the flight mode on the vehicle is changed to Offboard mode. This can be done by activating a configured switch on the RC controller. The self-guided control automatically stops if the connection to the computer is lost or if any of the configured fail-safes are triggered, such as low battery, loss of RC or GPS signal, or exceeding predefined pitch and roll limits for a specified time.
@@ -30,17 +30,9 @@ The extracted landmarks are used to draw a bounding rectangle around the detecte
 Figure \ref{fig:pose-validation} shows some examples of the validation checks running on the raw landmarks extracted from an image.
 To ensure controlled movements, the vehicle will stop and hover if it becomes impossible to detect a person in the image or if the detected features do not match the expected pose. Once a valid bounding box is defined around the target person, its position in the image is sent to a control mechanism consisting of two independent PID controllers. These control the vehicle's velocity in the yaw and forward direction, respectively. Section \ref{subsec:pid-tools} describes the mechanisms the PID controllers employ to translate detected positions to output velocities and how they are customized for the project.
 
-\todo[inline]{Explain input extraction better}
+\todo[inline]{Explain validation better}
 \todo[inline]{Explain noise introduced by image detection}
-\todo[inline]{Explain effect of pid internal controller}
-\todo[inline]{Move this to 3.5.1 ????, or explain coordinates here}
-Figure \ref{fig:follow-input-calcs} shows how the inputs for each controller are extracted from the coordinates of the bounding box detected around the figure.
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/pose-calculations.jpg}
-  \caption{Calculation of horizontal position and height of figure from the detected bounding box.}
-  \label{fig:follow-input-calcs}
-\end{figure}
+
 
 
 The follow\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/follow/follow.py}} module's structure is summarized in a diagram in Figure \ref{fig:follow-loop}.
@@ -88,8 +80,16 @@ While a PID controller is defined by three control terms, certain scenarios adap
 As previously mentioned, DroneVisionControl implements two separate PID controllers to control the vehicle's velocity.
 The first one is responsible for controlling the yaw velocity of the vehicle, responding to movement in the horizontal axis of the camera's field of view to attempt to keep the person centred horizontally in the field of view. To achieve this, the process variable or input fed to the controller is x-coordinate of the bounding box position in the camera image, normalized to the width of the image, and the setpoint is the middle of the screen (0.5).
 The second PID controller directs the forward velocity of the vehicle to respond to changes in the distance between the followed person and the drone. It adjusts the drone's forward movement to keep the height of the bounding box (as a percentage of the total image height) within a desired range. Since the perceived height in the image depends on the camera perspective, the setpoint for this controller should be determined experimentally for each video source.
-In the AirSim simulator, a setpoint of 0.36 maintains the vehicle and the person separated by 6 meters. The setpoint for the physical camera used for flight test is determined by analysing images taken during flight as described in Section \ref{sec:test-2-sitl}.
+In the AirSim simulator, a setpoint of 0.5 maintains the vehicle and the person separated approximately 4 meters. The setpoint for the physical camera used for flight test is determined by analysing images taken during flight as described in Section \ref{sec:test-2-sitl}.
 \todo[inline]{Check setpoints after pid work}
+
+Figure \ref{fig:follow-input-calcs} shows how the inputs for each controller are extracted from the coordinates of the bounding box detected around the figure.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/pose-calculations.jpg}
+  \caption{Calculation of controller inputs from bounding box drawn around the detected figure.}
+  \label{fig:follow-input-calcs}
+\end{figure}
 
 The velocities that the controllers output are sent to the pilot module to be communicated to the autopilot through MAVLink messages. However, these velocities do not exactly match the speeds measured by the vehicle's telemetry. The autopilot includes its own internal controllers that translate received commands into signals for the propeller motors to run at a specific speed and maintain a smooth flight. This additional step between the output of the controllers in DroneVisionControl and the vehicle's actual speed will have to be taken into account when the control parameters are determined. In practice, it will result in the possibility of implementing more aggressive behaviour on the controllers, as the more complex internal autopilot controllers will end up smoothing the final trajectory.
 
@@ -98,12 +98,9 @@ It is only necessary to provide the coefficients or tunings ($K_P$, $K_I$, $K_D$
 In the DroneVisionControl application, it is the internal \texttt{controller}\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/follow/controller.py}} module the one that interacts with the external \texttt{simple-pid} library to feed and receive the correct values to the PID controllers calculated from the bounding box around the detected person.
 
 \subsubsection{PID tools}
-Two additional utilities have been developed for tuning and testing the performance of the PID controllers.
-
-The first utility is called \texttt{tune\_controller}\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/tune_controller.py}}. Tuning a PID controller typically involves testing different combinations of coefficients empirically. The \texttt{tune\_controller} tool facilitates this process by allowing users to specify a range of potential coefficients and testing the system's response using images retrieved from AirSim and a simulated flight controller (SITL or HITL). The tool sets up a simulated person in an offset position from the target centre, engages the controller with the test values, and plots the detected position input and calculated velocity output on a graph for analysis. After each test, the vehicle returns to the starting position to reset the environment for the next coefficient to be checked. The tool can be executed using the command \texttt{dronevisioncontrol tools tune} and can be started with the option \texttt{--yaw} or \texttt{--forward} to tune a specific controller while deactivating the other one for better visualization. Each coefficient can be tested individually by providing fixed values for the other two parameters.
+An additional utility called \texttt{tune\_controller}\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/tune_controller.py}} have been developed for tuning and testing the response of the PID controllers. Tuning a PID controller typically involves testing different combinations of coefficients empirically. The \texttt{tune\_controller} tool facilitates this process by allowing users to specify a range of potential coefficients and testing the system's response using images retrieved from AirSim and a simulated flight controller (SITL or HITL). The tool sets up a simulated person in an offset position from the target centre, engages the controller with the test values, and plots the detected position input and calculated velocity output on a graph for analysis. After each test, the vehicle returns to the starting position to reset the environment for the next coefficient to be checked. The tool can be executed using the command \texttt{dronevisioncontrol tools tune} and can be started with the option \texttt{--yaw} or \texttt{--forward} to tune a specific controller while deactivating the other one for better visualization. Each coefficient can be tested individually by providing fixed values for the other two parameters.
 \todo[inline]{Fix end}
 
-The second utility is called \texttt{test\_controller}\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/tools/test_controller.py}}. This tool is designed to evaluate the performance of an already-tuned controller with different position inputs for the camera. The objective is to assess how the controller reacts to varying relative positions between the vehicle and the person being followed. The tool engages both the yaw and forward controllers simultaneously to simulate real flight conditions. However, it can be run in either yaw or forward mode to vary distances in one of the two axes (left to right and forward to backwards, respectively). The tool measures how the vehicle responds to increasingly larger differences from the target position. The purpose is to validate that the controller maintains a smooth response during the process, ensuring safety throughout the flight. The test tool's execution and results are detailed in Section \ref{subsec:pid-test-controller}.
 
 \subsection{Safety mechanisms}
 \label{subsec:safety}
