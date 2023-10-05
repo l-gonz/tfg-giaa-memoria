@@ -160,23 +160,28 @@ A video showcasing the entire process can be accessed on this \href{https://l-go
 \subsection{Follow control with onboard computer.}
 \label{subsec:fl-test-5}
 
-The last test to conduct is for the follow control solution. In this section, the companion computer will run the follow program with the aim of tracking and following a moving target outside of simulation. The setup for this test will be the same as the third test flight, described in Section \ref{subsec:fl-test-3}. Without the need for a wireless telemetry connection on the DroneVisionControl side, the telemetry radio can be utilized to track the vehicle's path using the QGroundControl application on a secondary offboard computer. The control application will be started with the following command:
+The last test to conduct is for the follow control solution. In this section, the onboard computer will run the control application to test detecting, tracking and following a moving person in a realistic scenario. The setup for this test will be the same as in the third test from Section \ref{subsec:fl-test-3}, with the application running on the Raspberry Pi, controlled over WiFi from the ground station laptop. Unlike the test for the hand solution, DroneVisionControl does not need a wireless telemetry connection to connect to the Pixhawk. Consequently, the telemetry radio can be used to monitor the vehicle with the QGroundControl application while the flight is taking place. To ensure safety during the test, a second person must monitor the flight prepared with the RC controller to intervene and pilot the aircraft if the autonomous control fails in any way.
+
+
+The control application will be started by connecting over WiFi to the Raspberry Pi desktop and opening a console to execute the following command:
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
 dronevisioncontrol follow --serial /dev/serial0:921600
 \end{minted}
-This \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}{video}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}} showcases the process of the vehicle taking off (T key) and activating offboard flight mode (O key) to initiate the tracking of a detected figure. Figure \ref{fig:flight-test-follow} presents an image extracted from this video.
 
+
+The complete execution of this test has been recorded in this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}{video}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-follow}} as shown in Figure \ref{fig:flight-test-follow}. During the test, the vehicle is made to take off through the Raspberry Pi console by pressing the T key and to initiate following the detected person by pressing the O key to start offboard flight mode. Afterwards, when the person moves around in the field, the vehicle follows closely to maintain the person in its field of view. At the end of the test, the offboard mode is deactivated by pressing the O key again to check that the drone stops following the person and holds its position before landing the aircraft with the L key.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-follow.png}
-  \caption{Terminal and image output of the DroneVisionControl follow solution running on the Raspberry Pi.}
+  \caption{On the left, console and image output of the DroneVisionControl follow solution running on the Raspberry Pi. On the right, outside perspective of the flight test taking place.}
   \label{fig:flight-test-follow}
 \end{figure}
 
+In the recorded process, it can be appreciated that there are moments when the software stops recognising the person in the image. In these cases, the vehicle noticeably stops moving and hovers in the air until the person is recognized again.
+\todo[inline]{Discuss PID performance, vehicle trajectory here}
 
 During the flight test, the application running on the Raspberry Pi achieves a maximum frame rate of around 6 FPS when the follow mechanism is active and approximately 8 FPS when it is disabled by switching out of offboard flight mode. In practical terms, this means that the person being tracked by the drone needs to move relatively slowly to ensure that the camera does not lose sight of them before the control loop can send the command to the vehicle to move to the previously detected position. However, for a proof-of-concept scenario, this performance is acceptable.
-
 
 At the end of the program execution, the average loop time and average runtime for each task in the control loop are displayed in the terminal. Based on the measurements obtained during the test flight, the average frame rate is calculated to be 3.58 FPS. Figure \ref{fig:flight-performance} compares these measurements with those analyzed in Section \ref{subsec:performance}, particularly with the test configuration selected to most closely resemble actual flight conditions (autopilot board running on HITL mode and the companion computer powered by the secondary battery). Very similar results are recorded for both tests, confirming the simulation configuration employed as a valid method of obtaining realistic results without complex or costly flight tests.
 
