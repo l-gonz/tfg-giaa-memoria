@@ -74,7 +74,9 @@ Once the vehicle is fully configured and calibrated, testing the assisted takeof
 
 Through QGroundControl, it is possible to map different switches on the RC controller to various autopilot commands. For the test, a two-position switch will be mapped to the armed/disarmed state in order to control the quadcopter's engine startup. A three-position switch will be assigned to change the vehicle's flight mode between the landing, takeoff and position modes. By shifting between the available switch positions during flight, the primary autopilot modes can be tested. Any other flight modes or triggers that need to be used can be activated directly through the QGroundControl interface during flight.
 
-\todo[inline]{Add picture of RC controller with labels for controls}
+%%%%%%%%%%%%%
+%%\todo[inline]{Add picture of RC controller with labels for controls}
+%%%%%%%%%%%%%%
 
 
 To initiate the flight, the main battery is connected to the power module socket. This action powers up the autopilot, GPS antenna, telemetry radio, and RC receiver. Subsequently, QGroundControl is launched on a computer connected to the second telemetry radio via USB. If all connections have been established correctly, the ground station application will automatically connect to the vehicle and display its position on a satellite map. Similarly, turning on the RC controller establishes its connection with the vehicle, provided they have been correctly paired together as outlined in the build instructions guide. Once all wireless connections are established, the drone can take off by switching to the armed state, followed by selecting the takeoff flight mode. While the drone is airborne, switching to the position flight mode enables direct control through the joysticks on the controller.
@@ -157,7 +159,7 @@ A video showcasing the entire process can be accessed on this \href{https://l-go
 \end{figure}
 
 
-\subsection{Follow control with onboard computer.}
+\subsection{Follow control with onboard computer}
 \label{subsec:fl-test-5}
 
 The last test to conduct is for the follow control solution. In this section, the onboard computer will run the control application to test detecting, tracking and following a moving person in a realistic scenario. The setup for this test will be the same as in the third test from Section \ref{subsec:fl-test-3}, with the application running on the Raspberry Pi, controlled over WiFi from the ground station laptop. Unlike the test for the hand solution, DroneVisionControl does not need a wireless telemetry connection to connect to the Pixhawk. Consequently, the telemetry radio can be used to monitor the vehicle with the QGroundControl application while the flight is taking place. To ensure safety during the test, a second person must monitor the flight prepared with the RC controller to intervene and pilot the aircraft if the autonomous control fails in any way.
@@ -179,7 +181,9 @@ The complete execution of this test has been recorded in this \href{https://l-go
 \end{figure}
 
 In the recorded process, it can be appreciated that there are moments when the software stops recognising the person in the image. In these cases, the vehicle noticeably stops moving and hovers in the air until the person is recognized again.
-\todo[inline]{Discuss PID performance, vehicle trajectory here}
+%%%%%%
+%\todo[inline]{Discuss PID performance, vehicle trajectory here}
+%%%%%%
 
 During the flight test, the application running on the Raspberry Pi achieves a maximum frame rate of around 6 FPS when the follow mechanism is active and approximately 8 FPS when it is disabled by switching out of offboard flight mode. In practical terms, this means that the person being tracked by the drone needs to move relatively slowly to ensure that the camera does not lose sight of them before the control loop can send the command to the vehicle to move to the previously detected position. However, for a proof-of-concept scenario, this performance is acceptable.
 

@@ -113,6 +113,22 @@ These features, combined with its powerful capabilities, make the Pixhawk 4 an i
   \label{fig:pixhawk4}
 \end{figure}
 
+% The flight controller or autopilot is a circuit board equipped with sensors, and optimized for running the flight stack.
+% The autopilot used in this project is the Pixhawk 4, designed by Holybro for the PX4 firmware.
+% This board depends on a specific set of hardware components to function properly.
+% These components include sensors, which collect environment data for processing, and actuators, which transform the output signals from the controller into movement.
+
+% To determine the vehicle's state for stabilization and autonomous control, PX4 relies on sensors such as gyroscopes, accelerometers, magnetometers (compasses), and barometers.
+% These are the sensors that are typically included already integrated with the autopilot's board.
+% Additionally, a GPS or other positioning system is required to enable fully automatic flight modes and assisted features like altitude stabilization or mission planning.
+
+% PX4 utilises outputs to control motor speed, flight surfaces (e.g., ailerons and flaps), camera triggers, parachutes, grippers, and other payloads. Brushless motors, controlled by Electronic Speed Controllers (ESCs) connected to the flight controller, rotate the propellers in most PX4 drones. These drones typically employ Lithium-Polymer (LiPo) batteries, which are connected to the system using a Power Module or Power Management Board, providing separate power for the flight controller and ESCs. 
+
+% For manual control of the vehicle, a \acrfull{rc} system is employed, consisting of a remote control unit that communicates stick and control positions to a receiver on the vehicle. Advanced RC systems can also receive telemetry information from the autopilot, providing feedback to the operator. Telemetry radios offer an alternative means of communication with the autopilot, establishing a wireless MAVLink connection between a ground control station and a PX4-powered vehicle. This enables real-time parameter tuning, flight mode commands, telemetry inspection, and on-the-fly mission changes.
+
+% In an actual UAV, the PX4 software runs on dedicated hardware like the Pixhawk 4 mentioned. This hardware includes all the essential sensors for flight as well as interfaces to connect additional actuators and I/O systems (RC, telemetry radio). 
+% However, on a simulated environment like the one described in Section \ref{sec:devenv}, all the hardware components of the sensors and actuators are simulated on the same computer running the flight stack.
+
 
 \subsubsection{Holybro X500}
 \label{subsec:x500}

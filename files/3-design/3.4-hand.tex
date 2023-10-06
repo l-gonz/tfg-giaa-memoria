@@ -1,12 +1,11 @@
 \section{Proof of concept: hand-gesture solution}
 \label{sec:hands}
 This solution was developed to test that the flow of the application works as expected, both in simulation and in actual flight, and that all the systems can interact and establish the required connections with each other.
-For that reason, it is designed to run with as little setup as possible. Flight tests can be undertaken with the minimal hardware components in the offboard configuration (Figure \ref{fig:offboard-config}).
+For that reason, it is designed to run with as little setup as possible. Flight tests can be undertaken with the minimal hardware components in the offboard configuration (see Figure \ref{fig:offboard-config}).
 
 The control module for this solution is the \texttt{mapper} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/hands/mapper.py}}.
-It runs on a loop that continuously polls for a new frame from the chosen video source and feeds it to the hand detection functionality provided by MediaPipe \cite{mp-hands-paper}.
-If a hand is detected in the image, 2D coordinates called landmarks are extracted according to the mapping in Figure \ref{fig:hand-landmarks}.
-These landmarks are then converted into discrete gestures, such as an open palm, closed fist, or finger pointing in different directions. Each detected gesture is assigned a command, which is queued to the pilot module and executed once the previous commands have been completed.
+It runs on a loop that continuously polls for a new frame from the chosen video source and feeds it to the hand detection functionality provided by the MediaPipe library \cite{mp-hands-paper}. If a hand is detected in the image, MediaPipe returns a series of 2D coordinates called landmarks that identify each joint in the hand as depicted in Figure \ref{fig:hand-landmarks}.
+The landmarks received from the external library are converted into discrete gestures, such as an open palm, closed fist, or finger pointing in different directions by the developed \texttt{gesture} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/hands/gesture.py}}. Each detected gesture is then mapped to a command, which is queued to the pilot module and executed once the previous commands have been completed.
 
 \begin{figure}
   \centering
@@ -16,7 +15,19 @@ These landmarks are then converted into discrete gestures, such as an open palm,
   \label{fig:hand-landmarks}
 \end{figure}
 
-The conversion from landmarks to gestures is performed by the \texttt{gestures} module\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/dronecontrol/hands/gestures.py}}. Vectors are drawn from the base of each finger to its tip, as well as from the base of the hand (wrist feature) to the base of the fingers. The dot product vector operation is used to calculate the relative angles between each finger and the base of the hand, as shown in Figure \ref{fig:vector-calcs}. By comparing these angles to a threshold, the module can determine whether each finger is extended or folded and in which direction it points. For example, an open hand gesture is detected when all five fingers are extended.
+The conversion from landmarks to gestures performed by the \texttt{gestures} has been designed as a simple but effective way to identify a limited set of hand positions without relying on complex machine-learning solutions. This conversion works by using the landmark coordinates to define two vectors per finger of the hand. One of the vectors points from the base of the hand (wrist landmark) to the base of each finger (points 1, 5, 9, 13, and 17 in Figure \ref{fig:hand-landmarks}), and the other vector points from the base of each finger to its tip (points 4, 8, 12, 16, and 20 in Figure \ref{fig:hand-landmarks}). With the vectors defined, the dot product vector operation is employed to calculate the relative angle of each finger with the base of the hand, as shown in Figure \ref{fig:vector-calcs}. Equations \ref{eq:vectors} and \ref{eq:angles} show example calculations for the index finger.
+
+\begin{eqnarray}
+    \vec{a} = P_5 - P_0\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; \Vec{b} = P_8 - P_5
+    \label{eq:vectors}\\
+    \angle (\vec{a}, \vec{b}) = \arccos(\dfrac{\vec{a} \cdot \vec{b}}{\lvert\vec{a}\lvert \lvert\vec{b}\lvert})
+    \label{eq:angles}
+\end{eqnarray}
+\begin{conditions}
+\vec{a} &   vector for the index base \\
+\vec{b} &   vector for the index finger \\
+P_x     &   coordinates of landmark x according to Figure \ref{fig:hand-landmarks} \\
+\end{conditions}
 
 \begin{figure}
   \centering
@@ -25,7 +36,7 @@ The conversion from landmarks to gestures is performed by the \texttt{gestures} 
   \label{fig:vector-calcs}
 \end{figure}
 
-The program defines several gestures based on the calculated angles. These gestures are shown in Figure \ref{fig:hand-gestures} and detailed in the following list:
+By comparing the calculated angles to different thresholds, the module can determine whether each finger is extended or folded and in which direction it points. The thresholds have been determined experimentally by analyzing the angles calculated for the different fingers for different hand positions. Each possible gesture (see Figure \ref{fig:hand-gestures}) is then defined by the direction towards which each finger points, as detailed in the following list:
 \begin{itemize}
     \item No hand: this happens when no landmarks can be extracted from the image. As a safety feature, the vehicle stops whichever previous commands it had in its queue and goes into Hold flight mode, hovering in the air while maintaining its position.
     \item Open hand: all five fingers extended, indicating a stop gesture. The drone holds at its current position.
