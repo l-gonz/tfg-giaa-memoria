@@ -19,7 +19,7 @@ Moreover, PX4 acts as the key interface between the high-level commands generate
 It implements sophisticated control algorithms and flight dynamics models to maintain stability, responsiveness, and safety during flight operations, thereby freeing the vision-based control application from focusing on low-level implementation.
 
 
-\subsubsection{MAVLink and MavSDK}
+\subsubsection{MAVLink and MAVSDK}
 \label{subsec:mavlink}
 
 MAVLink\footnote{\url{https://mavlink.io/en/}} is a lightweight messaging protocol designed as an integral part of the Dronecode Project.
@@ -29,7 +29,7 @@ MAVSDK\footnote{\url{https://mavsdk.mavlink.io/main/en/index.html}}, on the othe
 The library handles the underlying MAVLink messaging protocol, abstracting the complexity of message parsing and transmission. Developers can focus on the logic and commands they want to send to the autopilot without worrying about low-level communication details.
 These libraries offer a user-friendly API for managing one or multiple vehicles, granting programmatic access to crucial vehicle information, telemetry, and control over missions, movements, and other operations. They can be utilized either onboard a drone's companion computer or on the ground via a ground station or mobile device, offering flexibility and convenience in system management.
 
-While primarily implemented in C++, MAVSDK provides wrappers for Swift, Python, Java, and other languages. This project will employ the Python version of the library, allowing the developed application to send high-level commands and receive telemetry information from the autopilot.
+While primarily implemented in C++, MAVSDK provides wrappers for Swift, Python, Java, and other languages. This project will employ the Python version of the library, allowing the developed application to send high-level commands and receive telemetry information from the autopilot without being concerned with the underlying MAVLink messages.
 
 
 \subsubsection{QGroundControl}
@@ -60,11 +60,11 @@ Unreal Engine\footnote{\url{https://www.unrealengine.com/en-US}} is a versatile 
 \end{figure}
 
 
-AirSim\footnote{\url{https://microsoft.github.io/AirSim/}}, released by Microsoft in 2017, is an open-source simulator built on Unreal Engine. Designed for drones, cars, and other vehicles, AirSim supports both software-in-the-loop (SITL) and hardware-in-the-loop (HITL) simulations. It seamlessly integrates with popular flight controllers like PX4 and ArduPilot, allowing for realistic simulations that encompass both physical and visual aspects. Built as an Unreal Engine plugin, AirSim can be easily incorporated into existing Unreal environments. The main objective of AirSim is to provide a platform for AI research, facilitating experiments with deep learning, computer vision, and reinforcement learning algorithms for autonomous vehicles. To achieve this, AirSim offers APIs for data retrieval and vehicle control in a platform-independent manner. As of 2023, Microsoft has announced the development of a new simulation platform, Project AirSim, which will replace the original 2017 AirSim. While the original version will remain accessible to the public, it will no longer receive updates.
+AirSim\footnote{\url{https://microsoft.github.io/AirSim/}}, released by Microsoft in 2017, is an open-source simulator built on Unreal Engine. Designed for drones, cars, and other vehicles, AirSim supports both software-in-the-loop (SITL) and hardware-in-the-loop (HITL) simulations. It seamlessly integrates with popular flight controllers like PX4 and ArduPilot, allowing for realistic simulations that encompass both physical and visual aspects. Built as an Unreal Engine plugin, AirSim can be easily incorporated into existing Unreal environments. The main objective of AirSim is to provide a platform for AI research, facilitating experiments with deep learning, computer vision, and reinforcement learning algorithms for autonomous vehicles. To achieve this, AirSim offers the \texttt{airlib} library for data retrieval and vehicle control in a platform-independent manner. As of 2023, Microsoft has announced the development of a new simulation platform, Project AirSim, which will replace the original 2017 AirSim. While the original version will remain accessible to the public, it will no longer receive updates.
 
 The combination of Unreal Engine and AirSim provides a robust framework for developing and testing autonomous systems. Researchers and developers can take advantage of the advanced capabilities of Unreal Engine to create visually immersive virtual environments, while AirSim's integration enables realistic simulations and AI experimentation. This integration offers a valuable toolset for exploring and advancing the field of autonomous vehicle technology.
 
-AirSim plays a crucial role in this project by providing a simulated environment for testing and evaluating a vision-based control solution for tracking and following a person. By integrating AirSim into the project, the developed control algorithm can be applied to virtual drones within the simulated environment. This allows for comprehensive testing of the algorithm in various scenarios and conditions, providing valuable insights into its performance and effectiveness. Through this integration, the project benefits from the convenience and flexibility of simulation-based testing, ultimately leading to the development of a robust and reliable control solution for real-world deployment.
+AirSim plays a crucial role in this project by providing a simulated environment for testing and evaluating a vision-based control solution for tracking and following a person. By integrating AirSim into the project, the developed control algorithm can be applied to virtual drones within the simulated environment. This allows for comprehensive testing of the algorithms in various scenarios and conditions, providing valuable insights into its performance and effectiveness. Through this integration, the project benefits from the convenience and flexibility of simulation-based testing, ultimately leading to the development of a robust and reliable control solution for real-world deployment.
 
 
 \subsubsection{MediaPipe}
@@ -75,7 +75,7 @@ One of the key advantages of MediaPipe is its cross-platform support, allowing i
 MediaPipe offers a flexible framework specifically tailored for complex perception pipelines, making it well-suited for tasks that require real-time analysis of visual data. 
 
 Its versatility and robustness make it a valuable tool for researchers and developers working on computer vision and machine learning projects, empowering them to create innovative applications that leverage the power of streaming media, like the live feed from a camera onboard a drone.
-Given the constraints of the onboard hardware for this project, which may have limited processing capabilities, Mediapipe's ability to perform on smaller devices becomes essential. 
+Given the constraints of the onboard hardware for this project, which may have limited processing capabilities, Mediapipe's ability to perform on smaller devices becomes essential. Both the hand and human pose MediaPipe solutions will be used within this project to develop control mechanisms that react to the different positions detected (see Sections \ref{sec:hands} and \ref{sec:follow}).
 
 
 \subsubsection{GitHub}
@@ -83,7 +83,7 @@ Given the constraints of the onboard hardware for this project, which may have l
 
 GitHub is an online hosting service that utilizes the Git version control system for software development. It serves as a centralized platform for storing code repositories, making it easy to manage and collaborate on projects. With a massive user base and millions of repositories, GitHub has become the leading source code host. 
 In this project, both the software code\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol}} and this report\footnote{\url{https://github.com/l-gonz/tfg-giaa-memoria}} are stored in GitHub. This allows for seamless version control and easy access to the project's codebase. 
-Additionally, GitHub allows users to create static websites directly from repositories through GitHub Pages. This feature  serves as an ideal solution for creating a landing or presentation page for the project\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/}}. The page contains an overview of the project's goals and implementation details, accompanied by videos showcasing the tests conducted in Chapter \ref{chap:validation}.
+Additionally, GitHub allows users to create static websites directly from repositories through GitHub Pages. This feature serves as an ideal solution for creating a landing or presentation page for the project. The project's website\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/}} contains an overview of the goals and implementation details, accompanied by videos showcasing the tests conducted in Chapter \ref{chap:validation}.
 
 
 \subsubsection{OpenCV}
@@ -102,8 +102,9 @@ In this project, the OpenCV and Numpy libraries play a crucial role in managing 
 The Pixhawk 4 is an advanced autopilot module developed by Holybro\footnote{\url{https://shop.holybro.com/}} in collaboration with the Dronecode Project team. It is designed based on the open hardware design of the Pixhawk-project\footnote{\url{https://pixhawk.org/}} and optimized to run the PX4 flight stack on the NuttX\footnote{\url{https://nuttx.apache.org/}} operating system.
 
 Equipped with an integrated accelerometer, gyroscope, magnetometer, and barometer, the Pixhawk 4 can autonomously control unmanned aerial vehicles using the native capabilities of the PX4 flight stack. These built-in sensors provide essential data for flight control and navigation.
-Additionally, the Pixhawk 4 offers a range of connector sockets, depicted in Figure \ref{fig:pixhawk4}. The connectors allow for the expansion of its functionality with external sensors, input/output devices, or a companion computer.
-These features, combined with its powerful capabilities, make the Pixhawk 4 an integral component in the project's hardware setup.
+These features make the Pixhawk 4 an integral component in the project's hardware setup.
+Additionally, the Pixhawk 4 offers a range of connector sockets, depicted in Figure \ref{fig:pixhawk4}. The connectors allow for the expansion of its functionality with external sensors, input/output devices, or a companion computer. A companion computer is a separate computer connected to the flight controller to allow computationally expensive features like vision-based control. This project uses the Raspberry Pi 4 as the companion computer connected to the Pixhawk 4.
+
 
 \begin{figure}[H]
   \centering
@@ -130,19 +131,6 @@ These features, combined with its powerful capabilities, make the Pixhawk 4 an i
 % However, on a simulated environment like the one described in Section \ref{sec:devenv}, all the hardware components of the sensors and actuators are simulated on the same computer running the flight stack.
 
 
-\subsubsection{Holybro X500}
-\label{subsec:x500}
-
-The Holybro X500\footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} is a quadcopter specifically designed by Holybro to be compatible with the PX4 autopilot system. It is supplied as a comprehensive development kit that consists of essential components for assembly. These components include a durable carbon-fibre twill frame, the Pixhawk 4 flight controller, a power management board, four motors, a GPS module, an RC receiver, and a telemetry radio. The kit is designed for easy assembly, with a build time of approximately 3 hours and no need for specialized tools. The completed quadcopter is depicted in Figure \ref{fig:x500}, showcasing the final outcome of the assembly process.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.5\textwidth,keepaspectratio]{img/X500-assembled.jpg}
-  \caption{Fully assembled X500 kit.}
-  \source{Adapted from \citetitle{px4-guide} \cite{px4-guide}.}
-  \label{fig:x500}
-\end{figure}
-
 \subsubsection{Raspberry Pi 4B}
 \label{subsec:rpi}
 
@@ -160,3 +148,22 @@ By leveraging the Raspberry Pi 4B as a companion computer to the Pixhawk 4 board
   \source{Wikimedia Commons \cite{rpi4-side}.}
   \label{fig:rpi4b}
 \end{figure}
+
+
+\subsubsection{Holybro X500}
+\label{subsec:x500}
+
+The Holybro X500\footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} is a quadcopter specifically designed by Holybro to be compatible with the PX4 autopilot system. It is supplied as a comprehensive development kit that consists of essential components for assembly. These components include a durable carbon-fibre twill frame, the Pixhawk 4 flight controller, a power management board, four motors, a GPS module, an RC receiver, and a telemetry radio. The kit does not include a camera for computer vision applications, but the frame leaves some space to add one for this project (see Section \label{subsec:onboard}). The kit is designed for easy assembly, with a build time of approximately 3 hours and no need for specialized tools. The completed quadcopter is depicted in Figure \ref{fig:x500}, showcasing the outcome of the assembly process.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth,keepaspectratio]{img/X500-assembled.jpg}
+  \caption{Fully assembled X500 kit.}
+  \source{Adapted from \citetitle{px4-guide} \cite{px4-guide}.}
+  \label{fig:x500}
+\end{figure}
+
+\subsubsection{Logitech C920 camera}
+\label{subsec:camera}
+
+The chosen camera to add to the vehicle frame to support vision-based control features during flight is the Logitech C920 1080p webcamera\footnote{\url{https://www.logitech.com/en-gb/products/webcams/c920-pro-hd-webcam.960-001055.html}}. This camera offers a field of view of 78º, 1080p resolution at 30 frames per second and autofocus while weighing 162 grams. In practice, any camera with a contained weight and size that offers enough quality for the pose detection library to function correctly can be used to obtain similar results for this project.
