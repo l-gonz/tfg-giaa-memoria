@@ -4,26 +4,30 @@
 This chapter analyses the results obtained from the project, as well as the obstacles that arose during the development and testing phases.
 Afterwards, the proposed initial objectives are examined for completion, and the lessons learned during the project are exposed, along with some suggestions for future work in the field.
 
+\section{Analysis of results}
+\label{sec:end-results}
+
+The main accomplishment of this thesis has been to achieve a complete end-to-end vision-based control solution that can make a UAV fly following a target person. From the test results exposed in Chapter \ref{chap:validation}, it can be seen that the designed software and hardware manage to work together to obtain the desired control of the vehicle, with good enough results to use the control mechanisms on real flight tests. Responsiveness is maintained during the flights, and changing conditions like vision loss are handled appropriately.
+
+The second element to highlight is the testing process followed to validate the developed solutions, made possible by integrating the PX4 platform with the designed development and testing environment. The focus of this process has been to maintain a systematic step-by-step approach to testing that can be employed to validate each individual component of the system in isolation before combining them together. 
+
+The main drive of this emphasis on thorough testing has been to ensure safety at every point of the process, with a focus on the most potentially dangerous situations, the flight tests outside of simulation. Thanks to the unit tests on the components and the contingency measures implemented to regain control if errors occur, the potential for undesired scenarios is mitigated satisfactorily.
+
+%Obstacles
+This systematic approach also facilitated identifying and isolating any conflictive elements during development. Some examples of obstacles whose origin was made easy to pinpoint by incremental testing include setting up thresholds and target setpoints experimentally for the hand and follow control solutions or discovering performance issues from powering the onboard companion computer from the same power supply as the drone engines. A trial-and-error approach was likewise used to determine the most appropriate configuration for the different tools and the best communication channels for integrating components.
+
+
 \section{Evaluation of objectives}
 \label{sec:consecucion-objetivos}
 
-The main objective of this project was to illustrate how the PX4 platform could be used to develop vision-driven control mechanisms for UAVs.
-This was achieved by building and presenting a complete development environment that can be used for each stage in the process of creating new control solutions, from the concept phases to running tests in the target hardware.
+Casting back to the introduction for this project, the main objective was to illustrate how the tools in the PX4 ecosystem could be used to develop vision-driven control mechanisms for UAVs.
+This was achieved by building and presenting a complete development environment that integrates those tools into a platform that acts as the foundation for each stage of the process, from the concept phases to running tests in the target hardware.
 
-For the more specific objectives, in the first place,
-the tools and systems developed by the Dronecode Project, which includes PX4, MavSDK and QGroundControl, were leveraged in cooperation with the DroneVisionControl written code to reduce the workload of the project by making use of preexisting and stable technologies.
+In particular, the tools and systems developed by the Dronecode Project, which includes PX4, MavSDK and QGroundControl, were integrated with the designed DroneVisionControl application to reduce the workload of the project by making use of preexisting stable technologies. To show the minimum requirements to develop a complete control solution, low-cost and accessible hardware was employed to test all the developed software. This made it possible to dedicate the most time to developing the desired control solutions without being concerned with low-level electronics and control theory.
 
-Second, to show the minimum requirements needed to develop an individual control solution, a combination of low-cost and accessible hardware was employed to test all the developed software and take the project out of the simulation environment and into a real drone capable of flying.
-Thanks to the platform's modular nature, all the individual pieces are also interchangeable with other hardware based on budget or availability as long as it can run the same software as the one chosen for the tests in this project.
+Additionally, it has been demonstrated how the development environment, the presented existing tools, and the chosen hardware can be connected together to create viable vision-driven mechanisms for UAVs by developing two distinct control solutions for two different computer-camera-autopilot configurations that show the flexibility of the system and some of the possibilities it offers. The viability of these solutions was further validated by carrying out test flights in real-life conditions outside of simulation environments.
 
-Third, it has been demonstrated how the development environment, all the presented existing tools and the chosen hardware can be tied together to create viable vision-driven mechanisms for UAVs, 
-by developing two distinct control solutions for two different computer-camera-autopilot configurations that show the flexibility of the system and some of the possibilities it offers.
-The viability of these solutions was further validated by carrying out test flights in real-life conditions outside of simulation environments.
-
-Fourth, the testing process presented in chapter \ref{chap:validation} introduces a systematic approach to validating the system that can help carry any new software from the earliest phases of testing to the final flight tests while maintaining safety and reliability by progressively introducing new parts on top of the components already validated, for the smallest possible divisions of both the software and the hardware.
-
-Finally, a UAV of the quadcopter type was built to carry out the test flights mentioned before by using a development kit commercialised for easy assembly and already designed to work with the PX4 platform.
-This made it possible to dedicate the most time to developing the desired control solutions without being concerned with the low-level electronics involved in controlling the engines or the basic flight mechanics like takeoff and landing.
+Finally, the testing process presented in chapter \ref{chap:validation} fulfils the objective of presenting a systematic approach to validating the system that can help carry any new software from the earliest phases of testing to the final flight tests while maintaining safety and reliability by progressively introducing new components. 
 
 
 \section{Lessons learned}
@@ -81,8 +85,6 @@ These are some of the main aptitudes developed:
     \item Practical application of a PID to a control problem and how to use trial-and-error to calibrate it for an experimental system with an unknown transfer function.
 
     \item 3D-modelling in Tinkercad and 3D-printing with PLA plastic to design and build a camera holder adapted to the drone frame.
-
-    \item Using Miro for drawing different kinds of diagrams and image layouts.
 \end{itemize}
 
 
@@ -92,13 +94,15 @@ These are some of the main aptitudes developed:
 The work presented in this bachelor's thesis focused on presenting several basic vision-based control solutions for the PX4 autopilot to show the system's capabilities. Therefore, there are numerous avenues for further research and development in this area that could expand on the work presented here.
 
 \begin{itemize}
-    \item Integration with more sensors: In this work, only a single camera was used as the input source for the computer vision algorithm. In future work, it would be beneficial to investigate the integration of other sensors, such as lidar, radar, or multiple camera systems, to improve the performance of the computer vision algorithm.
+    \item Integration with more sensors: In this work, only a single camera was used as the input source for the computer vision algorithm. In future work, it would be beneficial to investigate the integration of other sensors, such as lidar, radar, or multiple camera systems, to improve the performance of the computer vision algorithm and allow for more precise tracking. This could reduce the noise in the input to the PID controllers and achieve a more optimal tuning, at the price of increasing the complexity of the detection mechanisms.
 
-    \item More sophisticated computer vision algorithms: The algorithms used in this thesis employ basic image processing techniques to make up a detector-tracker ML pipeline. However, there is still room for improvement in the sophistication of computer vision algorithms. Future work can investigate the use of deep learning-based algorithms, such as convolutional neural networks, to improve the accuracy and robustness of the system.
+    \item More sophisticated computer vision algorithms: The algorithms used in this thesis employ basic image processing techniques to make up a detector-tracker machine learning pipeline. As an alternative to more sensors, future work can investigate the use of deep learning-based algorithms, such as convolutional neural networks, to improve the accuracy and robustness of the system and mitigate the detection errors in the current system.
 
-    \item Exploration of alternative control algorithms: A simple proportional-integral-derivative (PID) controller was used in this work to control the drone's position. However, several alternative control algorithms, such as model predictive control or neural network-based controllers, could be explored.
+    \item Exploration of alternative control algorithms: A simple proportional-integral-derivative (PID) controller was used in this work to control the drone's position. However, several alternative control algorithms, such as model predictive control or neural network-based controllers, could be explored to achieve a better movement response in low-performance hardware.
 
-    \item Multi-drone control: The focus of the project was on controlling a single drone. However, in real-world scenarios, multiple drones may need to be controlled simultaneously. Future work can investigate using multi-drone vision-based control algorithms to enable the coordinated control of multiple drones.
+    \item Design of a complete \acrlong{gui}: the command-line interface offers limited control over the variables in the implemented solutions. Adding a graphical interface would make the program more user-friendly and accessible.
+
+    \item Multi-drone control: The project focused on controlling a single drone. However, in real-world scenarios, multiple drones may need to be controlled simultaneously. Future work can investigate using multi-drone vision-based control algorithms with a centralized companion computer to enable coordinated control in response to different perspectives of the environment from multiple drones.
 
     \item Application to other domains: While the focus of this work was on drone control, the PX4 autopilot is compatible with other ground and water-based vehicles, so the proposed computer vision solutions could be applied to other domains, such as robotics or autonomous vehicles.
 \end{itemize}

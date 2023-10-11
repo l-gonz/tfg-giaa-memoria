@@ -266,7 +266,7 @@ GRADO EN INGENIERÍA AEROESPACIAL EN AERONAVEGACIÓN
 \vspace{0.4cm}
 
 \large
-Curso Académico 2022/2023
+Curso Académico 2023/2024
 
 \vspace{0.8cm}
 
@@ -314,8 +314,7 @@ Exploration of Vision-Based Control Solutions for PX4-Driven UAVs.
 \end{center}
 
 \vspace{1cm}
-La defensa del presente Proyecto Fin de Grado/Máster se realizó el día 3\qquad$\;\,$ de
-\qquad\qquad\qquad\qquad \newline de 20XX, siendo calificada por el siguiente tribunal:
+La defensa del presente Proyecto Fin de Grado se realizó el día \qquad$\;\,$ de \qquad\qquad\qquad\qquad \newline de 2023, siendo calificada por el siguiente tribunal:
 
 
 \vspace{0.5cm}
@@ -337,19 +336,18 @@ y habiendo obtenido la siguiente calificación:
 
 \vspace{0.8cm}
 \begin{flushright}
-Móstoles/Fuenlabrada, a \qquad$\;\,$ de \qquad\qquad\qquad\qquad de 20XX
+Fuenlabrada, a \qquad$\;\,$ de \qquad\qquad\qquad\qquad de 2023
 \end{flushright}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Dedicatoria
 
-\chapter*{}
-\thispagestyle{empty}
-%\pagenumbering{Roman} % para comenzar la numeración de paginas en numeros romanos
-\begin{flushright}
-\textit{Aquí normalmente \\
-se inserta una dedicatoria corta \\}
-\end{flushright}
+% \chapter*{}
+% \thispagestyle{empty}
+% %\pagenumbering{Roman} % para comenzar la numeración de paginas en numeros romanos
+% \begin{flushright}
+% \textit{To the future.\\}
+% \end{flushright}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Agradecimientos
@@ -359,13 +357,17 @@ se inserta una dedicatoria corta \\}
 %\addcontentsline{toc}{chapter}{Agradecimientos} % si queremos que aparezca en el índice
 \markboth{ACKNOWLEDGEMENTS}{ACKNOWLEDGEMENTS} % encabezado 
 
-Aquí vienen los agradecimientos\ldots
+I would like to take this opportunity to express my deepest gratitude to the many individuals who have played a significant role in the completion of this bachelor thesis.
 
-Hay más espacio para explayarse y explicar a quién agradeces su apoyo o ayuda para
-haber acabado el proyecto: familia, pareja, amigos, compañeros de clase\ldots
+First and foremost, I want to thank my family for their unwavering support and patience throughout my academic journey. They never doubted me, even when I did it myself. Thank you as well for your help during this project, for being there when I needed a camera person or an extra hand to fly the drone. To my sister, especially, thank you for putting up with me these two years while I inched along this project.
 
-También hay quien, en algunos casos, hasta agradecer a su tutor o tutores del proyecto
-la ayuda prestada\ldots
+I also extend my thanks to my supervisors for their guidance, expertise, and invaluable feedback throughout the thesis project. Your dedication to my academic growth and your willingness to share your knowledge have been indispensable.
+
+I would also like to express my gratitude to all my friends and colleagues who were by my side during this journey. Your camaraderie and the frequent inquiries about the status of my "never-ending drone project" pushed me towards the finish line.
+
+This thesis represents the culmination of years of hard work and dedication, and I am grateful for the support of everyone who stood by my side.
+
+Thank you all for being a part of this journey.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Resumen
@@ -375,17 +377,7 @@ la ayuda prestada\ldots
 %\addcontentsline{toc}{chapter}{Resumen} % si queremos que aparezca en el índice
 \markboth{RESUMEN}{RESUMEN} % encabezado
 
-Aquí viene un resumen del proyecto.
-Ha de constar de tres o cuatro párrafos, donde se presente de manera clara y concisa de qué va el proyecto. 
-Han de quedar respondidas las siguientes preguntas:
-
-\begin{itemize}
-  \item ¿De qué va este proyecto? ¿Cuál es su objetivo principal?
-  \item ¿Cómo se ha realizado? ¿Qué tecnologías están involucradas?
-  \item ¿En qué contexto se ha realizado el proyecto? ¿Es un proyecto dentro de un marco general?
-\end{itemize}
-
-Lo mejor es escribir el resumen al final.
+La popular plataforma de código abierto PX4 surge con el objetivo de facilitar el desarrollo de nuevas soluciones para vehículos aéreos no tripulados y su integración con nuevas tecnologías para favorecer su acercamiento al público general. Esta tesis pretende demonstrar cómo esta plataforma puede ser empleada para desarrollar y evaluar estrategias de control que integren técnicas de visión artificial existentes, utilizando sus resultados para controlar el movimiento de un vehículo aéreo y empleando componentes electrónicos de bajo presupuesto. Para mostrar las capacidades de las herramientas disponibles, se presenta un método de control viable que permite a un dron usar una cámara abordo del mismo para identificar y realizar un seguimiento de una persona en su campo de visión, cuyos movimientos son reflejados por el vehículo.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Resumen en inglés
@@ -395,15 +387,15 @@ Lo mejor es escribir el resumen al final.
 %\addcontentsline{toc}{chapter}{Summary} % si queremos que aparezca en el índice
 \markboth{ABSTRACT}{ABSTRACT} % encabezado
 
-The popular open-source platform PX4 aims to facilitate the programming of unmanned aerial vehicles and their integration with new sensors and actuators and make it approachable for the common developer. This thesis aims to demonstrate how this platform can be used to develop solutions that integrate computer vision techniques and use their input to control the movement of an aerial vehicle, while employing easily-available and affordable hardware with basic specifications. For this purpose, a viable solution is presented that allows a drone to use an onboard camera to identify and keep track of a person in its field of view to follow their movement.
+The popular open-source platform PX4 aims to facilitate the development and integration of new solutions for unmanned aerial vehicles, making them approachable for the common developer. This thesis aims to demonstrate how this platform can be used to develop and test control strategies that integrate existing computer vision techniques, using their input to control the movement of an aerial vehicle while employing readily available and affordable hardware components with basic specifications. To showcase the tools available, a viable solution is presented that allows a drone to use an onboard camera to identify and keep track of a person in its field of view to follow their movement.
 
 %%%%--------------------------------------------------------------------
 % Lista de comentarios de revisión
 % Se puede borrar este bloque al acabar el borrador
 
-\listoftodos
-\thispagestyle{empty}
-\markboth{TODO LIST}{TODO LIST} % encabezado
+% \listoftodos
+% \thispagestyle{empty}
+% \markboth{TODO LIST}{TODO LIST} % encabezado
 %%%%--------------------------------------------------------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

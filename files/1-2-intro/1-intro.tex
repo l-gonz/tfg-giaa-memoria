@@ -4,55 +4,29 @@
 
 \section{General context}
 
-% An Unmanned Aerial Vehicle (UAV) is an aircraft able to fly without any pilot or operator on board. They may be operated through remote control by a human operator or with various degrees of autonomy, from sensor-driven control aids provided to the operator to fully autonomous flight through preplanned missions.
-% UAVs have existed since the 20th century and were initially developed as military technology to protect pilots from dangerous missions.
-% However, as the cost of the electronics and sensors decreased and control technologies improved, they became available to a broader public. They are now employed in various civil applications like crop control, search and rescue, or filmmaking and photography.
-% Most commercial solutions are limited to remote operations or rudimentary autonomy, with fully autonomous flight still in the earliest phases.
-% However, there is a growing trend towards using vision-based control solutions, which can offer improved performance and flexibility compared to traditional control methods.
-
-% Vision-based control solutions use cameras and image processing algorithms to provide real-time feedback and control of the UAV. 
-% These solutions are often more flexible and robust than traditional control methods, which are typically based on accelerometers, gyroscopes, and other sensors. 
-% Additionally, vision-based control solutions can be implemented on low-cost platforms, making them accessible to a broader range of users.
-% These vision-based guidance systems have only started to appear in recent years as artificial intelligence becomes more widespread and very few fully-developed consumer-ready platforms are available for the general public.
-% Even so,
-% from the essential hardware to build an own quadcopter, a helicopter with four rotors that represents the most common type of UAV, to miniaturized computers that handle complex calculations and open-source software that can be customized to endless applications,
-% all the individual pieces that enable building such a system are readily available.
-
-Unmanned Aerial Vehicles (UAVs), commonly known as drones, have emerged as remarkable aircraft capable of flying without a pilot or operator on board. Initially developed as military technology to safeguard pilots from dangerous missions, UAVs have transitioned into the civilian domain due to advancements in control technologies and the decreasing costs of electronics and sensors. This progress has led to broader accessibility of UAVs, allowing their utilization in diverse civil applications such as crop monitoring, search and rescue operations, and filmmaking and photography.
+\acrfullpl{uav}, commonly known as drones, have emerged as remarkable aircraft capable of flying without a pilot or operator on board. Initially developed as military technology to safeguard pilots from dangerous missions, UAVs have transitioned into the civilian domain due to advancements in control technologies and the decreasing costs of electronics and sensors. This progress has led to broader accessibility of UAVs, allowing their utilization in diverse civil applications such as crop monitoring, search and rescue operations, and filmmaking and photography.
 Traditionally, UAVs have been operated either remotely by a human operator or with limited autonomy through preplanned missions. However, recent trends have indicated a shift towards vision-based control solutions, which offer promising advantages over conventional control methods. Vision-based control harnesses the power of cameras and image processing algorithms to provide real-time feedback and precise control of UAVs.
 
 Compared to traditional control systems that heavily rely on sensors such as accelerometers and gyroscopes, vision-based control solutions offer greater flexibility and robustness. By leveraging the visual input obtained from cameras, these solutions can adapt to varying environmental conditions and handle complex flight scenarios more effectively. Furthermore, vision-based control methods are often more accessible, as they can be implemented on lower-cost platforms, making them appealing to a broader range of users.
-While integrating vision-based control solutions into UAVs is a relatively recent development, propelled by the increasing prevalence of artificial intelligence, there is limited availability of fully-developed, consumer-ready platforms in the market. However, this does not impede progress in this field, as all the necessary components for constructing such systems are readily available. From the essential hardware required to build a quadcopter, which represents the most common type of UAV, to miniaturized computers capable of handling complex calculations and open-source software that can be customized for endless applications, the individual pieces required for constructing and implementing vision-based control solutions are very accessible.
+While integrating vision-based control solutions into UAVs is a relatively recent development, propelled by the increasing prevalence of artificial intelligence, there is limited availability of fully-developed, consumer-ready platforms in the market. However, this does not impede progress in this field, as all the necessary components for constructing such systems are readily available. From the essential hardware required to build a quadcopter, the most convenient type of UAV, to miniaturized computers capable of handling complex calculations and open-source software that can be customized for endless applications, the individual pieces required for constructing and implementing vision-based control solutions are very accessible.
 
 In summary, the rise of UAVs and their integration into various civil applications has paved the way for exploring vision-based control solutions. These solutions, utilizing cameras and image processing algorithms, offer enhanced performance, adaptability, and accessibility compared to traditional control methods. Although consumer-ready platforms are still emerging, the necessary components for constructing vision-based control systems are readily available, fueling the advancement of this field.
 
 \section{The DroneVisionControl project}
 
-% The project presented in this thesis aims to show the tools available to design and implement control solutions for the popular PX4 open-source autopilot platform and how to integrate them with detection and tracking computer vision mechanisms to achieve simple vision-based self-guided UAVs.
-% To do that, a simple application has been developed to use as a basis for delving into the PX4 ecosystem and exploring ways of integrating the hardware and software necessary to control a UAV.
-% Two main architectures of software and hardware interaction in vision-based scenarios are proposed based on whether the vision module is located offboard or onboard the vehicle during flight.
-% The first case, the simpler of the two, will be used as a landing platform to begin development and test the most basic integration between the tools employed, by designing a proof-of-concept control mechanism that translates hand gestures executed in front of an independent camera to flight commands that control the movement of the vehicle.
-% The second scenario builds upon the previous one to integrate the camera and vision computation onboard the vehicle to develop a tracking and following control solution that looks for a person standing in the field of view of the drone and mirrors its movements in a 3D environment to keep it on sight.
 
-% This thesis explores the development environment used, which enables a process for designing the software in a way that gradually adapts to the hardware employed by building up progressively from a completely simulated flight controller to actual flight tests in an unmanned vehicle.
-% To do that, the AirSim simulation engine is leveraged to build an environment that allows for safe and thorough testing of unreliable, in-progress control solutions.
-% All the necessary code for this project has been written in Python and always runs outside the flight controller board on a companion computer.
-% This allows more processing power to be accessible for any compute-intensive computer vision algorithms,
-% but also ensures that the control solutions are abstracted from the hardware components and not dependent on the specific flight stack employed, 
-% to allow applying the results to any available autopilot platform with exposed APIs.
+The project outlined in this thesis emerges from an exploration of the tools available for designing and implementing control solutions for the PX4 open-source autopilot platform. The goal is to demonstrate how these tools can be integrated with computer vision mechanisms to achieve vision-based self-guided (UAVs).
+To achieve this objective, an application named DroneVisionControl has been developed. It aims to serve as a foundation for the investigation into the PX4 ecosystem and methods of integrating the necessary hardware and software for UAV control.
+For the computer vision detection mechanisms, the ready-to-use MediaPipe suite of libraries for real-time image analyses on hand-held devices has been employed to reduce the project's complexity.
+Two primary architectures for integrating software and hardware in vision-based scenarios have been proposed, with one scenario involving offboard vision control (offboard configuration) and the other integrating the camera and vision computations aboard the aircraft (onboard configuration).
 
-The project outlined in this thesis is a comprehensive exploration of the tools available for designing and implementing control solutions for the PX4 open-source autopilot platform. The goal is to demonstrate how these tools can be integrated with computer vision mechanisms to achieve vision-based self-guided unmanned aerial vehicles (UAVs).
-To achieve this objective, a simple application named DroneVisionControl has been developed. It aims to serve as a foundation for the investigation into the PX4 ecosystem and methods of integrating the necessary hardware and software for UAV control.
-For the computer vision detection mechanisms, the ready-to-use Mediapipe suite of libraries for real-time image analyses on hand-held devices has been employed to reduce the project's complexity.
-Two primary architectures for integrating software and hardware in vision-based scenarios have been proposed, with one scenario involving offboard vision modules and the other integrating onboard camera and vision computation. 
-
-The first scenario involves a proof-of-concept control mechanism that translates hand gestures executed in front of an independent camera to flight commands, thereby controlling the vehicle's movement. This mechanism functions as a landing platform to begin development and test the most basic integration between the tools employed.
-The second scenario builds upon the first to integrate the camera and vision computation onboard the vehicle to develop a tracking and following control solution. This mechanism will track and follow a person standing in the drone's field of view, mirroring their movements in a 3D environment.
+The first scenario involves a proof-of-concept control mechanism, the hand gesture solution, that translates hand gestures in front of an independent camera to flight commands, thereby controlling the vehicle's movement. This mechanism functions as a starting platform to begin development and test basic integration between the tools employed.
+The second scenario, the follow solution, builds upon the first to integrate the camera and vision computation onboard the vehicle to develop a tracking and following control solution. This mechanism will track and follow a person standing in the drone's field of view, mirroring their movements in three dimensions.
 
 A dedicated development environment was employed to further the development of these control mechanisms. This environment facilitated the design process by allowing a gradual adaptation of the software to match the hardware requirements, starting from a purely simulated flight controller and progressing towards actual flight tests in an unmanned vehicle.
-The critical component of this environment is the integration with the AirSim simulation engine. Built upon the powerful 3D computer graphics game engine Unreal, it provides a platform that ensures secure and comprehensive testing of control solutions that are still a work in progress and not entirely reliable.
+The critical component of this environment is the integration with the AirSim simulation engine. Built upon the powerful 3D computer graphics game engine Unreal, it provides a platform that allows secure and comprehensive testing of work-in-progress control solutions to ensure that they become reliable.
 
-For this project, all the code has been implemented in Python, running on a companion computer separate from the flight controller board. This deliberate approach ensures that the control solutions remain independent of the hardware components and are not tied to any particular flight stack. Consequently, the results can be applied to any autopilot platform that offers exposed APIs and are not limited to the PX4 ecosystem.
+For this project, all the code has been implemented in Python and run on a companion computer separate from the flight controller board. This deliberate approach ensures that the control solutions remain independent of the hardware components and are not tied to any particular flight stack. Consequently, the results are not limited to the PX4 ecosystem but can be applied to any autopilot platform that exposes control APIs.
 
 In conclusion, this thesis offers a thorough investigation into the development of vision-based self-guided UAVs, presenting a range of tools and techniques that can be utilized to accomplish this objective.
 
@@ -93,7 +67,7 @@ More specifically, it aims to:
   \label{fig:project-timeline}
 \end{figure}
 
-This project was carried out over a period of approximately one and a half years, while handling the parallel commitment of working a full-time job. The development process was divided into three distinct phases, totalling approximately 500 hours of dedicated effort. These phases consisted of the following tasks:
+This project was carried out over a period of approximately one and a half years, while handling the parallel commitment of working full-time. The development process was divided into three distinct phases, totalling approximately 250 hours of dedicated effort. An additional 250 hours were dedicated to writing the report, which was carried out in parallel with the research and programming work. The development phases consisted of the following tasks:
 
 \begin{itemize}
 \item \textbf{Phase 1: Proof-of-concept (Oct 2021 - Jan 2022: 61 hours)}
@@ -125,30 +99,17 @@ The second phase focused on developing an advanced tracking and following contro
 In the third phase, the research explored hardware options for the UAV system, including flight controllers, companion computers, and cameras. The chosen hardware components were integrated, and test tools were developed to enhance the performance and reliability of the control mechanisms. The system's hardware and software integration was thoroughly tested to ensure seamless operation and optimize the control algorithms.
 
 
-Additionally, a significant amount of time, totalling 250 hours, was dedicated to writing the report, which was carried out concurrently with the research and development work.
-
 This time planning and task distribution allowed for a structured approach to the project, ensuring a comprehensive exploration of the subject matter while accommodating other commitments.
 
 \section{Thesis layout}
 \label{sec:layout}
 
-% This section details the structure of this thesis.
-% It is organized into five chapters that reflect the three distinct tasks described in the last section: research, development and testing, along with this introduction and some final conclusions.
-% Specifically:
 
-% \begin{itemize}
-%     \item In the first chapter, there is a brief introduction to the context in which the project has been developed, as well as the objectives it pursues.
-%     \item Chapter 2 presents the technologies and tools employed in this project and the current state-of-the-art for UAV vision-based control solutions.
-%     \item The third chapter introduces the simulation environments used to develop the solutions throughout the project and the architecture of the hardware and software used.
-%     \item Chapter 4 follows along through the process of testing every part of the system incrementally until reaching the final flight tests.
-%     \item The last chapter shows the conclusions drawn from the work and presents ideas for future development.
-% \end{itemize}
-
-The thesis is structured into five chapters, with the three main blocks focusing on each of the three specific aspects of the project mentioned in the previous section: research, development and testing. 
+The thesis is structured into five chapters, with an introduction, a conclusion and three main blocks focusing on each of the three specific aspects of the project mentioned in the previous section: research, development and testing. 
 
 The first chapter introduces the context in which the project has been developed, providing background information and highlighting the objectives pursued throughout the research. It sets the stage for the subsequent chapters, giving an overview of the project's scope and purpose.
 
-The second chapter reviews the relevant literature and the current state-of-the-art for UAV vision-based control solutions. It also discusses the existing technologies and tools employed by the project.
+The second chapter reviews the relevant literature and the current state-of-the-art for UAV vision-based control solutions. It also discusses the preexisting technologies and tools employed by the project.
 
 The third chapter covers the simulation environments used throughout the development process and the architecture for the project's hardware and software, discussing the design decisions that went into selecting the individual components.
 

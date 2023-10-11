@@ -1,7 +1,7 @@
 \chapter{Installation manuals}
 
-This appendix 
-\url{https://github.com/l-gonz/tfg-giaa-dronecontrol}
+This appendix describes the installation process for the tools employed throughout this project. 
+
 
 \section{SITL: Development environment}
 \label{app:install-dev-env}
@@ -12,7 +12,7 @@ PX4 details the installation steps of their source code for several platforms in
 To make it easier, the DroneVisionControl repository contains a small shell script that aggregates all the steps and installs all the dependencies with the folder structure that the project expects.
 This includes installing and setting up PX4 and QGroundControl and creating a virtual environment for the project, installing the Python packages and the DroneVisionControl application.
 
-To run the script, simply clone the repository, navigate to the project folder and execute:
+To run the script, simply clone the project repository\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol}}, navigate to the project folder and execute:
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{bash}
 ./install.sh
 \end{minted}
@@ -165,6 +165,19 @@ The \texttt{CameraDefaults} section defines the settings for the camera images t
 }
     \end{minted}
 \end{listing}
+
+\section{Library versions}
+
+The following versions of the external libraries have been employed throughout the project:
+
+PX4 v1.12.3
+Unreal Engine v4.27.2
+AirSim v1.7.0
+MAVSDK v1.2.0
+MediaPipe v0.8.10
+OpenCV-Python v4.5.4.60
+simple-pid v1.0.1
+
 
 \chapter{Command-line interface of the application}
 \label{app:cli}
