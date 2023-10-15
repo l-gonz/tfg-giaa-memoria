@@ -179,7 +179,9 @@ OpenCV-Python v4.5.4.60
 simple-pid v1.0.1
 
 
-\chapter{Command-line interface of the application}
+\chapter{Application interface}
+
+\section{Command-line interface}
 \label{app:cli}
 
 \begin{minted}[breaklines, fontsize=\footnotesize, baselinestretch=1]{text}
@@ -236,8 +238,46 @@ Options:
   -h, --help         Show this message and exit.
 \end{minted}
 
+\section{Keyboard control}
+\label{app:keyboard}
+
+Table \ref{tab:keyboard} presents the options available for manual control of the drone through the keyboard on the companion computer running the DroneVisionControl application. These commands are available for all the test tools and control solutions (test-camera, hand, follow) as long as a MAVLink connection is established.
+
+\begingroup
+\setlength{\tabcolsep}{15pt}
+\renewcommand{\arraystretch}{1.6}
+\begin{table}
+    \centering
+    \begin{tabular}{c||c}
+        %\hline
+        Z & Quit \\ \hline
+        K & Kill switch \\ \hline
+        H & Return home \\ \hline
+        0 & Stop (Hover) \\ \hline
+        T & Take-off \\ \hline
+        L & Land \\ \hline
+        O & Toggle Offboard flight mode \\ \hline
+        W & Pitch forward \\ \hline
+        S & Pitch backward \\ \hline
+        D & Roll right \\ \hline
+        A & Roll left \\ \hline
+        Q & Yaw left \\ \hline
+        E & Yaw right \\ \hline
+        1 & Up \\ \hline
+        3 & Down \\ \hline
+        Space & Take picture / start video \\ \hline
+        < & Change picture saving mode (Photo <> video) \\ \hline
+        R & Reset image processing \\ %\hline
+    \end{tabular}
+    \caption{Keyboard to drone command mapping.}
+    \label{tab:keyboard}
+\end{table}
+\endgroup
+
+
 
 \chapter{PID tuning graphs}
+\label{app:pid-results}
 
 \section{Yaw controller}
 \label{app:yaw-pid-results}

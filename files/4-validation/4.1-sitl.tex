@@ -5,7 +5,7 @@ The software-in-the-loop simulation mode developed by PX4 is described in Sectio
 
 \subsection{Basic functionality tests with Gazebo}
 
-To facilitate starting the tests with as few components as possible at a time and reduce the amount of configuration needed, the initial validations will be run with Gazebo\footnote{\url{https://gazebosim.org/home}} as the flight mechanics simulator. This simulator comes by default with the PX4's SITL installation. Gazebo works natively on Linux, so it can run in parallel with the simulated flight stack in SITL mode and the project's software on the same machine without having to be concerned about the networking between Windows and WSL. To set up a Linux machine for these tests, PX4 and DroneVisionControl need to be installed as detailed in Appendix \ref{app:install-dev-env}.
+To facilitate starting the tests with as few components as possible at a time and reduce the amount of configuration needed, the initial validations will be run with Gazebo \cite{gazebo-front} as the flight mechanics simulator. This simulator comes by default with the PX4's SITL installation. Gazebo works natively on Linux, so it can run in parallel with the simulated flight stack in SITL mode and the project's software on the same machine without having to be concerned about the networking between Windows and WSL. To set up a Linux machine for these tests, PX4 and DroneVisionControl need to be installed as detailed in Appendix~\ref{app:install-dev-env}.
 
 The initial tests conducted in this section will ensure that the foundational features of the control algorithms, sending commands to the autopilot and retrieving images for analysis, are reliable.
 To do that, the sequence of steps will be as follows:
@@ -20,13 +20,13 @@ To do that, the sequence of steps will be as follows:
 
 \subsubsection{Verify SITL simulation}
 
-The expected result is that building and starting the PX4 software in a console also starts the Gazebo program with a drone model that is flown by the flight controller executing on the console. This console can be used to send commands to the vehicle and set configuration parameters for the simulation.
+The expected result is that building and starting the PX4 flight stack in a console also starts the Gazebo program, where the drone model is visible and can be controlled by the flight controller executing on the console. This console can be used to send commands to the vehicle and set configuration parameters for the simulation.
 
 Once the required software is installed, the simulation can be started with the \texttt{make\ px4\_sitl\ gazebo} command or using the \texttt{simulator.sh} script found on the project repository\footnote{\url{https://github.com/l-gonz/tfg-giaa-dronecontrol/blob/main/simulator.sh}}.
 The result can be seen in Figure \ref{fig:gazebo}, with the user interface and 3D world of the Gazebo simulator on the left side and the PX4 console on the right side.
 
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/gazebo.png}
   \caption{Gazebo simulator (left) and output from the PX4 console (right) after PX4's software-in-the-loop simulation is started.}
@@ -37,7 +37,7 @@ The first command to test is takeoff, which is done by sending \texttt{commander
 Figure \ref{fig:gazebo-takeoff} shows the simulator's state after the takeoff command, where the vehicle model has climbed to the default takeoff height of 2.5 meters above the ground.
 The command to land the vehicle again is \texttt{commander land}.
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/gazebo-takeoff.png}
   \caption{Gazebo simulator (left) and output from the PX4 console (right) after the takeoff command has been executed.}
@@ -104,7 +104,7 @@ The objective of this test is to confirm that the Unreal Engine test environment
 Figure \ref{fig:airsim-sitl} shows the testing environment after the AirSim simulator and the PX4 console have been started successfully.
 At this point, it is possible to use the PX4 console to send takeoff and land commands to the simulator and observe the 3D model of the vehicle climb into the air.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-sitl.png}
   \caption{AirSim environment (right) connected to the PX4 console (left).}
@@ -114,11 +114,9 @@ At this point, it is possible to use the PX4 console to send takeoff and land co
 
 \subsubsection{Verify integration with hand solution}
 
-In the second test, the goal is to integrate the individual modules tested in the previous steps: the pilot, the external camera and the hand recognition software. This will be achieved through the proof-of-concept hand control solution by running the DroneVisionControl application with the gesture-based control loop enabled. This mechanism is started with the \texttt{dronecontrol hand} command. The expected result after the command is executed is that the DroneVisionControl application connects to the PX4 console, and a window is displayed with the output from the external camera. When a hand is shown to the camera, the detection software draws the landmarks over the image. At that moment, the developed control software will attempt to interpret the gesture signalled with the hand and map it to its corresponding command for the vehicle, according to the list in Section \ref{sec:hands}.
+In the second test, the goal is to integrate the individual modules tested in the previous steps: the pilot, the external camera and the hand recognition software. This will be achieved through the proof-of-concept hand control solution by running the DroneVisionControl application with the gesture-based control loop enabled. This mechanism is started with the \texttt{dronecontrol hand} command. The expected result after the command is executed is that the DroneVisionControl application connects to the PX4 console, and a window is displayed with the output from the external camera. When a hand is shown to the camera, the detection software draws the landmarks over the image. At that moment, the developed control software will attempt to interpret the gesture signalled with the hand and map it to its corresponding command for the vehicle, according to the list in Section \ref{sec:hands}. The complete execution is shown in the video\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-hand}} accessible through this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-hand}{link}. Additionally, a frame extracted from the video can be observed in Figure \ref{fig:sitl-hand-video}.
 
-The complete execution is shown in the video\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-hand}} accessible through this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/test-sitl-hand}{link}. Additionally, a frame extracted from the video can be observed in Figure \ref{fig:sitl-hand-video}.
-
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-hand-sitl.png}
   \caption{Single frame extracted from the video of the full execution of the hand-gesture control solution. Gesture detection is shown on the upper left side of the screen. On the lower left, the console shows the DroneVisionControl output logged during the mapping between detected gestures and flight commands. The right side shows the vehicle's movement response inside the simulator.}
@@ -131,6 +129,13 @@ The validation process will now focus on the tools required to execute the pose 
 
 To assess the detection and tracking of human figures from images captured within the simulator, the camera testing tool provided with DroneVisionControl can be used again. This time, the \texttt{-p/-{}-pose-detection} option can be added to run the pose-detection algorithm provided by the MediaPipe library on the source images.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-sitl-pose.png}
+  \caption{AirSim (top half, behind), PX4 (bottom left) and DroneVisionControl (console, bottom right; image window, top left, over AirSim) applications running side-by-side with image retrieval and pose detection working as expected.}
+  \label{fig:airsim-sitl-pose}
+\end{figure}
+
 Figure \ref{fig:airsim-sitl-pose} demonstrates the output obtained when running the tool with a 3D model of a person positioned in front of the drone within the simulated environment. The following command was executed: 
 % \texttt{dronevisioncontrol tools test-camera -{}-wsl -{}-sim -{}-pose-detection}
 \begin{minted}{bash}
@@ -138,16 +143,9 @@ dronevisioncontrol tools test-camera --wsl --sim --pose-detection
 \end{minted}
 
 
-In the image, the computer vision utility successfully detects the key features of the human body, outlining them with a bounding box. Simultaneously, the program draws an overlay in the image window with the two calculated positions that will be used as the input for the PID controllers: the x-coordinate of the midpoint within the bounding box (yaw controller) and the percentage of the image height covered by the height of the bounding box (forward controller), as shown in Figure \ref{fig:follow-input-calcs}. Unlike the yaw controller, whose setpoint is set to match the image's centre, the setpoint for the forward controller can be set higher or lower depending on the desired distance for the drone to follow the person when the control mode is engaged.
-The value of the forward input displayed by the program can be employed to decide on an adequate setpoint by moving the person to the desired distance in the simulator and noting down the measured value for the input detected at that relative position.
+In the image, the computer vision utility successfully detects the key features of the human body, outlining them with a bounding box. Simultaneously, the program draws an overlay in the image window with the two calculated positions that will be used as the input for the PID controllers: the normalized x-coordinate of the midpoint within the bounding box (yaw controller) and the percentage of the image height covered by the height of the bounding box (forward controller), as shown in Figure \ref{fig:follow-input-calcs}. Unlike the yaw controller, whose setpoint is set to match the image's centre, the setpoint for the forward controller can be set higher or lower depending on the desired distance for the drone to follow the person when the control mode is engaged.
+The value of the forward input displayed by the program can be employed to decide on an adequate setpoint by moving the person to the desired distance in the simulator and noting down the measured input detected at that relative position.
 
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-sitl-pose.png}
-  \caption{AirSim (top half, behind), PX4 (bottom left) and DroneVisionControl (console, bottom right; image window, top left, over AirSim) applications running side-by-side with image retrieval and pose detection working as expected.}
-  \label{fig:airsim-sitl-pose}
-\end{figure}
 
 
 \subsubsection{Verify integration with follow solution}

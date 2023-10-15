@@ -1,11 +1,7 @@
 \chapter{Conclusions}
 \label{chap:conclusion}
 
-This chapter analyses the results obtained from the project, as well as the obstacles that arose during the development and testing phases.
-Afterwards, the proposed initial objectives are examined for completion, and the lessons learned during the project are exposed, along with some suggestions for future work in the field.
-
-\section{Analysis of results}
-\label{sec:end-results}
+This chapter summarizes the key conclusions obtained from the project and the obstacles that arose during the development and testing phases. Afterwards, the proposed initial objectives are examined for completion, and the lessons learned during the project are exposed, along with some suggestions for future work in the field.
 
 The main accomplishment of this thesis has been to achieve a complete end-to-end vision-based control solution that can make a UAV fly following a target person. From the test results exposed in Chapter \ref{chap:validation}, it can be seen that the designed software and hardware manage to work together to obtain the desired control of the vehicle, with good enough results to use the control mechanisms on real flight tests. Responsiveness is maintained during the flights, and changing conditions like vision loss are handled appropriately.
 
@@ -65,18 +61,20 @@ Throughout this project's development, many challenges have required expanding o
 These are some of the main aptitudes developed:
 
 \begin{itemize}
-    \item Python skills: how to organise projects with multiple submodules and create packages from own code, as well as experience in several standard libraries:
+    \item Knowledge of open-source UAV autopilots, including the main options available, the tools they offer, how they work and how they allow developing new functionality for their platform.
+
+    \item Safety-oriented testing methodology, including strategies for systematic validation of application components, performance analysis on software and hardware components and design of safety mechanisms to prevent accidents in loss of control situations.
+
+    \item Computer vision: knowledge of the main tasks of classification, localisation, landmark detection, and tracking, types of algorithms available and how they are trained in big datasets and how to select one based on the required accuracy and available performance.
+
+    \item Python skills: how to organise bigger projects with multiple submodules and create custom packages, as well as experience in several common libraries:
     \begin{itemize}
         \item Asynchronous programming in Python with the \texttt{asyncio} library.
         \item Matrix and vector handling with the \texttt{numpy} library.
         \item Plotting customisable graphs in different UI platforms with the \texttt{matplotlib} library.
+        \item Analysing and manipulating images from different sources with the OpenCV library.
     \end{itemize}
-
-    \item Knowledge of open-source UAV autopilots, including the main options available, the tools they offer, how they work and how they allow developing new functionality for their platform.
-
-    \item Computer vision: knowledge of the main tasks of classification, localisation, landmark detection, and tracking, types of algorithms available and how they are trained in big datasets and how to select one based on the required accuracy and available performance.
-
-    \item OpenCV: how to use the multi-platform library to analyse and manipulate images from different sources.
+    
 
     \item Raspberry Pi board and Raspberry OS: how to work with serial connections from general I/O pins, how the OS differs from other Linux variants and its limitations, and how to improve the performance of Python code to adapt to the limited processing power.
 
@@ -94,7 +92,7 @@ These are some of the main aptitudes developed:
 The work presented in this bachelor's thesis focused on presenting several basic vision-based control solutions for the PX4 autopilot to show the system's capabilities. Therefore, there are numerous avenues for further research and development in this area that could expand on the work presented here.
 
 \begin{itemize}
-    \item Integration with more sensors: In this work, only a single camera was used as the input source for the computer vision algorithm. In future work, it would be beneficial to investigate the integration of other sensors, such as lidar, radar, or multiple camera systems, to improve the performance of the computer vision algorithm and allow for more precise tracking. This could reduce the noise in the input to the PID controllers and achieve a more optimal tuning, at the price of increasing the complexity of the detection mechanisms.
+    \item Integration with more sensors: In this work, only a single camera was used as the input source for the computer vision algorithm. In future work, it would be beneficial to investigate sensor fusion techniques to integrate other sensors, such as lidar, radar, or multiple camera systems, to improve the performance of the computer vision algorithm and allow for more precise tracking. This could reduce the noise in the input to the PID controllers and achieve a more optimal tuning, at the price of increasing the complexity of the detection mechanisms.
 
     \item More sophisticated computer vision algorithms: The algorithms used in this thesis employ basic image processing techniques to make up a detector-tracker machine learning pipeline. As an alternative to more sensors, future work can investigate the use of deep learning-based algorithms, such as convolutional neural networks, to improve the accuracy and robustness of the system and mitigate the detection errors in the current system.
 

@@ -2,7 +2,7 @@
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[a4paper, 12pt]{book}
+\documentclass[a4paper, 12pt, oneside]{book}
 
 %%-- Geometría principal (dejar activada la siguiente línea en la versión final)
 \usepackage[a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
@@ -225,6 +225,12 @@
 
 \interfootnotelinepenalty=10000
 
+\usepackage[
+    type={CC},
+    modifier={by-sa},
+    version={4.0},
+]{doclicense}
+
 %%%---------------------------------------------------------------------------
 
 \begin{document}
@@ -349,6 +355,22 @@ Fuenlabrada, a \qquad$\;\,$ de \qquad\qquad\qquad\qquad de 2023
 % \textit{To the future.\\}
 % \end{flushright}
 
+\chapter*{}
+\thispagestyle{empty}
+%\pagenumbering{Roman} % para comenzar la numeración de paginas en numeros romanos
+
+\begin{flushright}
+\begin{minipage}{8cm}
+\raggedleft
+©2023 Laura González Fernández  \\
+Some rights reserved. \\
+\doclicenseLongText \\
+\vspace{0.5cm}
+\doclicenseImage
+\end{minipage}
+
+\end{flushright}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Agradecimientos
 
@@ -439,14 +461,14 @@ The popular open-source platform PX4 aims to facilitate the development and inte
 
 % INTRODUCTION %
 \include{files/1-2-intro/1-intro}
-\cleardoublepage
+\clearpage
 
 % ESTADO DEL ARTE %
 \chapter{State of the art}
 \label{chap:sota}
 \input{files/1-2-intro/2.1-literature}
 \input{files/1-2-intro/2.2-tech}
-\cleardoublepage
+\clearpage
 
 % DISEÑO E IMPLEMENTACIÓN %
 \chapter{Design and implementation}
@@ -456,15 +478,15 @@ The popular open-source platform PX4 aims to facilitate the development and inte
 \input{files/3-design/3.3-softarch}
 \input{files/3-design/3.4-hand}
 \input{files/3-design/3.5-follow}
-\cleardoublepage
+% \clearpage
 
 % EXPERIMENTOS Y VALIDACIÓN %
 \input{files/4-validation/4-validation}
-\cleardoublepage
+\clearpage
 
 % CONCLUSIONES %
 \input{files/5-6-end/5-conclusion}
-\cleardoublepage
+\clearpage
 
 % GLOSARIO(S) %
 \printglossary[type=\acronymtype]

@@ -18,7 +18,7 @@ It is important to note that both QGroundControl and AirSim cannot simultaneousl
 To test the complete system configuration for HITL, as outlined in Figure \ref{fig:hitl-connections}, the Pixhawk board requires an additional communication channel dedicated to the MAVLink exchange with the DroneVisionControl application. This channel is achieved by adding a telemetry radio to the board, which will connect to a counterpart radio on the simulation computer. This wireless link, along with the already existing USB connection, will provide the two separate MAVLink channels needed to complete the environment.
 As the AirSim simulator requires a higher update rate compared to the DroneVisionControl application, it is important to keep the Pixhawk to AirSim connection on the wired link. The DroneVisionControl application, on the other hand, sends and receives commands from the Pixhawk at a lower rate, as it depends on the results of the slower computer vision algorithms. The data transmission rate of the radio link is, therefore, sufficient for this application.
 
-Since the flight stack now runs on a physical controller, it becomes possible to attach an RC antenna to the \texttt{PPM RC} port of the board. This antenna allows the vehicle to be flown using an independent RC controller\footnote{\url{https://docs.px4.io/main/en/config/radio.html}}. By configuring the switches in the RC unit for flight mode change or as a kill switch, additional tests can be carried out to verify the developed safety features described in Section \ref{subsec:safety}, like interrupting autonomous flight upon flight mode changes or upon loss of signal from the RC controller.
+Since the flight stack now runs on a physical controller, it becomes possible to attach an RC antenna to the \texttt{PPM RC} port of the board. This antenna allows the vehicle to be flown using an independent RC controller \cite{configure-rc}. By configuring the switches in the RC unit for flight mode change or as a kill switch, additional tests can be carried out to verify the developed safety features described in Section \ref{subsec:safety}, like interrupting autonomous flight upon flight mode changes or upon loss of signal from the RC controller.
 
 
 After all the necessary connections are set up and the AirSim simulator started, the control program can be started with the following command:
@@ -32,18 +32,18 @@ The \texttt{COM[X]:57600} section describes the serial connection to the telemet
 \subsection{HITL validation with Raspberry Pi (onboard configuration)}
 \label{sec:test-5-rpi}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth, keepaspectratio]{img/hitl-setup-picture.jpg}
-  \caption{Pixhawk 4 board connected to a Raspberry Pi running the DroneVisionControl application and a Windows computer running the AirSim simulator. The setup includes a telemetry radio for QGroundControl and an RC receiver for manual control.}
-  \label{fig:hitl-setup-picture}
-\end{figure}
-
 The next crucial step in transitioning from a fully simulated environment to real flight is to establish a connection between the future onboard computer, the Raspberry Pi 4, and the Pixhawk flight controller. This connection enables conducting more realistic tests using the same hardware as during flight tests to allow the identification of potential hardware performance issues. The tests mimic the onboard computer configuration outlined in Figure \ref{fig:onboard-config}, with the DroneVisionControl application running on an onboard companion computer.
 
 Figure \ref{fig:hitl-setup-picture} provides an overview of the connections used for HITL testing with the Raspberry Pi. The main addition from the previous section is the direct connection between the Pixhawk board and the Raspberry Pi's I/O pins. While the inclusion of the telemetry radio is not strictly required in this scenario, it enables maintaining a simultaneous connection to QGroundControl on the ground station or simulation computer, facilitating better oversight and monitoring.
 
-Before any tests can begin, the operating system of the Raspberry needs to be set up for the DroneVisionControl application. A detailed explanation of the complete installation process, along with all the necessary libraries and dependencies for the Raspberry Pi, is included in Appendix \ref{app:install-hitl}. To conveniently control the Raspberry Pi during the installation, a remote desktop connection is recommended. This allows for transmitting screen contents, as well as mouse and keyboard input, over a local network. Thus, accessing the Pi's desktop from the ground station computer becomes feasible, even during flight. One available option to achieve this is XRDP\footnote{\url{http://xrdp.org/}}, an open-source implementation of a Microsoft Remote Desktop Protocol server that is compatible with the Raspberry OS.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth, keepaspectratio]{img/hitl-setup-picture.jpg}
+  \caption{Pixhawk 4 board connected to a Raspberry Pi running the DroneVisionControl application and a Windows computer running the AirSim simulator. The setup includes a telemetry radio for QGroundControl and an RC receiver for manual control.}
+  \label{fig:hitl-setup-picture}
+\end{figure}
+
+Before any tests can begin, the operating system of the Raspberry needs to be set up for the DroneVisionControl application. A detailed explanation of the complete installation process, along with all the necessary libraries and dependencies for the Raspberry Pi, is included in Appendix \ref{app:install-hitl}. To conveniently control the Raspberry Pi during the installation, a remote desktop connection is recommended. This allows for transmitting screen contents, as well as mouse and keyboard input, over a local network. Thus, accessing the Pi's desktop from the ground station computer becomes feasible, even during flight. One available option to achieve this is XRDP \cite{xrdp-front}, an open-source implementation of a Microsoft Remote Desktop Protocol server that is compatible with the Raspberry OS.
 
 To ensure successful progress towards autonomous flight, several key characteristics of the Raspberry Pi must be addressed:
 \begin{enumerate}
@@ -61,10 +61,7 @@ The first step is to verify that the Raspberry Pi can be powered by a secondary 
 
 \subsubsection{Verify serial connections}
 
-The most important connection that needs to be verified is the MAVLink communication channel between the flight controller and the onboard computer. The custom connector described in Table \ref{tab:wiring-telem} is used for this purpose, with the \texttt{TELEM2} port on the Pixhawk board connected to the TX/RX UART pins on the Raspberry Pi's GPIO header. Additionally, configuration is required for the flight controller and the companion computer. For the PX4 flight controller, only the \texttt{TELEM1} port of the Pixhawk is configured for telemetry radio. An additional MAVLink channel must be configured in QGroundControl by setting the correct values to the parameters listed in \ref{tab:telem2-params}.
-On the Raspberry Pi side, the serial port is configured by default to exchange shell messages. This needs to be disabled using the \texttt{raspi-config} command-line utility and selecting the following steps: Interface options -> Serial Port -> Disable login shell, enable serial port hardware (see Figure \ref{fig:serial-connection}). After making these changes, the \texttt{/dev/serial0} address can be used to communicate with the device at the baud rate configured in QGroundControl.
-
-The remaining connections serve to communicate the Pixhawk board and the simulation computer. Two different channels are needed to be able to exchange information with QGroundControl and AirSim at the same time. The connection to AirSim will be implemented through the development-only micro-USB port on the Pixhawk board, and the connection to QGroundControl through the telemetry radio. Due to the substantially lower throughput of the telemetry radio in comparison with the USB cable, using the telemetry radio to communicate between the Pixhawk board and AirSim will result in inferior performance since there is a more significant amount of messages transferred than between QGroundControl and the Pixhawk.
+The most important connection that needs to be verified is the MAVLink communication channel between the flight controller and the onboard computer. The custom connector described in Table \ref{tab:wiring-telem} is used for this purpose, with the \texttt{TELEM2} port on the Pixhawk board connected to the TX/RX UART pins on the Raspberry Pi's GPIO header. Additionally, configuration is required for the flight controller and the companion computer. For the PX4 flight controller, only the \texttt{TELEM1} port of the Pixhawk is configured for telemetry radio. An additional MAVLink channel must be configured in QGroundControl by setting the correct values to the parameters listed in Table \ref{tab:telem2-params}.
 
 \begin{table}[h!]
  \begin{center}
@@ -78,6 +75,7 @@ The remaining connections serve to communicate the Pixhawk board and the simulat
  \end{center}
 \end{table}
 
+On the Raspberry Pi side, the serial port is configured by default to exchange shell messages. This needs to be disabled using the \texttt{raspi-config} command-line utility and selecting the following steps: Interface options -> Serial Port -> Disable login shell, enable serial port hardware (see Figure \ref{fig:serial-connection}). After making these changes, the \texttt{/dev/serial0} address can be used to communicate with the device at the baud rate configured in QGroundControl.
 
 \begin{figure}
   \centering
@@ -87,6 +85,10 @@ The remaining connections serve to communicate the Pixhawk board and the simulat
   \caption{a) Picture of Raspberry's \texttt{raspi-config} and b) close-up of Pixhawk to Pi cable connection.}
   \label{fig:serial-connection}
 \end{figure}
+
+
+The remaining connections serve to communicate the Pixhawk board and the simulation computer. Two different channels are needed to be able to exchange information with QGroundControl and AirSim at the same time. The connection to AirSim will be implemented through the development-only micro-USB port on the Pixhawk board and the connection to QGroundControl through the telemetry radio. Due to the substantially lower throughput of the telemetry radio in comparison with the USB cable, using the telemetry radio to communicate between the Pixhawk board and AirSim will result in inferior performance since there is a more significant amount of messages transferred than between QGroundControl and the Pixhawk.
+
 
 
 \subsubsection{Verify DroneVisionControl software}
@@ -101,7 +103,7 @@ This command connects DroneVisionControl to PX4 via the hardware address \texttt
 
 The result from the execution is shown in Figure \ref{fig:rpi-airsim-test}. On the right side, the remote connection to the Raspberry Pi's desktop is displayed, showing the output of the DroneVisionControl program running the pose detection algorithm on the images received from the simulator. On the left side of the figure, the AirSim simulator renders the movements of the vehicle as it responds to the instructions from the flight controller that listens to the companion computer.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/airsim-rpi-test.png}
   \caption{Left: AirSim simulator on Windows host. Right: RPi desktop with DroneVisionControl application and pose output.}
@@ -143,7 +145,7 @@ Similar measurements were conducted for different hardware combinations, employi
 \end{enumerate}
 
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/performance-graph.png}
   \caption{Average FPS and time spent on each task per iteration of the follow solution for the different hardware configurations.}

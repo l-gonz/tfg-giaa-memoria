@@ -16,23 +16,14 @@ The initial test will run the hand-control solution to verify that the autopilot
 \subsection{Build process}
 \label{sec:test-7-builddrone}
 
-The chosen vehicle for this project is the Holybro X500, specifically designed to be compatible with PX4. The PX4 documentation\footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} provides detailed instructions on how to build the vehicle using its Development Kit. Figure \ref{fig:x500-dev-kit} illustrates all the components required to construct the complete vehicle.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=.9\textwidth, keepaspectratio]{img/x500-dev-kit.jpg}
-  \caption{Development kit for the Holybro X500.}
-  \source{Adapted from \citetitle{px4-guide} \cite{px4-guide}.}
-  \label{fig:x500-dev-kit}
-\end{figure}
-
+The chosen vehicle for this project is the Holybro X500, specifically designed to be compatible with PX4. The PX4 documentation\footnote{\url{https://docs.px4.io/main/en/frames_multicopter/holybro_x500_pixhawk4.html}} provides detailed instructions on how to build the vehicle using its Development Kit. 
 
 Once the standard parts are assembled, the custom additions can be integrated into the remaining space within the frame. The Raspberry Pi companion computer will be positioned between the autopilot and GPS antenna (see Figure \ref{fig:full-build}). This placement facilitates a convenient connection between the autopilot and the Raspberry Pi's I/O pins using short cables, preventing excessive wire clutter within the frame. During flight, the Raspberry Pi will be powered by a dedicated external battery, separate from the main battery powering the motors, which supplies power through a 2-ampere USB port. This port will be connected to the Raspberry Pi's USB-C power supply socket with a charging cable. As explained in Section \ref{sec:test-5-rpi}, the power supply by this secondary battery is sufficient to operate the connected camera and run the developed software with satisfactory performance. The battery will be positioned beneath the autopilot, as depicted in Figure \ref{fig:full-build}. 
 
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\textwidth, keepaspectratio]{img/full-build.jpg}
+  \includegraphics[width=0.75\textwidth, keepaspectratio]{img/full-build.jpg}
   \caption{Complete build of the quadcopter with the main components highlighted.}\label{fig:full-build}
 \end{figure}
 
@@ -102,7 +93,7 @@ After successfully establishing the connection with the vehicle, the computer ke
 
 Figure \ref{fig:flight-test-cam-offboard} illustrates the output displayed in the computer's terminal window, showcasing the connection process, the sent velocity commands, and the camera output from the offboard computer. Additionally, a video capturing the entire process can be accessed in the project's \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-offboard}{website}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-offboard}}.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-offboard.png}
   \caption{Terminal output from the \texttt{test-camera} tool running on an offboard computer and image of the drone flying in response.}
@@ -126,7 +117,7 @@ dronevisioncontrol tools test-camera --hardware /dev/serial0:921600 -p
 Unlike the telemetry radio flight, this test employs a serial connection running at a baud rate of 921600, matching the configured baud rate on the \texttt{TELEM2} port of the Pixhawk board. The \texttt{-p} option enables pose detection in the output images. A video documenting the entire process can be accessed on this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-onboard}{link}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-onboard}}. Figure \ref{fig:flight-test-cam-onboard} shows the Raspberry Pi's desktop with pose detection running on the images taken from onboard the vehicle, as transmitted to the ground station laptop via WiFi.
 
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/video-field-test-onboard.png}
   \caption{On the left, the onboard computer controlled from the ground station laptop runs pose detection while flying. On the right, the drone and the detected person are seen from a different angle}
@@ -146,10 +137,7 @@ dronevisioncontrol hand --serial <device>:57600
 \end{minted}
 
 
-Once the pilot connection is established, the image from the computer's webcam will be displayed on the screen with an outline highlighting any detected hand. The open palm gesture (hold command) can be shown to the camera to test that the hand is correctly recognised without triggering any action. Closing the hand into a fist will initiate takeoff, and pointing up with the index finger will activate the offboard flight mode. Moving the index finger right or left will cause the vehicle to mirror the movement, while moving the thumb right or left will make the vehicle move forward and backward, respectively. At any point during the test, displaying an open hand will cause the drone to hover in its current position. Losing sight of the controlling hand will also trigger the hovering mode.
-
-
-A video showcasing the entire process can be accessed on this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-hand}{link}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-hand}}. Additionally, an image extracted from the video can be seen in Figure \ref{fig:flight-test-hand}.
+Once the pilot connection is established, the image from the computer's webcam will be displayed on the screen with an outline highlighting any detected hand. The open palm gesture (hold command) can be shown to the camera to test that the hand is correctly recognised without triggering any action. Closing the hand into a fist will initiate takeoff, and pointing up with the index finger will activate the offboard flight mode. Moving the index finger right or left will cause the vehicle to mirror the movement, while moving the thumb right or left will make the vehicle move forward and backward, respectively. At any point during the test, displaying an open hand will cause the drone to hover in its current position. Losing sight of the controlling hand will also trigger the hovering mode. A video showcasing the entire process can be accessed on this \href{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-hand}{link}\footnote{\url{https://l-gonz.github.io/tfg-giaa-dronecontrol/videos/flight-test-hand}}. Additionally, an image extracted from the video can be seen in Figure \ref{fig:flight-test-hand}.
 
 \begin{figure}[H]
   \centering
@@ -189,12 +177,12 @@ During the flight test, the application running on the Raspberry Pi achieves a m
 
 At the end of the program execution, the average loop time and average runtime for each task in the control loop are displayed in the terminal. Based on the measurements obtained during the test flight, the average frame rate is calculated to be 3.58 FPS. Figure \ref{fig:flight-performance} compares these measurements with those analyzed in Section \ref{subsec:performance}, particularly with the test configuration selected to most closely resemble actual flight conditions (autopilot board running on HITL mode and the companion computer powered by the secondary battery). Very similar results are recorded for both tests, confirming the simulation configuration employed as a valid method of obtaining realistic results without complex or costly flight tests.
 
-Overall, this test flight verifies the effectiveness of the follow control solution and its ability to track and follow a moving target during a real flight scenario, as well as the validity of the simulation process to obtain realistic results.
 
-
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth, keepaspectratio]{img/perf-hitl-flight.png}
   \caption{Average loop time for each individual task in the follow control solution and total frame rate for realistic simulation versus actual test flights.}
   \label{fig:flight-performance}
 \end{figure}
+
+Overall, this test flight verifies the effectiveness of the follow control solution and its ability to track and follow a moving target during a real flight scenario, as well as the validity of the simulation process to obtain realistic results.
